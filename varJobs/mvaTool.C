@@ -59,6 +59,12 @@ mvaTool::mvaTool(Int_t channel, TString Category, std::map<Int_t, TString> chann
     varList.push_back("dr_leps");
     varList.push_back("mvaOutput_2lss_ttV");
     varList.push_back("mvaOutput_2lss_ttbar");
+    if(subCat2l.Contains("DNN")){
+        varList.push_back("DNN_maxval");
+        varList.push_back("DNN_maxval_option2");
+        varList.push_back("DNN_maxval_option3");
+    }
+
   
   //At some point this should be filled out with the names of the systematics so that we can read those too
   systlist.push_back("");
@@ -646,6 +652,9 @@ void mvaTool::createHists(TString sampleName){
       if(varList[i]== "dr_leps") {nbins= 10; xmin= 0.; xmax= 5;};
       if(varList[i]== "mvaOutput_2lss_ttV") {nbins= 10; xmin= -1; xmax= 1;};
       if(varList[i]== "mvaOutput_2lss_ttbar") {nbins= 10; xmin= -1; xmax= 1;};
+      if(varList[i]== "DNN_maxval") {nbins= 20; xmin= 0; xmax= 1;};
+      if(varList[i]== "DNN_maxval_option2") {nbins= 20; xmin= 0; xmax= 1;};
+      if(varList[i]== "DNN_maxval_option3") {nbins= 20; xmin= 0; xmax= 1;};
 
       TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),nbins,xmin,xmax);
       histo->Sumw2();

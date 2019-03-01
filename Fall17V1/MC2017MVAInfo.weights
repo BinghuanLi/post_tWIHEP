@@ -1,0 +1,61 @@
+################# 
+### Fall 17 MC for ML Informations #### 
+###################
+ 
+#The luminosity of the Sample to be processed
+Weight.Lumi: 41298
+ 
+# 100100 - ttHnobb
+Weight.Source.100100: 0.2119678
+Events.Source.100100: 7431361
+PileUp.Source.100100: ttHnobb
+
+# 100101 - ttW_ext_Jets
+Weight.Source.100101: 0.6008
+Events.Source.100101: 9070386
+PileUp.Source.100101: ttW_ext_Jets
+
+# 100102 - ttWJets
+Weight.Source.100102: 0.6008
+Events.Source.100102: 6388052
+PileUp.Source.100102: ttWJets
+
+# 100103 - ttZ_ext_Jets
+Weight.Source.100103: 0.8393
+Events.Source.100103: 8455616
+PileUp.Source.100103: ttZ_ext_Jets
+
+# 100104 - ttZ_Jets
+Weight.Source.100104: 0.8393
+Events.Source.100104: 9678691
+PileUp.Source.100104: ttZ_Jets
+
+# 100012 - TTTo2L2Nu
+Weight.Source.100012: 88.29
+Events.Source.100012: 77566188
+PileUp.Source.100012: TTTo2L2Nu
+
+# 100013 - TTToHadron
+Weight.Source.100013: 377.96
+Events.Source.100013: 171096728
+PileUp.Source.100013: TTToHadronic
+
+# 100014 - TTToSemiLep
+Weight.Source.100014: 365.34
+Events.Source.100014: 151053081
+PileUp.Source.100014: TTToSemiLeptonic
+
+# 100020 - TT_PSwgt_To2L2Nu
+Weight.Source.100020: 88.29
+Events.Source.100020: 77566188
+PileUp.Source.100020: TTTo2L2Nu_PSweights
+
+# 100021 - TT_PSwgt_ToHadron
+Weight.Source.100021: 377.96
+Events.Source.100021: 171096728
+PileUp.Source.100021: TTToHadronic_PSweights
+
+# 100022 - TT_PSwgt_ToSemiLep
+Weight.Source.100022: 365.34
+Events.Source.100022: 151053081
+PileUp.Source.100022: TTToSemiLeptonic_PSweights

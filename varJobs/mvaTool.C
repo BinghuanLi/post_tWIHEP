@@ -1,10 +1,11 @@
 #define mvaTool_cxx
 #include "mvaTool.h"
 
-mvaTool::mvaTool(Int_t channel, TString Category, std::map<Int_t, TString> channelNameMap){
+mvaTool::mvaTool(Int_t channel, TString Category, TString TreeName, std::map<Int_t, TString> channelNameMap){
   
   _channel = channel;
   subCat2l = Category;
+  treeName = TreeName;
   ChannelNameMap = channelNameMap;
   //  regionNames = {"3j1t","3j2t","2j1t","4j1t","4j2t"};
   regionNames = {""};
@@ -237,7 +238,8 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
 
   unsigned int varsize = varList.size();
 
-  TChain* theTree = new TChain("syncTree");
+  //TChain* theTree = new TChain("syncTree");
+  TChain* theTree = new TChain(treeName);
   theTree->Add(dirWithTrees);
   std::cout << "[loopInSample] Added "<<dirWithTrees << " to TChain" << std::endl;
   

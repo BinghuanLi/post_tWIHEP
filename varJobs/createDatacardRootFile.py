@@ -6,10 +6,17 @@ import optparse
 import distutils.util
 
 regPerCat={
-"SubCat2l":["SigRegion","ttWctrl"]
+"SubCat2l":["SigRegion","ttWctrl"],
+"DNNCat":["SigRegion"],
+"DNNCat_option2":["SigRegion"],
+"DNNCat_option3":["SigRegion"],
 }
 subCats={
-"SubCat2l":["inclusive","ee_neg","ee_pos", "em_bl_neg","em_bl_pos","em_bt_neg","em_bt_pos", "mm_bl_neg","mm_bl_pos","mm_bt_neg","mm_bt_pos" ]
+#"SubCat2l":["inclusive","ee_neg","ee_pos", "em_bl_neg","em_bl_pos","em_bt_neg","em_bt_pos", "mm_bl_neg","mm_bl_pos","mm_bt_neg","mm_bt_pos" ]
+"SubCat2l":["ee_neg","ee_pos", "em_bl_neg","em_bl_pos","em_bt_neg","em_bt_pos", "mm_bl_neg","mm_bl_pos","mm_bt_neg","mm_bt_pos" ],
+"DNNCat":["ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNCat_option2":["ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNCat_option3":["ttHnode","ttJnode","ttWnode","ttZnode"],
 }
 
 histoGramPerSample = {"EWK":"EWK","Conv":"Conv","TTW":"TTW","TTZ":"TTZ","Rares":"Rares","TTWW":"TTWW","Fakes":"Fakes", "Flips":"Flips",
@@ -20,8 +27,11 @@ histoGramPerSample = {"EWK":"EWK","Conv":"Conv","TTW":"TTW","TTZ":"TTZ","Rares":
 
 
 samples = ["Rares","EWK","Conv","TTW","TTZ","TTWW","Fakes","Flips","TTH_htt","TTH_hww","TTH_hzz","TTH_hot","TTH_hmm",
+#"THQ_htt","THQ_hzz",
+#"THW_htt","THW_hzz",
 "THQ_htt","THQ_hww","THQ_hzz",
-"THW_htt","THW_hww","THW_hzz"]
+"THW_htt","THW_hww","THW_hzz"
+]
 
 
 

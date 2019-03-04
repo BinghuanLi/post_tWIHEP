@@ -5,12 +5,15 @@ from threading import Thread
 
 
 
-Categories=["SubCat2l"]
+Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3"]
 varPerCat={
-"SubCat2l":["Bin2l","Hj_tagger_resTop"]
+"SubCat2l":["Bin2l"],
+"DNNCat":["DNN_maxval"],
+"DNNCat_option2":["DNN_maxval_option2"],
+"DNNCat_option3":["DNN_maxval_option3"],
 }
 
-version = "V0212"
+version = "V0227"
 
 for category in Categories:
     if not os.path.exists("Output/"+category+"/Systs2lss"):
@@ -21,6 +24,6 @@ for category in Categories:
         print ( "write histograms for var: "+var+ " in cat: "+ category)
         if not os.path.exists(DirName_datacard):
             os.popen("mkdir -p "+DirName_datacard)
-        command_run = "python createDatacardRootFile.py -i Output/SubCat2l/ -o "+DirName_datacard+"/ -v "+var+" -c "+category+" > "+DirName_datacard+"/Information.txt"
+        command_run = "python createDatacardRootFile.py -i Output/"+category+"/ -o "+DirName_datacard+"/ -v "+var+" -c "+category+" > "+DirName_datacard+"/Information.txt"
         print(command_run) 
         os.system(command_run)

@@ -7,12 +7,17 @@ import optparse
 import distutils.util
 
 regPerCat={
-"SubCat2l":["2lss","ttWctrl"]
-#"SubCat2l":["2lss"]
+"SubCat2l":["2lss","ttWctrl"],
+"DNNCat":["2lss"],
+"DNNCat_option2":["2lss"],
+"DNNCat_option3":["2lss"],
 }
 subCats={
-"SubCat2l":["inclusive","ee_neg","ee_pos", "em_bl_neg","em_bl_pos","em_bt_neg","em_bt_pos", "mm_bl_neg","mm_bl_pos","mm_bt_neg","mm_bt_pos" ]
-#"SubCat2l":["ee_neg"]
+#"SubCat2l":["inclusive","ee_neg","ee_pos", "em_bl_neg","em_bl_pos","em_bt_neg","em_bt_pos", "mm_bl_neg","mm_bl_pos","mm_bt_neg","mm_bt_pos" ]
+"SubCat2l":["ee_neg","ee_pos", "em_bl_neg","em_bl_pos","em_bt_neg","em_bt_pos", "mm_bl_neg","mm_bl_pos","mm_bt_neg","mm_bt_pos" ],
+"DNNCat":["ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNCat_option2":["ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNCat_option3":["ttHnode","ttJnode","ttWnode","ttZnode"],
 }
 
 usage = 'usage: %prog [options]'

@@ -56,6 +56,9 @@ blind = opt.blind
 #header_postfix = "2lss l^{#pm}l^{#pm} "
 header_postfix = "2lss "
 if region =="ttWctrl": header_postfix = " ttWctrl "
+    
+Expected = "expected" 
+if blind !=1 : Expected = "observed"
 
 
 Samples=["TTH","H","TTW+TTWW","TTZ","EWK","Rares","Conv","Fakes","Flips"]
@@ -245,7 +248,7 @@ def readHists(postfix=""):
     latexString += (expString + dataString)
     latexString += ("\\end{tabular}\n}\n\\end{table}\n\\end{frame}\n \\end{document}\n")
     if LATEX==1 : 
-        latexfile = file(DirOfRootplas+SubCat+"/"+POI+"/"+fit_type+"_"+SPLIT+"_yield.tex","w")
+        latexfile = file(DirOfRootplas+SubCat+"/"+POI+"/"+SubCat+"_"+POI+"_"+region+"_"+fit_type+"_"+SPLIT+"_"+Expected+"_yield.tex","w")
         latexfile.write("\\documentclass{beamer}\n\\usetheme{Warsaw}\n\n\\usepackage{graphicx}\n\\useoutertheme{infolines}\n\\setbeamertemplate{headline}{}\n\n\\begin{document}\n\n")
         latexfile.write(latexString)
 
@@ -329,8 +332,6 @@ def ratioplot():
     h_ratio = createRatio(h_dataobs, h_TotalMC)
     h_MCerr = createTotalMCErr(h_TotalMC, POI)
     c, pad1, pad2 = createCanvasPads()
-    Expected = "expected" 
-    if blind !=1 : Expected = "observed"
     leg.AddEntry(h_dataobs,Expected,"lep")
     leg.AddEntry(h_TotalMC,"Uncertainty","f")
     
@@ -338,7 +339,7 @@ def ratioplot():
     
     pad1.cd()
     maximum = h_dataobs.GetMaximum()
-    upperbound = 2.*maximum
+    upperbound = 2.3*maximum
     lowerbound = -maximum/40.
     hstack.SetMinimum(lowerbound)
     hstack.SetMaximum(upperbound)
@@ -371,7 +372,7 @@ def ratioplot():
     h_MCerr.Draw("e2") 
     h_ratio.Draw("epsame")
   
-    c.SaveAs(DirOfRootplas+SubCat+"/"+POI+"/"+fit_type+"_"+SPLIT+"_"+Expected+".png") 
+    c.SaveAs(DirOfRootplas+SubCat+"/"+POI+"/"+SubCat+"_"+POI+"_"+region+"_"+fit_type+"_"+SPLIT+"_"+Expected+".png") 
     # To hold window open when running from command line
     if OPEN==1: text = raw_input()
 

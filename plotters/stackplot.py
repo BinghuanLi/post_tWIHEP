@@ -17,7 +17,7 @@
 # This program is modified to produce pre-fit StackPlots and Data/MC comparison and the yield table
 # The script takes the output of mvaTool.C
 # python stackplot.py -r <region> -p <POI> -o <plotOpen> -d<dir> -l<LATEX> -b<blind> -c<category> -s<SPLIT> 
-# python stackplot.py -r 2lss -p Bin2l -l 1 -b 1 -c SubCat2l
+# python stackplot.py -r 2lss -p Bin2l -l 1 -b 1 -c SubCat2l -s inclusive
 # 4 March 2019   Binghuan Li
 # *** 
 #
@@ -261,7 +261,7 @@ def readHists():
     else : latexString += expString
     latexString += ("\\end{tabular}\n}\n\\end{table}\n\\end{frame}\n \\end{document}\n")
     if LATEX==1 : 
-        latexfile = file(outputDir+"/"+POI+"_"+Expected+"_yield.tex","w")
+        latexfile = file(outputDir+"/"+POI+"_"+region+"_"+SPLIT+"_"+Expected+"_yield.tex","w")
         latexfile.write("\\documentclass{beamer}\n\\usetheme{Warsaw}\n\n\\usepackage{graphicx}\n\\useoutertheme{infolines}\n\\setbeamertemplate{headline}{}\n\n\\begin{document}\n\n")
         latexfile.write(latexString)
 
@@ -398,7 +398,7 @@ def stackplot():
     h_MCerr.Draw("e2") 
     h_ratio.Draw("epsame")
   
-    c.SaveAs(outputDir+"/"+POI+"_"+Expected+".png") 
+    c.SaveAs(outputDir+"/"+SubCat+"_"+POI+"_"+region+"_"+SPLIT+"_"+Expected+".png") 
     # To hold window open when running from command line
     if OPEN==1: text = raw_input()
 

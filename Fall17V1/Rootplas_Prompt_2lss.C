@@ -50,7 +50,7 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
     float lep1_phi(0.), lep2_phi(0.), lep3_phi(0.);
     float lep1_E(0.), lep2_E(0.), lep3_E(0.);
     float Sum2lCharge(0.), Dilep_nTight(0.), massL_SFOS(0.), Trilep_nTight(0.), Dilep_pdgId(0.), Sum3LCharge(0.);
-    float xsec_rwgt(0.);
+    float xsec_rwgt(0.), EventWeight(0.);
     float mvaOutput_2lss_ttV(0.), mvaOutput_2lss_ttbar(0.);
     
     std::vector<double>* Jet25_pt =0;
@@ -95,6 +95,7 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
     oldtree->SetBranchAddress("massL_SFOS", &massL_SFOS);
     oldtree->SetBranchAddress("Trilep_nTight", &Trilep_nTight);
     oldtree->SetBranchAddress("nEvent", &nEvent);
+    oldtree->SetBranchAddress("EventWeight", &EventWeight);
     oldtree->SetBranchAddress("mvaOutput_2lss_ttV", &mvaOutput_2lss_ttV);
     oldtree->SetBranchAddress("mvaOutput_2lss_ttbar", &mvaOutput_2lss_ttbar);
     oldtree->SetBranchAddress("Jet25_pt", &Jet25_pt);
@@ -187,6 +188,7 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
             nBestVtx = rnBestVtx;
             nEvt = nEvent;
             xsec_rwgt = get_rewgtlumi(FileName);
+            EventWeight = EventWeight * xsec_rwgt;
             Jet_numLoose = nLooseJet;
             if (nEvent <0) nEvt = nEvent + 4294967296; // 4294967296 = 2^32, this is to fix the problem saving EVENT_event as a wrong type
             else nEvt = nEvent;
@@ -287,6 +289,7 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
         Trilep_nTight =0;
         mvaOutput_2lss_ttV=0;
         mvaOutput_2lss_ttbar=0;
+        EventWeight=0;
     }
 
     newtree->SetName("syncTree");

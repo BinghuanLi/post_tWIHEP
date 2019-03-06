@@ -46,7 +46,7 @@ void Rootplas_Conv_2lss(TString InputDir, TString OutputDir, TString FileName, T
     float firstLep_isMatchRightCharge(0.), secondLep_isMatchRightCharge(0.), thirdLep_isMatchRightCharge(0.);
     float lep1_pdgId(0.), lep2_pdgId(0.), lep3_pdgId(0.);
     float Sum2lCharge(0.), Dilep_nTight(0.), massL_SFOS(0.), Trilep_nTight(0.), Dilep_pdgId(0.), Sum3LCharge(0.);
-    float xsec_rwgt(0.);
+    float xsec_rwgt(0.), EventWeight(0.);
     float mvaOutput_2lss_ttV(0.), mvaOutput_2lss_ttbar(0.);
     
    
@@ -77,6 +77,7 @@ void Rootplas_Conv_2lss(TString InputDir, TString OutputDir, TString FileName, T
     oldtree->SetBranchAddress("nEvent", &nEvent);
     oldtree->SetBranchAddress("mvaOutput_2lss_ttV", &mvaOutput_2lss_ttV);
     oldtree->SetBranchAddress("mvaOutput_2lss_ttbar", &mvaOutput_2lss_ttbar);
+    oldtree->SetBranchAddress("EventWeight", &EventWeight);
 
     SetOldTreeBranchStatus(oldtree);
     
@@ -153,6 +154,7 @@ void Rootplas_Conv_2lss(TString InputDir, TString OutputDir, TString FileName, T
             nBestVtx = rnBestVtx;
             nEvt = nEvent;
             xsec_rwgt = get_rewgtlumi(FileName);
+            EventWeight = EventWeight * xsec_rwgt;
             Jet_numLoose = nLooseJet;
             if (nEvent <0) nEvt = nEvent + 4294967296; // 4294967296 = 2^32, this is to fix the problem saving EVENT_event as a wrong type
             else nEvt = nEvent;
@@ -201,6 +203,7 @@ void Rootplas_Conv_2lss(TString InputDir, TString OutputDir, TString FileName, T
         Trilep_nTight =0;
         mvaOutput_2lss_ttV=0;
         mvaOutput_2lss_ttbar=0;
+        EventWeight=0;
     }
 
     newtree->SetName("syncTree");

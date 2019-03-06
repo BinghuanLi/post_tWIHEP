@@ -205,6 +205,7 @@ void Rootplas_Prompt_fake(TString InputDir, TString OutputDir, TString FileName,
             nBestVtx = rnBestVtx;
             nEvt = nEvent;
             xsec_rwgt = get_rewgtlumi(FileName);
+            EventWeight = EventWeight * xsec_rwgt;
             Jet_numLoose = nLooseJet;
             if (nEvent <0) nEvt = nEvent + 4294967296; // 4294967296 = 2^32, this is to fix the problem saving EVENT_event as a wrong type
             else nEvt = nEvent;

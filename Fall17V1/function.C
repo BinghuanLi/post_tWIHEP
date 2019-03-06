@@ -22,6 +22,9 @@ double get_rewgtlumi(TString FileName){
     if(FileName.Contains("ttWJets")) wgt=6388052./15458438.;
     if(FileName.Contains("ttZ_ext_Jets")) wgt=8455616./18134307.;
     if(FileName.Contains("ttZ_Jets")) wgt=9678691./18134307.;
+    if(FileName.Contains("WZTo3LNu")) wgt=4.42965/5.063;
+    if(FileName.Contains("THQ")) wgt=0.07096*8837.23781460*123798.0/(0.7927*25.69875024);
+    if(FileName.Contains("THW")) wgt=0.01561*5458.47479968*49936.0/(0.1472*3.21369648);
     return wgt;
 }
 double deltaPhi(double phi1, double phi2){

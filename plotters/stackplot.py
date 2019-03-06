@@ -74,6 +74,14 @@ subCats={
 "DNNCat_option3":["ttHnode","ttJnode","ttWnode","ttZnode"],
 }
 
+signals=["TTH"]
+if "ttWnode" in SPLIT:
+    signals=["TTW+TTWW"]
+elif "ttJnode" in SPLIT:
+    signals=["Fakes","Conv","Flips"]
+elif "ttZnode" in SPLIT:
+    signals=["TTZ"]
+
 Channels = []
 if not subCats.has_key(SubCat):
     print ("ERROR : " + SubCat +" is not a key of subCats ")
@@ -112,8 +120,8 @@ def createSum(h1, h2):
     h3.SetFillColor(kGray+3)
     h3.SetFillStyle(3001)
     h3.SetTitle("")
-    h3.SetMinimum(0.8)
-    h3.SetMaximum(1.35)
+    #h3.SetMinimum(0.8)
+    #h3.SetMaximum(1.35)
     # Set up plot for markers and errors
     h3.Sumw2()
     h3.SetStats(0)
@@ -136,8 +144,8 @@ def readHists():
     h_totalbkg.SetFillColor(kGray+3)
     h_totalbkg.SetFillStyle(3001)
     h_totalbkg.SetTitle("")
-    h_totalbkg.SetMinimum(0.8)
-    h_totalbkg.SetMaximum(1.35)
+    #h_totalbkg.SetMinimum(0.8)
+    #h_totalbkg.SetMaximum(1.35)
     h_totalbkg.Sumw2()
     h_totalbkg.SetStats(0)
             
@@ -153,8 +161,8 @@ def readHists():
     h_totalmc.SetFillColor(kGray+3)
     h_totalmc.SetFillStyle(3001)
     h_totalmc.SetTitle("")
-    h_totalmc.SetMinimum(0.8)
-    h_totalmc.SetMaximum(1.35)
+    #h_totalmc.SetMinimum(0.8)
+    #h_totalmc.SetMaximum(1.35)
     h_totalmc.Sumw2()
     h_totalmc.SetStats(0)
 
@@ -177,6 +185,8 @@ def readHists():
 
     Samples.reverse()
     for sample in Samples:
+        isSignal = False
+        if sample in signals: isSignal = True
         hist=h_totalsig.Clone(sample)
         hist.Reset()
         if not sample == "Data" : latexString += sample + " &"
@@ -191,15 +201,20 @@ def readHists():
                 rootfile.Close()
         # loop over mc
         # loop over signal
-        elif "TTH" in sample:
+        elif isSignal:
             for p in Process[sample]:
                 rootfile  = read_rootfile(p)
                 gROOT.cd()
                 h1 = rootfile.Get(POI+"_"+p)
                 #h1.SetDirectory(0)
-                h_totalsig.Add(h1)
-                h_totalmc.Add(h1)
-                hist.Add(h1)
+                if p == "FakeSub" and sample == "Fakes":
+                    h_totalsig.Add(h1, -1)
+                    h_totalmc.Add(h1, -1)
+                    hist.Add(h1, -1)
+                else:
+                    h_totalsig.Add(h1)
+                    h_totalmc.Add(h1)
+                    hist.Add(h1)
                 rootfile.Close()
             hist.SetFillColor(Color[sample])
             hist.SetLineColor(kBlack)
@@ -311,12 +326,33 @@ def createRatio(h1, h2):
     h3.SetLineColor(kBlack)
     h3.SetMarkerStyle(20)
     h3.SetTitle("")
-    h3.SetMinimum(0.8)
-    h3.SetMaximum(1.35)
+    #h3.SetMinimum(0.8)
+    #h3.SetMaximum(1.35)
     # Set up plot for markers and errors
     h3.Sumw2()
     h3.SetStats(0)
     h3.Divide(h2)
+    
+    # Adjust y-axis settings
+    y = h3.GetYaxis()
+    y.SetTitle("S/#sqrt{B}")
+    y.CenterTitle()
+    y.SetNdivisions(505)
+    y.SetTitleSize(25)
+    y.SetTitleFont(43)
+    y.SetTitleOffset(1.55)
+    y.SetLabelFont(43)
+    y.SetLabelSize(20)
+
+    # Adjust x-axis settings
+    x = h3.GetXaxis()
+    x.SetTitle(POI)
+    x.SetTitleSize(25)
+    x.SetTitleFont(43)
+    x.SetTitleOffset(3.0)
+    x.SetLabelFont(43)
+    x.SetLabelSize(20)
+
 
     return h3
 
@@ -325,8 +361,8 @@ def createSqrt(h1):
     h2.SetLineColor(kBlack)
     h2.SetMarkerStyle(20)
     h2.SetTitle("")
-    h2.SetMinimum(0.8)
-    h2.SetMaximum(1.35)
+    #h2.SetMinimum(0.8)
+    #h2.SetMaximum(1.35)
     # Set up plot for markers and errors
     h2.Sumw2()
     h2.SetStats(0)
@@ -415,10 +451,12 @@ def stackplot():
     
     pad2.cd()
     if blind ==1 :
-        h_MCerr.SetMinimum(0.)
-        h_MCerr.SetMaximum(2.)
-        h_MCerr.Draw("") 
-        h_ratio.Draw("epsame")
+        h_ratio.SetMinimum(0.)
+        #maximum = h_ratio.GetMaximum()
+        #upperbound = 1.5*maximum
+        #h_ratio.SetMaximum(upperbound)
+        h_ratio.SetMaximum(6.)
+        h_ratio.Draw("ep")
     else:
         h_MCerr.SetMinimum(0.5)
         h_MCerr.SetMaximum(1.8)

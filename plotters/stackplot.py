@@ -273,19 +273,19 @@ def createTotalMCErr(h1, POI):
     h2 = h1.Clone("h2")
     h2.Sumw2()
     nbins = h2.GetNbinsX()
-    for b in range(nbins+1):
-        BinContent = h2.GetBinContent(b)
-        BinContentErr = h2.GetBinError(b)
-        #print "Bin "+str(b)+" BinContent "+str(BinContent)+" BinContentErr "+str(BinContentErr)
-        h2.SetBinContent(b,1)
-        if BinContent != 0 : h2.SetBinError(b,BinContentErr/BinContent)
-        else: h2.SetBinError(b,0)
 
     # Adjust y-axis settings
     y = h2.GetYaxis()
     if blind==1 :
-        y.SetTitle("Sig/Bkg. ")
+        y.SetTitle("S/#sqrt{B}")
     else:
+        for b in range(nbins+1):
+            BinContent = h2.GetBinContent(b)
+            BinContentErr = h2.GetBinError(b)
+            #print "Bin "+str(b)+" BinContent "+str(BinContent)+" BinContentErr "+str(BinContentErr)
+            h2.SetBinContent(b,1)
+            if BinContent != 0 : h2.SetBinError(b,BinContentErr/BinContent)
+            else: h2.SetBinError(b,0)
         y.SetTitle("Data/pred. ")
     y.CenterTitle()
     y.SetNdivisions(505)
@@ -320,6 +320,30 @@ def createRatio(h1, h2):
 
     return h3
 
+def createSqrt(h1):
+    h2 = h1.Clone("h2")
+    h2.SetLineColor(kBlack)
+    h2.SetMarkerStyle(20)
+    h2.SetTitle("")
+    h2.SetMinimum(0.8)
+    h2.SetMaximum(1.35)
+    # Set up plot for markers and errors
+    h2.Sumw2()
+    h2.SetStats(0)
+    nbins = h2.GetNbinsX()
+    for b in range(nbins+1):
+        BinContent = h2.GetBinContent(b)
+        BinContentErr = h2.GetBinError(b)
+        #print "Bin "+str(b)+" BinContent "+str(BinContent)+" BinContentErr "+str(BinContentErr)
+        BinValue = 0
+        if BinContent > 0: 
+            BinValue = math.sqrt(BinContent)
+            h2.SetBinContent(b,BinValue)
+            h2.SetBinError(b,BinContentErr/(2*BinValue))
+        else: 
+            h2.SetBinContent(b,0)
+            h2.SetBinError(b,0)
+    return h2
 
 def createCanvasPads():
     c = TCanvas("c", "canvas", 800, 800)
@@ -346,8 +370,9 @@ def stackplot():
     # create required parts
     h_totalsig, h_totalbkg, h_TotalMC, h_dataobs, hstack, leg = readHists()
     if blind ==1 :
-        h_MCerr = createTotalMCErr(h_totalbkg, POI)
-        h_ratio = createRatio(h_totalsig, h_totalbkg)
+        h_sqrtB = createSqrt(h_totalbkg)
+        h_MCerr = createTotalMCErr(h_sqrtB, POI)
+        h_ratio = createRatio(h_totalsig, h_sqrtB)
     else:
         h_MCerr = createTotalMCErr(h_TotalMC, POI)
         h_ratio = createRatio(h_dataobs, h_TotalMC)
@@ -391,12 +416,14 @@ def stackplot():
     pad2.cd()
     if blind ==1 :
         h_MCerr.SetMinimum(0.)
-        h_MCerr.SetMaximum(1.)
+        h_MCerr.SetMaximum(2.)
+        h_MCerr.Draw("") 
+        h_ratio.Draw("epsame")
     else:
         h_MCerr.SetMinimum(0.5)
         h_MCerr.SetMaximum(1.8)
-    h_MCerr.Draw("e2") 
-    h_ratio.Draw("epsame")
+        h_MCerr.Draw("e2") 
+        h_ratio.Draw("epsame")
   
     c.SaveAs(outputDir+"/"+SubCat+"_"+POI+"_"+region+"_"+SPLIT+"_"+Expected+".png") 
     # To hold window open when running from command line

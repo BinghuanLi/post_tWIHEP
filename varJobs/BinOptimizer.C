@@ -3,8 +3,9 @@
 // Output : rootplas ready for statistics study and histograms for Optimized Binning 
 #include "Maps.C"
 
-//std::vector<TString> samples = {"Rares","EWK","Conv","TTW","TTZ","TTWW","Fakes","FakeSub","Flips","TTH_htt","TTH_hww","TTH_hzz","TTH_hot","TTH_hmm","THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz"};
-std::vector<TString> samples = {"Fakes","TTZ","FakeSub","Flips","TTH_htt"};
+std::vector<TString> samplesAll = {"Rares","EWK","Conv","TTW","TTZ","TTWW","Fakes","FakeSub","Flips","TTH_htt","TTH_hww","TTH_hzz","TTH_hot","TTH_hmm","THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz","Data"};
+std::vector<TString> samplesJES = {"EWK","Rares","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hot","TTH_hmm","THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz","FakeSub"};
+//std::vector<TString> samples = {"Fakes","TTZ","TTH_htt"};
 // SubCatNames should be mapped to VarNames 1 to 1
 std::vector<TString> SubCatNames = {"DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"};
 std::vector<TString> VarNames = {"DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3"};
@@ -13,10 +14,16 @@ std::map<TString,std::vector<TH1F*>> theHistoMap;
 void createHists();
 void fillHists(TString SampleName, TString SubCatName, TString VarName, Int_t theChannel, float var, float theweight);
 
-
-void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool_t OptBin = true, TString JESVar=""){
+void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool_t OptBin = true){
  
     TString BinRootFile = OutputDir+"/BinData/OptBin_"+RegionName+".root";
+    std::vector<TString> samples;
+    if(RegionName.Contains("JES")){
+        OptBin = false;
+        samples = samplesJES;
+    }else{
+        samples = samplesAll;
+    }
     TFile *newBinFile;
     if(OptBin){
         newBinFile = new TFile(BinRootFile,"recreate");
@@ -24,8 +31,8 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
     }
 
     for(auto s : samples){
-        TString Input = InputDir + "/"+JESVar+RegionName+"/"+s + "_"+JESVar+RegionName+".root";
-        TString Output = OutputDir + "/"+JESVar+RegionName+"/"+s + "_"+JESVar+RegionName+".root";
+        TString Input = InputDir + "/"+RegionName+"/"+s + "_"+RegionName+".root";
+        TString Output = OutputDir + "/"+RegionName+"/"+s + "_"+RegionName+".root";
         std::cout <<" input file is " << Input << std::endl;
         std::cout <<" output file is " << Output << std::endl;
         TFile *oldfile = new TFile(Input);
@@ -207,17 +214,17 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
                 std::cout<< " DNNCat_option3 is : "<<DNNCat_option3 << std::endl;
             }
             newtree->Fill();
-std::vector<TString> SubCatNames = {"DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"};
-std::vector<TString> VarNames = {"DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3"};
-            fillHists(s, "DNNCat" , "DNN_maxval", DNNCat, DNN_maxval, EventWeight);
-            fillHists(s, "DNNSubCat1_option1" , "DNN_maxval", DNNSubCat1_option1, DNN_maxval, EventWeight);
-            fillHists(s, "DNNSubCat2_option1" , "DNN_maxval", DNNSubCat2_option1, DNN_maxval, EventWeight);
-            fillHists(s, "DNNCat_option2" , "DNN_maxval_option2", DNNCat_option2, DNN_maxval_option2, EventWeight);
-            fillHists(s, "DNNSubCat1_option2" , "DNN_maxval_option2", DNNSubCat1_option2, DNN_maxval_option2, EventWeight);
-            fillHists(s, "DNNSubCat2_option2" , "DNN_maxval_option2", DNNSubCat2_option2, DNN_maxval_option2, EventWeight);
-            fillHists(s, "DNNCat_option3" , "DNN_maxval_option3", DNNCat_option3, DNN_maxval_option3, EventWeight);
-            fillHists(s, "DNNSubCat1_option3" , "DNN_maxval_option3", DNNSubCat1_option3, DNN_maxval_option3, EventWeight);
-            fillHists(s, "DNNSubCat2_option3" , "DNN_maxval_option3", DNNSubCat2_option3, DNN_maxval_option3, EventWeight);
+            if(OptBin){
+                fillHists(s, "DNNCat" , "DNN_maxval", DNNCat, DNN_maxval, EventWeight);
+                fillHists(s, "DNNSubCat1_option1" , "DNN_maxval", DNNSubCat1_option1, DNN_maxval, EventWeight);
+                fillHists(s, "DNNSubCat2_option1" , "DNN_maxval", DNNSubCat2_option1, DNN_maxval, EventWeight);
+                fillHists(s, "DNNCat_option2" , "DNN_maxval_option2", DNNCat_option2, DNN_maxval_option2, EventWeight);
+                fillHists(s, "DNNSubCat1_option2" , "DNN_maxval_option2", DNNSubCat1_option2, DNN_maxval_option2, EventWeight);
+                fillHists(s, "DNNSubCat2_option2" , "DNN_maxval_option2", DNNSubCat2_option2, DNN_maxval_option2, EventWeight);
+                fillHists(s, "DNNCat_option3" , "DNN_maxval_option3", DNNCat_option3, DNN_maxval_option3, EventWeight);
+                fillHists(s, "DNNSubCat1_option3" , "DNN_maxval_option3", DNNSubCat1_option3, DNN_maxval_option3, EventWeight);
+                fillHists(s, "DNNSubCat2_option3" , "DNN_maxval_option3", DNNSubCat2_option3, DNN_maxval_option3, EventWeight);
+            }
         }
     
         newtree->SetName("syncTree");

@@ -252,9 +252,10 @@ void createHists(){
         double xmax = 1000;
         TString varName = VarNames.at(i);
         TString subCatName = SubCatNames.at(i); 
-        if(varName== "DNN_maxval") {nbins= 20; xmin= 0; xmax= 1;};
-        if(varName== "DNN_maxval_option2") {nbins= 20; xmin= 0; xmax= 1;};
-        if(varName== "DNN_maxval_option3") {nbins= 20; xmin= 0; xmax= 1;};
+        // smaller bins for quantiles
+        if(varName== "DNN_maxval") {nbins= 100; xmin= 0; xmax= 1;};
+        if(varName== "DNN_maxval_option2") {nbins= 100; xmin= 0; xmax= 1;};
+        if(varName== "DNN_maxval_option3") {nbins= 100; xmin= 0; xmax= 1;};
         std::map<Int_t, TString>::iterator it;
         for(it = MapOfChannelMap[subCatName].begin(); it!=MapOfChannelMap[subCatName].end(); it++){
             TString subChannel = it->second;

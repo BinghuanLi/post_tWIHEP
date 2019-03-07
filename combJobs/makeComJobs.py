@@ -19,7 +19,7 @@ varPerCat={
 }
 
 regPerCat={
-"SubCat2l":["2lss","ttWctrl"],
+"SubCat2l":["2lss"],
 "DNNCat":["2lss"],
 "DNNCat_option2":["2lss"],
 "DNNCat_option3":["2lss"],
@@ -37,10 +37,9 @@ def prepareCshJob(shFile,category, dirName):
     subFile      = file(shFile,"w")
     print >> subFile, "#!/bin/bash"
     print >> subFile, "/bin/hostname"
-    print >> subFile, "source /cvmfs/sft.cern.ch/lcg/views/LCG_93/x86_64-slc6-gcc62-opt/setup.sh"
     print >> subFile, "gcc -v"
     print >> subFile, "pwd"
-    print >> subFile, "cd "+dirName
+    print >> subFile, "cd "+dirName+"/"
     print >> subFile, "cmsenv"
     datacardName = "ttH"
     combineCards = "combineCards.py"

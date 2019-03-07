@@ -16,16 +16,19 @@ inputBaseDir = cwd
 outputBaseDir = cwd 
 
 dirsIgnored =  ["ttZctrl"]
+
+Regions = ["SigRegion", "ttWctrl"]
 # key,value to loops
 ListOfCats={
-    #"SubCat2l":{1:"ee_neg",2:"ee_pos",3:"em_bl_neg",4:"em_bl_pos",5:"em_bt_neg",6:"em_bt_pos",7:"mm_bl_neg",8:"mm_bl_pos",9:"mm_bt_neg",10:"mm_bt_pos"},
+    "SubCat2l":{1:"ee_neg",2:"ee_pos",3:"em_bl_neg",4:"em_bl_pos",5:"em_bt_neg",6:"em_bt_pos",7:"mm_bl_neg",8:"mm_bl_pos",9:"mm_bt_neg",10:"mm_bt_pos"},
     "DNNCat":{1:"ttHnode",2:"ttJnode",3:"ttWnode",4:"ttZnode"},
     "DNNCat_option2":{1:"ttHnode",2:"ttJnode",3:"ttWnode",4:"ttZnode"},
     "DNNCat_option3":{1:"ttHnode",2:"ttJnode",3:"ttWnode",4:"ttZnode"},
     }
 
 dirsToCheck = {
-"SubCat2l":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
+#"SubCat2l":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
+"SubCat2l":["SigRegion","JESUpSigRegion","JESDownSigRegion"],
 "DNNCat":["SigRegion","JESUpSigRegion","JESDownSigRegion"],
 "DNNCat_option2":["SigRegion","JESUpSigRegion","JESDownSigRegion"],
 "DNNCat_option3":["SigRegion","JESUpSigRegion","JESDownSigRegion"],
@@ -36,9 +39,9 @@ ignorefiles = ["TTH","H"]
 
 treeNames={
 "SubCat2l":"syncTree",
-"DNNCat":"output_tree",
-"DNNCat_option2":"output_tree",
-"DNNCat_option3":"output_tree",
+"DNNCat":"syncTree",
+"DNNCat_option2":"syncTree",
+"DNNCat_option3":"syncTree",
 }
 
 
@@ -54,17 +57,21 @@ def prepareCshJob(shFile,channel, key, value):
     # i+1 stands for channel, i==SubCat2l, in ttH 2lss
     for dirToCheck in dirsToCheck[key]:
         if dirToCheck in dirsIgnored: continue
+        regName = "SigRegion"
+        for reg in Regions: 
+            if reg in dirToCheck: regName = reg
         if not os.path.exists("Output/"+key+"/"+value[channel]+"/"+dirToCheck):
             os.popen("mkdir -p Output/"+key+"/"+value[channel]+"/"+dirToCheck)
         inputfiles = [f for f in os.listdir("./"+dirToCheck) if "root" in f]
         for inputfile in inputfiles:
             process = inputfile.split(("_"+dirToCheck))[0]
             if process in ignorefiles: continue
-            if process == "data" or process =="Fakes" or process== "Flips":
-                command_run = "root -l -b -q "+frameworkDir+executable+"'"+'("'+process+'","'+dirToCheck+'","Output/'+key+"/"+value[channel]+"/"+dirToCheck+'",true,'+str(channel)+',"'+key+'","'+treeNames[key]+'")'+"'"
+            if process == "data" or process =="Fakes" or process== "Flips" or process=="Data":
+                command_run = "root -l -b -q "+frameworkDir+executable+"'"+'("'+regName+'","'+inputBaseDir+'/BinData/","'+process+'","'+dirToCheck+'","Output/'+key+"/"+value[channel]+"/"+dirToCheck+'",true,'+str(channel)+',"'+key+'","'+treeNames[key]+'")'+"'"
                 print >> subFile, command_run 
             else:
-                command_run = "root -l -b -q "+frameworkDir+executable+"'"+'("'+process+'","'+dirToCheck+'","Output/'+key+"/"+value[channel]+"/"+dirToCheck+'",false,'+str(channel)+',"'+key+'","'+treeNames[key]+'")'+"'"
+                command_run = "root -l -b -q "+frameworkDir+executable+"'"+'("'+regName+'","'+inputBaseDir+'/BinData/","'+process+'","'+dirToCheck+'","Output/'+key+"/"+value[channel]+"/"+dirToCheck+'",false,'+str(channel)+',"'+key+'","'+treeNames[key]+'")'+"'"
+                #command_run = "root -l -b -q "+frameworkDir+executable+"'"+'("'+process+'","'+dirToCheck+'","Output/'+key+"/"+value[channel]+"/"+dirToCheck+'",false,'+str(channel)+',"'+key+'","'+treeNames[key]+'")'+"'"
                 print >> subFile, command_run 
     subprocess.call("chmod 777 "+shFile, shell=True)
 

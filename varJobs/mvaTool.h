@@ -44,7 +44,7 @@
 
 class mvaTool {
  public :
-  mvaTool(Int_t channel = 0, TString Category ="SubCat2l", TString TreeName="syncTree", std::map<Int_t,TString> channelNameMap={{0,"inclusive"},{1,"ee_neg"},{2,"ee_pos"},{3,"em_bl_neg"},{4,"em_bl_pos"},{5,"em_bt_neg"},{6,"em_bt_pos"},{7,"mm_bl_neg"},{8,"mm_bl_pos"},{9,"mm_bt_neg"},{10,"mm_bt_pos"}});
+  mvaTool(TString RegName="SigRegion", TString BinDir="/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplizers/varJobs/BinData/" ,Int_t channel = 0, TString Category ="SubCat2l", TString TreeName="syncTree", std::map<Int_t,TString> channelNameMap={{0,"inclusive"},{1,"ee_neg"},{2,"ee_pos"},{3,"em_bl_neg"},{4,"em_bl_pos"},{5,"em_bt_neg"},{6,"em_bt_pos"},{7,"mm_bl_neg"},{8,"mm_bl_pos"},{9,"mm_bt_neg"},{10,"mm_bt_pos"}});
   //  ~mvaTool();
 
   //void doBothTraining(TString inDir);
@@ -62,6 +62,8 @@ class mvaTool {
   TString treeName;
   std::vector<TString> regionNames;
   std::map<Int_t,TString> ChannelNameMap;
+  TString BinDir;
+  TString RegName;
   /*
   std::map<Int_t,TString> ChannelNameMap = {
       {0,"inclusive"},
@@ -75,6 +77,7 @@ class mvaTool {
   void processMCSample(TString sampleName,TString inDir,TString outDir, float * treevars, bool isData, bool doMVA = true);
   void loopInSample(TString dirName, TString sampleName, float* treevars, bool isData, bool doMVA = true);
   void createHists(TString sampleName);
+  std::vector<double> getBins(TFile* theBinFile, TString HistoName, float minN_total, float minN_sig);
   void fillHists(TString sampleName, float* treevars, double mvaValue, double mvawJets, double theweight, float met, float mtw, int theChannel);
   void saveHists(std::vector<TFile *> outFile);
   void setbTagVars(TChain* theTree); 

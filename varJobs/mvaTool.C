@@ -1,12 +1,14 @@
 #define mvaTool_cxx
 #include "mvaTool.h"
 
-mvaTool::mvaTool(Int_t channel, TString Category, TString TreeName, std::map<Int_t, TString> channelNameMap){
+mvaTool::mvaTool(TString regName, TString binDir, Int_t channel, TString Category, TString TreeName, std::map<Int_t, TString> channelNameMap){
   
   _channel = channel;
   subCat2l = Category;
   treeName = TreeName;
   ChannelNameMap = channelNameMap;
+  BinDir = binDir;
+  RegName = regName;
   //  regionNames = {"3j1t","3j2t","2j1t","4j1t","4j2t"};
   regionNames = {""};
   //Start by initialising the list of variables we will base the MVA on
@@ -593,6 +595,7 @@ void mvaTool::createHists(TString sampleName){
 
     std::vector<TH1F*> histovect;
     std::vector<TH1F*> bdtVect;
+    TFile* theBinFile = new TFile((BinDir+"/OptBin_"+RegName+".root"));
 
 
     //Make a histogram per variable
@@ -657,11 +660,26 @@ void mvaTool::createHists(TString sampleName){
       if(varList[i]== "DNN_maxval") {nbins= 20; xmin= 0; xmax= 1;};
       if(varList[i]== "DNN_maxval_option2") {nbins= 20; xmin= 0; xmax= 1;};
       if(varList[i]== "DNN_maxval_option3") {nbins= 20; xmin= 0; xmax= 1;};
-
-      TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),nbins,xmin,xmax);
-      histo->Sumw2();
-      histovect.push_back(histo);
-    
+      
+      TString histoName = subCat2l+"_"+varList[i]+"_"+ChannelNameMap[_channel];
+      TH1F* h_sig = (TH1F*) theBinFile->Get(histoName+"_Sig");
+      if(h_sig==0){
+        TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),nbins,xmin,xmax);
+        histo->Sumw2();
+        histovect.push_back(histo);
+      }else{
+        std::vector<double> bins;
+        bins.clear();
+        bins=getBins(theBinFile, histoName, 5 , 0.1);
+        nbins = bins.size() - 1;
+        const int binEdge = bins.size();
+        double *binning = new double[binEdge];
+        for(int i=0; i<bins.size(); i++)binning[i]=bins.at(i);
+        TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),nbins,binning);
+        histo->Sumw2();
+        histovect.push_back(histo);
+        delete [] binning;
+      }
     }
     //Add in some plots for met and mtw for control/fitting
     
@@ -901,4 +919,39 @@ void mvaTool::calculateLepTightEffSyst(float Dilep_flav, float& eltight_up, floa
   }
   eltight_down = 1./eltight_up;
   mutight_down = 1./mutight_up;
+};
+
+std::vector<double> mvaTool::getBins(TFile* theBinFile, TString HistoName, float minN_total, float minN_sig){
+    TH1F* h_sig = (TH1F*) theBinFile->Get(HistoName+"_Sig");
+    TH1F* h_bkg =(TH1F*) theBinFile->Get(HistoName+"_Bkg");
+    int binN = h_sig->GetNbinsX();
+    float minValue = h_sig->GetBinLowEdge(1);
+    float maxValue = h_sig->GetBinLowEdge(binN+1);
+    Float_t N_total = h_sig->Integral()+h_bkg->Integral();
+    Int_t Bin = floor(N_total/minN_total);
+    float sig_yield = 0.;
+    std::vector<double> bins;
+    while(Bin>0 && sig_yield < minN_sig){
+        double* XQ = new double[Bin];
+        double* YQ = new double[Bin];
+        double* nYQ = new double[Bin+1];
+        for(int i=0; i<Bin; i++)XQ[i]=Float_t(i+1)/Bin;
+        h_bkg->GetQuantiles(Bin, YQ, XQ);// now YQ contains the low bin edge
+        for(int i=0; i<Bin; i++)nYQ[i+1]=YQ[i];//shift YQ
+        // set first and last bin
+        nYQ[0]=minValue;
+        nYQ[Bin]=maxValue;
+        // reBin h_sig
+        TH1F* hnew;
+        hnew = (TH1F*) h_sig->Rebin(Bin,"hnew", nYQ);
+        sig_yield = hnew->GetMinimum();
+        Bin--;
+        // fill vector
+        bins.clear();
+        for(int i=0; i <(Bin+1); i++)bins.push_back(nYQ[i]);
+        delete [] XQ;
+        delete [] YQ;
+        delete [] nYQ;
+    }
+    return bins;
 };

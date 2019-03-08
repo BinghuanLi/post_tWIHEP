@@ -10,19 +10,41 @@ cwd = os.getcwd()
 frameworkDir = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplizers/combJobs/"
 inputBaseDir = cwd 
 
-Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3"]
+Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"]
 varPerCat={
 "SubCat2l":["Bin2l"],
 "DNNCat":["DNN_maxval"],
 "DNNCat_option2":["DNN_maxval_option2"],
 "DNNCat_option3":["DNN_maxval_option3"],
+"DNNSubCat1_option1":["DNN_maxval"],
+"DNNSubCat1_option2":["DNN_maxval_option2"],
+"DNNSubCat1_option3":["DNN_maxval_option3"],
+"DNNSubCat2_option1":["DNN_maxval"],
+"DNNSubCat2_option2":["DNN_maxval_option2"],
+"DNNSubCat2_option3":["DNN_maxval_option3"],
 }
 
 regPerCat={
+#"SubCat2l":["2lss","ttWctrl"],
+#"DNNCat":["2lss","ttWctrl"],
+#"DNNCat_option2":["2lss","ttWctrl"],
+#"DNNCat_option3":["2lss","ttWctrl"],
+#"DNNSubCat1_option1":["2lss","ttWctrl"],
+#"DNNSubCat1_option2":["2lss","ttWctrl"],
+#"DNNSubCat1_option3":["2lss","ttWctrl"],
+#"DNNSubCat2_option1":["2lss","ttWctrl"],
+#"DNNSubCat2_option2":["2lss","ttWctrl"],
+#"DNNSubCat2_option3":["2lss","ttWctrl"],
 "SubCat2l":["2lss"],
 "DNNCat":["2lss"],
 "DNNCat_option2":["2lss"],
 "DNNCat_option3":["2lss"],
+"DNNSubCat1_option1":["2lss"],
+"DNNSubCat1_option2":["2lss"],
+"DNNSubCat1_option3":["2lss"],
+"DNNSubCat2_option1":["2lss"],
+"DNNSubCat2_option2":["2lss"],
+"DNNSubCat2_option3":["2lss"],
 }
 
 subCats={
@@ -31,6 +53,12 @@ subCats={
 "DNNCat":["ttHnode","ttJnode","ttWnode","ttZnode"],
 "DNNCat_option2":["ttHnode","ttJnode","ttWnode","ttZnode"],
 "DNNCat_option3":["ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNSubCat1_option1":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+"DNNSubCat1_option2":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+"DNNSubCat1_option3":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+"DNNSubCat2_option1":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+"DNNSubCat2_option2":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+"DNNSubCat2_option3":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
 }
 
 def prepareCshJob(shFile,category, dirName):
@@ -64,10 +92,13 @@ else:
 
 for category in Categories:
     for var in varPerCat[category]:
+        fix =""
+        for regionName in regPerCat[category]:
+            fix += regionName
         DirName_datacard = inputBaseDir+"/"+category+"/"+var
-        shFileName = DirName_datacard + "/combineJob.sh"
-        logFileName = DirName_datacard + "/combineJob.log"
-        errorFileName = DirName_datacard + "/combineJob.error"
+        shFileName = DirName_datacard + "/Fit_"+category+"_"+var+"_"+fix+"_Job.sh"
+        logFileName = DirName_datacard + "/Fit_"+category+"_"+var+"_"+fix+"_Job.log"
+        errorFileName = DirName_datacard + "/Fit_"+category+"_"+var+"_"+fix+"_Job.error"
         prepareCshJob(shFileName, category, DirName_datacard)
         print >> allJobFile, "hep_sub "+ shFileName + " -o "+logFileName+ " -e "+errorFileName
 

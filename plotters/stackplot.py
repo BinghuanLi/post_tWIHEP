@@ -28,7 +28,11 @@ import distutils.util
 import math
 import ROOT
 from ROOT import TCanvas, TColor, TGaxis, TH1F, TPad, TString, TFile, TH1, THStack, gROOT, TStyle, TAttFill, TLegend, TGraphAsymmErrors
-from ROOT import kBlack, kBlue, kRed, kCyan, kViolet, kGreen, kOrange, kGray, kPink
+from ROOT import kBlack, kBlue, kRed, kCyan, kViolet, kGreen, kOrange, kGray, kPink, kTRUE
+from ROOT import gROOT
+
+gROOT.SetBatch(kTRUE)
+
 
 usage = 'usage: %prog [options]'
 parser = optparse.OptionParser(usage)
@@ -194,6 +198,7 @@ def readHists():
         if sample == "Data" or sample == "data":
             for p in Process[sample]:
                 rootfile  = read_rootfile(p)
+                if rootfile.IsZombie():continue
                 gROOT.cd()
                 h1 = rootfile.Get(POI+"_"+p)
                 #h1.SetDirectory(0)
@@ -204,6 +209,7 @@ def readHists():
         elif isSignal:
             for p in Process[sample]:
                 rootfile  = read_rootfile(p)
+                if rootfile.IsZombie():continue
                 gROOT.cd()
                 h1 = rootfile.Get(POI+"_"+p)
                 #h1.SetDirectory(0)
@@ -232,6 +238,7 @@ def readHists():
         else:
             for p in Process[sample]:
                 rootfile  = read_rootfile(p)
+                if rootfile.IsZombie():continue
                 gROOT.cd()
                 #print " try to get histogram : " + POI+"_"+p
                 h1 = rootfile.Get(POI+"_"+p)

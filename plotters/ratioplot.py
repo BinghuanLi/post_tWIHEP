@@ -28,7 +28,10 @@ import distutils.util
 import math
 import ROOT
 from ROOT import TCanvas, TColor, TGaxis, TH1F, TPad, TString, TFile, TH1, THStack, gROOT, TStyle, TAttFill, TLegend, TGraphAsymmErrors
-from ROOT import kBlack, kBlue, kRed, kCyan, kViolet, kGreen, kOrange, kGray, kPink
+from ROOT import kBlack, kBlue, kRed, kCyan, kViolet, kGreen, kOrange, kGray, kPink, kTRUE
+from ROOT import gROOT
+
+gROOT.SetBatch(kTRUE)
 
 usage = 'usage: %prog [options]'
 parser = optparse.OptionParser(usage)

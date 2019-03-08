@@ -25,26 +25,26 @@ varPerCat={
 }
 
 regPerCat={
-#"SubCat2l":["2lss","ttWctrl"],
-#"DNNCat":["2lss","ttWctrl"],
-#"DNNCat_option2":["2lss","ttWctrl"],
-#"DNNCat_option3":["2lss","ttWctrl"],
-#"DNNSubCat1_option1":["2lss","ttWctrl"],
-#"DNNSubCat1_option2":["2lss","ttWctrl"],
-#"DNNSubCat1_option3":["2lss","ttWctrl"],
-#"DNNSubCat2_option1":["2lss","ttWctrl"],
-#"DNNSubCat2_option2":["2lss","ttWctrl"],
-#"DNNSubCat2_option3":["2lss","ttWctrl"],
-"SubCat2l":["2lss"],
-"DNNCat":["2lss"],
-"DNNCat_option2":["2lss"],
-"DNNCat_option3":["2lss"],
-"DNNSubCat1_option1":["2lss"],
-"DNNSubCat1_option2":["2lss"],
-"DNNSubCat1_option3":["2lss"],
-"DNNSubCat2_option1":["2lss"],
-"DNNSubCat2_option2":["2lss"],
-"DNNSubCat2_option3":["2lss"],
+"SubCat2l":["2lss","ttWctrl"],
+"DNNCat":["2lss","ttWctrl"],
+"DNNCat_option2":["2lss","ttWctrl"],
+"DNNCat_option3":["2lss","ttWctrl"],
+"DNNSubCat1_option1":["2lss","ttWctrl"],
+"DNNSubCat1_option2":["2lss","ttWctrl"],
+"DNNSubCat1_option3":["2lss","ttWctrl"],
+"DNNSubCat2_option1":["2lss","ttWctrl"],
+"DNNSubCat2_option2":["2lss","ttWctrl"],
+"DNNSubCat2_option3":["2lss","ttWctrl"],
+#"SubCat2l":["2lss"],
+#"DNNCat":["2lss"],
+#"DNNCat_option2":["2lss"],
+#"DNNCat_option3":["2lss"],
+#"DNNSubCat1_option1":["2lss"],
+#"DNNSubCat1_option2":["2lss"],
+#"DNNSubCat1_option3":["2lss"],
+#"DNNSubCat2_option1":["2lss"],
+#"DNNSubCat2_option2":["2lss"],
+#"DNNSubCat2_option3":["2lss"],
 }
 
 subCats={
@@ -74,6 +74,10 @@ def prepareCshJob(shFile,category, dirName):
     for region in regPerCat[category]:
         datacardName += ("_"+region)
         for subCat in subCats[category]:
+            count = 0
+            datacard = open(dirName+"/ttH_"+region+"_"+subCat+".txt",'r').read()
+            count = datacard.count("ttH_"+region+"_"+subCat)
+            if count <3: continue
             combineCards += (" ttH_"+region+"_"+subCat+"=ttH_"+region+"_"+subCat+".txt")
     combineCards += (" > "+datacardName+".txt")
     print >> subFile, combineCards
@@ -94,11 +98,11 @@ for category in Categories:
     for var in varPerCat[category]:
         fix =""
         for regionName in regPerCat[category]:
-            fix += regionName
+            fix += ("_"+regionName)
         DirName_datacard = inputBaseDir+"/"+category+"/"+var
-        shFileName = DirName_datacard + "/Fit_"+category+"_"+var+"_"+fix+"_Job.sh"
-        logFileName = DirName_datacard + "/Fit_"+category+"_"+var+"_"+fix+"_Job.log"
-        errorFileName = DirName_datacard + "/Fit_"+category+"_"+var+"_"+fix+"_Job.error"
+        shFileName = DirName_datacard + "/Fit_"+category+"_"+var+fix+"_Job.sh"
+        logFileName = DirName_datacard + "/Fit_"+category+"_"+var+fix+"_Job.log"
+        errorFileName = DirName_datacard + "/Fit_"+category+"_"+var+fix+"_Job.error"
         prepareCshJob(shFileName, category, DirName_datacard)
         print >> allJobFile, "hep_sub "+ shFileName + " -o "+logFileName+ " -e "+errorFileName
 

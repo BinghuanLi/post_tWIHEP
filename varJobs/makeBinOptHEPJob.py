@@ -15,7 +15,7 @@ frameworkDir = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuf
 inputBaseDir = cwd + "/Raw"
 outputBaseDir = cwd + "/Rootplas" 
 
-dirsToCheck = ["SigRegion","JESUpSigRegion","JESDownSigRegion"]
+dirsToChecks = ["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"]
 
 
 executable =  "BinOptimizer.C"
@@ -45,8 +45,8 @@ else:
     allJobFile.write("#!/bin/bash\n")
 
 for dirToCheck in dirsToChecks:
-  # one job for one dir ~ 20 mins
-  if not os.path.exists(outputBaseDir+"/"+dirToCheck):
+    # one job for one dir ~ 20 mins
+    if not os.path.exists(outputBaseDir+"/"+dirToCheck):
         os.popen("mkdir -p "+outputBaseDir+"/"+dirToCheck)
     shFileName = outputBaseDir + "/" + dirToCheck + "/" +dirToCheck+"Job.sh"
     logFileName = outputBaseDir + "/" + dirToCheck + "/" +dirToCheck+"Job.log"

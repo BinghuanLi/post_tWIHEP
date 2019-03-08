@@ -4,8 +4,8 @@
 #include "Maps.C"
 
 std::vector<TString> samplesAll = {"Rares","EWK","Conv","TTW","TTZ","TTWW","Fakes","FakeSub","Flips","TTH_htt","TTH_hww","TTH_hzz","TTH_hot","TTH_hmm","THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz","Data"};
+//std::vector<TString> samplesAll = {"Rares","THW_hzz"};
 std::vector<TString> samplesJES = {"EWK","Rares","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hot","TTH_hmm","THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz","FakeSub"};
-//std::vector<TString> samples = {"Fakes","TTZ","TTH_htt"};
 // SubCatNames should be mapped to VarNames 1 to 1
 std::vector<TString> SubCatNames = {"DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"};
 std::vector<TString> VarNames = {"DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3"};
@@ -36,6 +36,10 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
         std::cout <<" input file is " << Input << std::endl;
         std::cout <<" output file is " << Output << std::endl;
         TFile *oldfile = new TFile(Input);
+        if(oldfile->IsZombie()){
+            std::cout << " Input deosn't exist " <<std::endl;
+            continue; 
+        }
         TTree *oldtree = (TTree*)oldfile->Get("output_tree");
 
         Long64_t nentries = oldtree->GetEntries(); 

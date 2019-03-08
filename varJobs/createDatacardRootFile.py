@@ -7,9 +7,15 @@ import distutils.util
 
 regPerCat={
 "SubCat2l":["SigRegion","ttWctrl"],
-"DNNCat":["SigRegion"],
-"DNNCat_option2":["SigRegion"],
-"DNNCat_option3":["SigRegion"],
+"DNNCat":["SigRegion","ttWctrl"],
+"DNNCat_option2":["SigRegion","ttWctrl"],
+"DNNCat_option3":["SigRegion","ttWctrl"],
+"DNNSubCat1_option1":["SigRegion","ttWctrl"],
+"DNNSubCat1_option2":["SigRegion","ttWctrl"],
+"DNNSubCat1_option3":["SigRegion","ttWctrl"],
+"DNNSubCat2_option1":["SigRegion","ttWctrl"],
+"DNNSubCat2_option2":["SigRegion","ttWctrl"],
+"DNNSubCat2_option3":["SigRegion","ttWctrl"],
 }
 subCats={
 #"SubCat2l":["inclusive","ee_neg","ee_pos", "em_bl_neg","em_bl_pos","em_bt_neg","em_bt_pos", "mm_bl_neg","mm_bl_pos","mm_bt_neg","mm_bt_pos" ]
@@ -17,6 +23,12 @@ subCats={
 "DNNCat":["ttHnode","ttJnode","ttWnode","ttZnode"],
 "DNNCat_option2":["ttHnode","ttJnode","ttWnode","ttZnode"],
 "DNNCat_option3":["ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNSubCat1_option1":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+"DNNSubCat1_option2":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+"DNNSubCat1_option3":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+"DNNSubCat2_option1":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+"DNNSubCat2_option2":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+"DNNSubCat2_option3":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
 }
 
 histoGramPerSample = {"EWK":"EWK","Conv":"Conv","TTW":"TTW","TTZ":"TTZ","Rares":"Rares","TTWW":"TTWW","Fakes":"Fakes", "Flips":"Flips",
@@ -408,6 +420,9 @@ def makeDatacard(mvaName,regions,channeltr,savePostfix=""):
         for sample in samples:
             #get input file
             inFile = TFile(inDir+channeltr+"/"+region+"/output_"+channeltr+"_"+sample+".root","READ")
+            if inFile.IsZombie():
+                print (inDir+channeltr+"/"+region+"/output_"+channeltr+"_"+sample+".root" + " is Zombie ")
+                continue
             print sample
             #get nominal plot"
             if histoGramPerSample[sample] in nominal.keys():
@@ -479,6 +494,9 @@ def makeDatacard(mvaName,regions,channeltr,savePostfix=""):
                         if sample=="Flips": continue
                         if sample != "Fakes":
                             inFile = TFile(inDir+channeltr+"/"+dirName+region+"/output_"+channeltr+"_"+sample+".root","READ")
+                            if inFile.IsZombie():
+                                print (inDir+channeltr+"/"+dirName+region+"/output_"+channeltr+"_"+sample+".root" + " is Zombie ")
+                                continue
                             print "Processing sample {0}".format(sample)
                             if dirName not in systHists[histoGramPerSample[sample]]:
                                 systHists[histoGramPerSample[sample]][dirName] = inFile.Get(mvaName+sample+"_bWeight_jes_"+ud.lower()).Clone(histoGramPerSample[sample]+"_"+syst+ud)
@@ -487,6 +505,9 @@ def makeDatacard(mvaName,regions,channeltr,savePostfix=""):
                                 systHists[histoGramPerSample[sample]][dirName] = inFile.Get(mvaName+sample+"_bWeight_jes_"+ud.lower()).Clone(histoGramPerSample[sample]+"_"+syst+ud)
                         else:
                             inFile = TFile(inDir+channeltr+"/"+region+"/output_"+channeltr+"_"+sample+".root","READ")
+                            if inFile.IsZombie():
+                                print (inDir+channeltr+"/"+region+"/output_"+channeltr+"_"+sample+".root" + " is Zombie ")
+                                continue
                             print "Processing sample {0}".format(sample)
                             if dirName not in systHists[histoGramPerSample[sample]]:
                                 systHists[histoGramPerSample[sample]][dirName] = inFile.Get(mvaName+sample).Clone(histoGramPerSample[sample]+"_"+syst+ud)
@@ -503,6 +524,9 @@ def makeDatacard(mvaName,regions,channeltr,savePostfix=""):
             inFile = TFile(inDir+channeltr+"/"+region+"/output_"+channeltr+"_"+sample+".root","READ")
             #inFile = TFile(inDir+region+"/output_"+sample+".root","READ")
             #inFileQCD = TFile(inDir+"QCD{0}/output_".format(region)+sample+".root","READ")
+            if inFile.IsZombie():
+                print (inDir+channeltr+"/"+region+"/output_"+channeltr+"_"+sample+".root" + " is Zombie ")
+                continue
             if "data" not in nominal.keys():
                 nominal["data"] = inFile.Get(mvaName+sample).Clone("data_obs")
                 nominal["data"].SetDirectory(0)

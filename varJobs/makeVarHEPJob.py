@@ -24,14 +24,26 @@ ListOfCats={
     "DNNCat":{1:"ttHnode",2:"ttJnode",3:"ttWnode",4:"ttZnode"},
     "DNNCat_option2":{1:"ttHnode",2:"ttJnode",3:"ttWnode",4:"ttZnode"},
     "DNNCat_option3":{1:"ttHnode",2:"ttJnode",3:"ttWnode",4:"ttZnode"},
+    "DNNSubCat1_option1":{1:"ee_neg",2:"ee_pos",3:"em_ttHnode",4:"em_ttJnode",5:"em_ttWnode",6:"em_ttZnode",7:"mm_ttHnode",8:"mm_ttJnode",9:"mm_ttWnode",10:"mm_ttZnode"},
+    "DNNSubCat1_option2":{1:"ee_neg",2:"ee_pos",3:"em_ttHnode",4:"em_ttJnode",5:"em_ttWnode",6:"em_ttZnode",7:"mm_ttHnode",8:"mm_ttJnode",9:"mm_ttWnode",10:"mm_ttZnode"},
+    "DNNSubCat1_option3":{1:"ee_neg",2:"ee_pos",3:"em_ttHnode",4:"em_ttJnode",5:"em_ttWnode",6:"em_ttZnode",7:"mm_ttHnode",8:"mm_ttJnode",9:"mm_ttWnode",10:"mm_ttZnode"},
+    "DNNSubCat2_option1":{1:"ee_ttHnode",2:"ee_ttJnode",3:"ee_ttWnode",4:"ee_ttZnode",5:"em_ttHnode",6:"em_ttJnode",7:"em_ttWnode",8:"em_ttZnode",9:"mm_ttHnode",10:"mm_ttJnode",11:"mm_ttWnode",12:"mm_ttZnode"},
+    "DNNSubCat2_option2":{1:"ee_ttHnode",2:"ee_ttJnode",3:"ee_ttWnode",4:"ee_ttZnode",5:"em_ttHnode",6:"em_ttJnode",7:"em_ttWnode",8:"em_ttZnode",9:"mm_ttHnode",10:"mm_ttJnode",11:"mm_ttWnode",12:"mm_ttZnode"},
+    "DNNSubCat2_option3":{1:"ee_ttHnode",2:"ee_ttJnode",3:"ee_ttWnode",4:"ee_ttZnode",5:"em_ttHnode",6:"em_ttJnode",7:"em_ttWnode",8:"em_ttZnode",9:"mm_ttHnode",10:"mm_ttJnode",11:"mm_ttWnode",12:"mm_ttZnode"}
     }
 
 dirsToCheck = {
-#"SubCat2l":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
-"SubCat2l":["SigRegion","JESUpSigRegion","JESDownSigRegion"],
-"DNNCat":["SigRegion","JESUpSigRegion","JESDownSigRegion"],
-"DNNCat_option2":["SigRegion","JESUpSigRegion","JESDownSigRegion"],
-"DNNCat_option3":["SigRegion","JESUpSigRegion","JESDownSigRegion"],
+"SubCat2l":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
+#"SubCat2l":["SigRegion","JESUpSigRegion","JESDownSigRegion"],
+"DNNCat":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
+"DNNCat_option2":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
+"DNNCat_option3":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
+"DNNSubCat1_option1":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
+"DNNSubCat1_option2":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
+"DNNSubCat1_option3":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
+"DNNSubCat2_option1":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
+"DNNSubCat2_option2":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
+"DNNSubCat2_option3":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"]
 }
 
 ignorefiles = ["TTH","H"]
@@ -42,6 +54,12 @@ treeNames={
 "DNNCat":"syncTree",
 "DNNCat_option2":"syncTree",
 "DNNCat_option3":"syncTree",
+"DNNSubCat1_option1":"syncTree",
+"DNNSubCat1_option2":"syncTree",
+"DNNSubCat1_option3":"syncTree",
+"DNNSubCat2_option1":"syncTree",
+"DNNSubCat2_option2":"syncTree",
+"DNNSubCat2_option3":"syncTree",
 }
 
 

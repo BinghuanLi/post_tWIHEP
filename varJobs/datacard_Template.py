@@ -8,9 +8,15 @@ import distutils.util
 
 regPerCat={
 "SubCat2l":["2lss","ttWctrl"],
-"DNNCat":["2lss"],
-"DNNCat_option2":["2lss"],
-"DNNCat_option3":["2lss"],
+"DNNCat":["2lss","ttWctrl"],
+"DNNCat_option2":["2lss","ttWctrl"],
+"DNNCat_option3":["2lss","ttWctrl"],
+"DNNSubCat1_option1":["2lss","ttWctrl"],
+"DNNSubCat1_option2":["2lss","ttWctrl"],
+"DNNSubCat1_option3":["2lss","ttWctrl"],
+"DNNSubCat2_option1":["2lss","ttWctrl"],
+"DNNSubCat2_option2":["2lss","ttWctrl"],
+"DNNSubCat2_option3":["2lss","ttWctrl"],
 }
 subCats={
 #"SubCat2l":["inclusive","ee_neg","ee_pos", "em_bl_neg","em_bl_pos","em_bt_neg","em_bt_pos", "mm_bl_neg","mm_bl_pos","mm_bt_neg","mm_bt_pos" ]
@@ -18,6 +24,12 @@ subCats={
 "DNNCat":["ttHnode","ttJnode","ttWnode","ttZnode"],
 "DNNCat_option2":["ttHnode","ttJnode","ttWnode","ttZnode"],
 "DNNCat_option3":["ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNSubCat1_option1":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+"DNNSubCat1_option2":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+"DNNSubCat1_option3":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+"DNNSubCat2_option1":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+"DNNSubCat2_option2":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+"DNNSubCat2_option3":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
 }
 
 usage = 'usage: %prog [options]'
@@ -332,8 +344,9 @@ def main():
                 
                 print samplesToLoop 
                 for sample in samplesToLoop:
-                    hist = inputfile.Get(sample)
-                    Rates[sample] = round(hist.Integral(),3)
+                    if inputfile.GetListOfKeys().Contains(sample):
+                        hist = inputfile.Get(sample)
+                        Rates[sample] = round(hist.Integral(),3)
                     if RemoveZeroSample:
                         if Rates[sample] ==0: 
                             print "POI "+ POI +":remove sample "+sample +" because rates[samples] is 0,  integral " + str(Rates[sample] )

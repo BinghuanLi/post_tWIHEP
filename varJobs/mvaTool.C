@@ -671,14 +671,23 @@ void mvaTool::createHists(TString sampleName){
         std::vector<double> bins;
         bins.clear();
         bins=getBins(theBinFile, histoName, 5 , 0.1);
-        nbins = bins.size() - 1;
-        const int binEdge = bins.size();
-        double *binning = new double[binEdge];
-        for(int i=0; i<bins.size(); i++)binning[i]=bins.at(i);
-        TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),nbins,binning);
-        histo->Sumw2();
-        histovect.push_back(histo);
-        delete [] binning;
+        if(bins.size()<=1){
+            TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),nbins,xmin,xmax);
+            histo->Sumw2();
+            histovect.push_back(histo);
+        }else{
+            nbins = bins.size() - 1;
+            const int binEdge = bins.size();
+            double *binning = new double[binEdge];
+            for(int i=0; i<bins.size(); i++)binning[i]=bins.at(i);
+            // set first and last bin
+            binning[0]=xmin;
+            binning[binEdge-1]=xmax;
+            TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),nbins,binning);
+            histo->Sumw2();
+            histovect.push_back(histo);
+            delete [] binning;
+        }
       }
     }
     //Add in some plots for met and mtw for control/fitting
@@ -925,22 +934,18 @@ std::vector<double> mvaTool::getBins(TFile* theBinFile, TString HistoName, float
     TH1F* h_sig = (TH1F*) theBinFile->Get(HistoName+"_Sig");
     TH1F* h_bkg =(TH1F*) theBinFile->Get(HistoName+"_Bkg");
     int binN = h_sig->GetNbinsX();
-    float minValue = h_sig->GetBinLowEdge(1);
-    float maxValue = h_sig->GetBinLowEdge(binN+1);
     Float_t N_total = h_sig->Integral()+h_bkg->Integral();
     Int_t Bin = floor(N_total/minN_total);
+    std::cout << "Nsig, Ntot "<<h_sig->Integral()<<","<<h_bkg->Integral()<<" getBins: initial bin "<< Bin   << std::endl;
     float sig_yield = 0.;
     std::vector<double> bins;
-    while(Bin>0 && sig_yield < minN_sig){
+    while(Bin>1 && sig_yield < minN_sig){
         double* XQ = new double[Bin];
         double* YQ = new double[Bin];
         double* nYQ = new double[Bin+1];
         for(int i=0; i<Bin; i++)XQ[i]=Float_t(i+1)/Bin;
         h_bkg->GetQuantiles(Bin, YQ, XQ);// now YQ contains the low bin edge
         for(int i=0; i<Bin; i++)nYQ[i+1]=YQ[i];//shift YQ
-        // set first and last bin
-        nYQ[0]=minValue;
-        nYQ[Bin]=maxValue;
         // reBin h_sig
         TH1F* hnew;
         hnew = (TH1F*) h_sig->Rebin(Bin,"hnew", nYQ);

@@ -672,7 +672,7 @@ void mvaTool::createHists(TString sampleName){
         bins.clear();
         bins=getBins(theBinFile, histoName, 5 , 0.1);
         if(bins.size()<=1){
-            TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),nbins,xmin,xmax);
+            TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),1,xmin,xmax);
             histo->Sumw2();
             histovect.push_back(histo);
         }else{

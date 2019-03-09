@@ -4,9 +4,9 @@ from ROOT import TString, TFile, TTree
 from threading import Thread
 
 
-Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3"]
+#Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3"]
 
-#Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"]
+Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"]
 varPerCat={
 "SubCat2l":["Bin2l"],
 "DNNCat":["DNN_maxval"],

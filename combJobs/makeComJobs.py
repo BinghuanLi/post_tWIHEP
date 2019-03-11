@@ -68,7 +68,7 @@ def prepareCshJob(shFile,category, dirName):
     print >> subFile, "gcc -v"
     print >> subFile, "pwd"
     print >> subFile, "cd "+dirName+"/"
-    print >> subFile, "cmsenv"
+    print >> subFile, "eval `scramv1 runtime -sh`"
     datacardName = "ttH"
     combineCards = "combineCards.py"
     for region in regPerCat[category]:

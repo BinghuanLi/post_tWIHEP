@@ -950,10 +950,10 @@ std::vector<double> mvaTool::getBins(TFile* theBinFile, TString HistoName, float
         TH1F* hnew;
         hnew = (TH1F*) h_sig->Rebin(Bin,"hnew", nYQ);
         sig_yield = hnew->GetMinimum();
-        Bin--;
         // fill vector
         bins.clear();
         for(int i=0; i <(Bin+1); i++)bins.push_back(nYQ[i]);
+        Bin--;
         delete [] XQ;
         delete [] YQ;
         delete [] nYQ;

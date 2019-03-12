@@ -171,30 +171,39 @@ def readHists(postfix=""):
     dataString =" Data Obs"
     latexString += ("\\begin{frame}\n\\frametitle{"+POI.replace("_","\_")+" "+fit_type.replace("_","\_")+"}\n\\begin{table}[]\n\scalebox{0.38}{\n\\begin{tabular}{"+"l"*(2+len(Channels))+"}\n")
     for channel in Channels:
+        FitDir = inputfile.Get("shapes_"+fit_type)
         directory = "shapes_"+fit_type+"/ttH_"+region+"_"+channel+"/" 
-        h_bkg = inputfile.Get(directory+"total_background").Clone(directory+"total_background")
-        h_totalbkg.Add(h_bkg)
-         
-        h_sig = inputfile.Get(directory+"total_signal").Clone(directory+"total_signal")
-        h_totalsig.Add(h_sig)
-    
-        h_total = inputfile.Get(directory+"total").Clone(directory+"total")
-        h_totalmc.Add(h_total)
-    
-        g_data = inputfile.Get(directory+"data").Clone(directory+"data")
-        h_data = h_total.Clone("h_data")
-        h_data.Reset()
-        TGraphToTH1(h_data, g_data)
-        h_dataobs.Add(h_data)
+        SkipChannel = False
+        if not FitDir.GetListOfKeys().Contains("ttH_"+region+"_"+channel):
+            print " skip " + directory
+            SkipChannel = True
+        else:
+            h_bkg = inputfile.Get(directory+"total_background").Clone(directory+"total_background")
+            h_totalbkg.Add(h_bkg)
+             
+            h_sig = inputfile.Get(directory+"total_signal").Clone(directory+"total_signal")
+            h_totalsig.Add(h_sig)
+        
+            h_total = inputfile.Get(directory+"total").Clone(directory+"total")
+            h_totalmc.Add(h_total)
+        
+            g_data = inputfile.Get(directory+"data").Clone(directory+"data")
+            h_data = h_total.Clone("h_data")
+            h_data.Reset()
+            TGraphToTH1(h_data, g_data)
+            h_dataobs.Add(h_data)
        
+        if not SkipChannel:
+            SM_error = ROOT.Double(0)
+            h_total.IntegralAndError(0,h_total.GetNbinsX(),SM_error)
+            expString += "  &  $ "+str(round(h_total.Integral(),2))+" \\pm "+str(round(SM_error,2))+"$"
         
-        SM_error = ROOT.Double(0)
-        h_total.IntegralAndError(0,h_total.GetNbinsX(),SM_error)
-        expString += "  &  $ "+str(round(h_total.Integral(),2))+" \\pm "+str(round(SM_error,2))+"$"
-        
-        data_error = ROOT.Double(0)
-        h_data.IntegralAndError(0,h_data.GetNbinsX(),data_error)
-        dataString += "  &  $ "+str(round(h_data.Integral(),2))+" \\pm "+str(round(data_error,2))+"$"
+            data_error = ROOT.Double(0)
+            h_data.IntegralAndError(0,h_data.GetNbinsX(),data_error)
+            dataString += "  &  $ "+str(round(h_data.Integral(),2))+" \\pm "+str(round(data_error,2))+"$"
+        else:
+            expString += "  &  - "
+            dataString += "  &  - "
         
          
         latexString += ("& "+channel.replace("_","\_")+"   ")

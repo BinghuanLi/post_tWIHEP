@@ -34,7 +34,7 @@ regPerCat={
 "DNNSubCat2_option3":["2lss"],
 }
 
-dirName = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/CombineStuff/CMSSW_8_1_0/src/HiggsAnalysis/V0307_loose_datacards/"
+dirName = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/CombineStuff/CMSSW_8_1_0/src/HiggsAnalysis/V0307.1_fakeable_datacards/"
 
 blind ="1"
 latex ="1"

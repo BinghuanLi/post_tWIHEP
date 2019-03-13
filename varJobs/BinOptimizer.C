@@ -12,11 +12,12 @@ std::vector<TString> VarNames = {"DNN_maxval","DNN_maxval_option2","DNN_maxval_o
 std::map<TString,std::vector<TH1F*>> theHistoMap;
 
 void createHists();
-void fillHists(TString SampleName, TString SubCatName, TString VarName, Int_t theChannel, float var, float theweight);
+void fillHists(TString SampleName, TString SubCatName, TString VarName, Int_t theChannel, float var, float theweight, Bool_t SigDNN);
 
-void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool_t OptBin = true){
- 
-    TString BinRootFile = OutputDir+"/BinData/OptBin_"+RegionName+".root";
+void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool_t DNNSig = true, Bool_t SaveRoot= true, Bool_t OptBin = true){
+    TString BinDataDir = "BinData_SigDNN"; 
+    if (!DNNSig) BinDataDir = "BinData_SigTTH";
+    TString BinRootFile = OutputDir +"/"+BinDataDir+"/OptBin_"+RegionName+".root";
     std::vector<TString> samples;
     if(RegionName.Contains("JES")){
         OptBin = false;
@@ -66,7 +67,10 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
         oldtree->SetBranchAddress("DNN_maxval_option3", &DNN_maxval_option3);
         oldtree->SetBranchStatus("*", 1);
     
-        TFile *newfile = new TFile(Output,"recreate");
+        TFile *newfile;
+        if(SaveRoot){
+            newfile = new TFile(Output,"recreate");
+        }
         TTree *newtree = new TTree("syncTree","syncTree");
     
         // new flags
@@ -83,6 +87,7 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
         newtree->Branch("DNNSubCat2_option3",&DNNSubCat2_option3);
     
         
+        std::cout << " loop over entries in sample "<< s <<std::endl;
         for (Long64_t i=0;i<nentries; i++) {
             EventWeight=0;
             Dilep_pdgId=0;
@@ -217,36 +222,41 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
             }else{
                 std::cout<< " DNNCat_option3 is : "<<DNNCat_option3 << std::endl;
             }
-            newtree->Fill();
+            if(SaveRoot) newtree->Fill();
             if(OptBin){
-                fillHists(s, "DNNCat" , "DNN_maxval", DNNCat, DNN_maxval, EventWeight);
-                fillHists(s, "DNNSubCat1_option1" , "DNN_maxval", DNNSubCat1_option1, DNN_maxval, EventWeight);
-                fillHists(s, "DNNSubCat2_option1" , "DNN_maxval", DNNSubCat2_option1, DNN_maxval, EventWeight);
-                fillHists(s, "DNNCat_option2" , "DNN_maxval_option2", DNNCat_option2, DNN_maxval_option2, EventWeight);
-                fillHists(s, "DNNSubCat1_option2" , "DNN_maxval_option2", DNNSubCat1_option2, DNN_maxval_option2, EventWeight);
-                fillHists(s, "DNNSubCat2_option2" , "DNN_maxval_option2", DNNSubCat2_option2, DNN_maxval_option2, EventWeight);
-                fillHists(s, "DNNCat_option3" , "DNN_maxval_option3", DNNCat_option3, DNN_maxval_option3, EventWeight);
-                fillHists(s, "DNNSubCat1_option3" , "DNN_maxval_option3", DNNSubCat1_option3, DNN_maxval_option3, EventWeight);
-                fillHists(s, "DNNSubCat2_option3" , "DNN_maxval_option3", DNNSubCat2_option3, DNN_maxval_option3, EventWeight);
+                fillHists(s, "DNNCat" , "DNN_maxval", DNNCat, DNN_maxval, EventWeight, DNNSig);
+                fillHists(s, "DNNSubCat1_option1" , "DNN_maxval", DNNSubCat1_option1, DNN_maxval, EventWeight, DNNSig);
+                fillHists(s, "DNNSubCat2_option1" , "DNN_maxval", DNNSubCat2_option1, DNN_maxval, EventWeight, DNNSig);
+                fillHists(s, "DNNCat_option2" , "DNN_maxval_option2", DNNCat_option2, DNN_maxval_option2, EventWeight, DNNSig);
+                fillHists(s, "DNNSubCat1_option2" , "DNN_maxval_option2", DNNSubCat1_option2, DNN_maxval_option2, EventWeight, DNNSig);
+                fillHists(s, "DNNSubCat2_option2" , "DNN_maxval_option2", DNNSubCat2_option2, DNN_maxval_option2, EventWeight, DNNSig);
+                fillHists(s, "DNNCat_option3" , "DNN_maxval_option3", DNNCat_option3, DNN_maxval_option3, EventWeight, DNNSig);
+                fillHists(s, "DNNSubCat1_option3" , "DNN_maxval_option3", DNNSubCat1_option3, DNN_maxval_option3, EventWeight, DNNSig);
+                fillHists(s, "DNNSubCat2_option3" , "DNN_maxval_option3", DNNSubCat2_option3, DNN_maxval_option3, EventWeight, DNNSig);
             }
         }
-    
-        newtree->SetName("syncTree");
-        newtree->SetTitle("syncTree");
-        //newtree->Write();
-        newtree->AutoSave();
-        gDirectory->Delete("output_tree;*");
+        std::cout << " end of loop over entries in sample "<< s <<std::endl;
+         
+        if(SaveRoot){
+            newtree->SetName("syncTree");
+            newtree->SetTitle("syncTree");
+            //newtree->Write();
+            newtree->AutoSave();
+            gDirectory->Delete("output_tree;*");
+            delete newfile;
+        }
         
         delete oldfile;    
-        delete newfile;
     }
+    std::cout << " end of sample loop " <<std::endl;
     if(OptBin){
+        std::cout << " save bin file " <<std::endl;
         newBinFile->cd();
         for (auto histoMapElement: theHistoMap){
             for (auto hist:histoMapElement.second) hist->Write();
         }
+        delete newBinFile;
     }
-    delete newBinFile;
 }
 
 void createHists(){
@@ -277,7 +287,7 @@ void createHists(){
     }
 }
 
-void fillHists(TString SampleName, TString SubCatName, TString VarName, Int_t theChannel, float var, float theweight){
+void fillHists(TString SampleName, TString SubCatName, TString VarName, Int_t theChannel, float var, float theweight, Bool_t SigDNN){
       int isSig = -1;
       int wgt = 1;
       if(SampleName.Contains("FakeSub"))wgt=-1;
@@ -286,13 +296,13 @@ void fillHists(TString SampleName, TString SubCatName, TString VarName, Int_t th
       else if(SampleName.Contains("TTW") || SampleName.Contains("TTZ") || SampleName.Contains("Fakes") || SampleName.Contains("FakeSub") || SampleName.Contains("Flip") || SampleName.Contains("Conv"))isSig=0;
       // Sig Bkg according to DNN
       TString histoName = SubCatName+"_"+VarName+"_"+MapOfChannelMap[SubCatName][theChannel];
-      if(histoName.Contains("ttJnode")){
+      if(histoName.Contains("ttJnode") && SigDNN){
         if(SampleName.Contains("Fakes") || SampleName.Contains("FakeSub") || SampleName.Contains("Flip") || SampleName.Contains("Conv"))isSig=1;
         else if(SampleName.Contains("TTW") || SampleName.Contains("TTZ") || SampleName.Contains("TTH"))isSig=0;
-      }else if(histoName.Contains("ttWnode")){
+      }else if(histoName.Contains("ttWnode") && SigDNN){
         if(SampleName.Contains("TTW"))isSig=1;
         else if(SampleName.Contains("TTH") || SampleName.Contains("TTZ") || SampleName.Contains("Fakes") || SampleName.Contains("FakeSub") || SampleName.Contains("Flip") || SampleName.Contains("Conv"))isSig=0;
-      }else if(histoName.Contains("ttZnode")){
+      }else if(histoName.Contains("ttZnode") && SigDNN){
         if(SampleName.Contains("TTZ"))isSig=1;
         else if(SampleName.Contains("TTH") || SampleName.Contains("TTW") || SampleName.Contains("Fakes") || SampleName.Contains("FakeSub") || SampleName.Contains("Flip") || SampleName.Contains("Conv"))isSig=0;
       }

@@ -16,7 +16,11 @@ inputBaseDir = cwd + "/Raw"
 outputBaseDir = cwd + "/Rootplas" 
 
 dirsToChecks = ["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"]
+DNNSig = True
+SaveROOT = True
 
+BinDir = "BinData_SigDNN"
+if not DNNSig : BinDir = "BinData_SigTTH"
 
 executable =  "BinOptimizer.C"
 
@@ -27,15 +31,15 @@ def prepareCshJob(shFile,region):
     print >> subFile, "source /cvmfs/sft.cern.ch/lcg/views/LCG_93/x86_64-slc6-gcc62-opt/setup.sh"
     print >> subFile, "gcc -v"
     print >> subFile, "pwd"
-    command_run = "root -l -b -q "+frameworkDir+executable+"'"+'("'+inputBaseDir+'","'+outputBaseDir+'","'+region+'")'+"'"
+    command_run = "root -l -b -q "+frameworkDir+executable+"'"+'("'+inputBaseDir+'","'+outputBaseDir+'","'+region+'",'+str(DNNSig).lower()+","+str(SaveROOT).lower()+")'"
     print >> subFile, command_run 
     subprocess.call("chmod 777 "+shFile, shell=True)
 
 
 if not os.path.exists("Rootplas"):
         os.popen("mkdir Rootplas")
-if not os.path.exists("Rootplas/BinData"):
-        os.popen("mkdir -p Rootplas/BinData")
+if not os.path.exists("Rootplas"+BinDir):
+        os.popen("mkdir -p Rootplas/"+BinDir)
 
 allJobFile = 0
 if os.path.exists(os.getcwd()+"/all.sh"):

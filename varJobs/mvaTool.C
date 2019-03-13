@@ -62,11 +62,9 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t channel, TString Categor
     varList.push_back("dr_leps");
     varList.push_back("mvaOutput_2lss_ttV");
     varList.push_back("mvaOutput_2lss_ttbar");
-    if(subCat2l.Contains("DNN")){
-        varList.push_back("DNN_maxval");
-        varList.push_back("DNN_maxval_option2");
-        varList.push_back("DNN_maxval_option3");
-    }
+    varList.push_back("DNN_maxval");
+    varList.push_back("DNN_maxval_option2");
+    varList.push_back("DNN_maxval_option3");
 
   
   //At some point this should be filled out with the names of the systematics so that we can read those too

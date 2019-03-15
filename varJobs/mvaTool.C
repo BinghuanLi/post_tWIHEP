@@ -65,6 +65,20 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t channel, TString Categor
     varList.push_back("DNN_maxval");
     varList.push_back("DNN_maxval_option2");
     varList.push_back("DNN_maxval_option3");
+    varList.push_back("resTop_BDT");
+    varList.push_back("jet1_pt");
+    varList.push_back("jet2_pt");
+    varList.push_back("jet3_pt");
+    varList.push_back("jet4_pt");
+    varList.push_back("jet1_eta");
+    varList.push_back("jet2_eta");
+    varList.push_back("jet3_eta");
+    varList.push_back("jet4_eta");
+    varList.push_back("lep1_conePt");
+    varList.push_back("lep2_conePt");
+    varList.push_back("lep1_eta");
+    varList.push_back("lep2_eta");
+    varList.push_back("massL");
 
   
   //At some point this should be filled out with the names of the systematics so that we can read those too
@@ -603,8 +617,8 @@ void mvaTool::createHists(TString sampleName){
       double xmax = 1000;
     
       
-      if(varList[i]== "Hj_tagger_resTop") {nbins= 10; xmin= -1.01; xmax= 1.01;};
-      if(varList[i]== "Hj_tagger_hadTop") {nbins= 10; xmin= -1.01; xmax= 1.01;};
+      if(varList[i]== "Hj_tagger_resTop") {nbins= 20; xmin= -1.01; xmax= 1.01;};
+      if(varList[i]== "Hj_tagger_hadTop") {nbins= 20; xmin= -1.01; xmax= 1.01;};
       if(varList[i]== "Dilep_mtWmin") {nbins= 10; xmin= 0; xmax= 200;};
       if(varList[i]== "mT_lep1") {nbins= 10; xmin= 0; xmax= 200;};
       if(varList[i]== "mT_lep2") {nbins= 10; xmin= 0; xmax= 200;};
@@ -653,11 +667,25 @@ void mvaTool::createHists(TString sampleName){
       if(varList[i]== "mbb_loose") {nbins= 20; xmin= 0; xmax= 1000;};
       if(varList[i]== "avg_dr_jet") {nbins= 10; xmin= 0.; xmax= 5.;};
       if(varList[i]== "dr_leps") {nbins= 10; xmin= 0.; xmax= 5;};
-      if(varList[i]== "mvaOutput_2lss_ttV") {nbins= 10; xmin= -1; xmax= 1;};
-      if(varList[i]== "mvaOutput_2lss_ttbar") {nbins= 10; xmin= -1; xmax= 1;};
+      if(varList[i]== "mvaOutput_2lss_ttV") {nbins= 20; xmin= -1; xmax= 1;};
+      if(varList[i]== "mvaOutput_2lss_ttbar") {nbins= 20; xmin= -1; xmax= 1;};
       if(varList[i]== "DNN_maxval") {nbins= 20; xmin= 0; xmax= 1;};
       if(varList[i]== "DNN_maxval_option2") {nbins= 20; xmin= 0; xmax= 1;};
       if(varList[i]== "DNN_maxval_option3") {nbins= 20; xmin= 0; xmax= 1;};
+      if(varList[i]== "resTop_BDT") {nbins= 20; xmin= -1; xmax= 1;};
+      if(varList[i]== "massL") {nbins= 20; xmin= 0; xmax= 400;};
+      if(varList[i]== "jet1_pt") {nbins= 20; xmin= 0; xmax= 800;};
+      if(varList[i]== "jet2_pt") {nbins= 20; xmin= 0; xmax= 600;};
+      if(varList[i]== "jet3_pt") {nbins= 20; xmin= 0; xmax= 400;};
+      if(varList[i]== "jet4_pt") {nbins= 20; xmin= 0; xmax= 200;};
+      if(varList[i]== "jet1_eta") {nbins= 20; xmin= -4; xmax= 4;};
+      if(varList[i]== "jet2_eta") {nbins= 20; xmin= -4; xmax= 4;};
+      if(varList[i]== "jet3_eta") {nbins= 20; xmin= -4; xmax= 4;};
+      if(varList[i]== "jet4_eta") {nbins= 20; xmin= -4; xmax= 4;};
+      if(varList[i]== "lep1_conePt") {nbins= 20; xmin= 0; xmax= 200;};
+      if(varList[i]== "lep2_conePt") {nbins= 20; xmin= 0; xmax= 100;};
+      if(varList[i]== "lep1_eta") {nbins= 20; xmin= -4; xmax= 4;};
+      if(varList[i]== "lep2_eta") {nbins= 20; xmin= -4; xmax= 4;};
       
       TString histoName = subCat2l+"_"+varList[i]+"_"+ChannelNameMap[_channel];
       TH1F* h_sig = (TH1F*) theBinFile->Get(histoName+"_Sig");

@@ -71,11 +71,20 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
     float TriggerSF(0.), TriggerSF_SysUp(0.), TriggerSF_SysDown(0.);
     float FakeRate_m_central(0.), FakeRate_m_up(0.), FakeRate_m_down(0.), FakeRate_m_pt1(0.), FakeRate_m_pt2(0.), FakeRate_m_be1(0.), FakeRate_m_be2(0.), FakeRate_m_QCD(0.), FakeRate_m_TT(0.); 
     float FakeRate_e_central(0.), FakeRate_e_up(0.), FakeRate_e_down(0.), FakeRate_e_pt1(0.), FakeRate_e_pt2(0.), FakeRate_e_be1(0.), FakeRate_e_be2(0.), FakeRate_e_QCD(0.), FakeRate_e_TT(0.); 
+    float TTHLep_2L(0.), massL(0.), n_fakeablesel_tau(0.), mass_dilep(0.), metLD(0.), lep1_TightCharge(0.), lep2_TightCharge(0.), nLepTight(0.);
 
     oldtree->SetBranchAddress("trueInteractions", &rtrueInteractions);
     oldtree->SetBranchAddress("nBestVtx", &rnBestVtx);
     oldtree->SetBranchAddress("Jet_numLoose", &nLooseJet);
     oldtree->SetBranchAddress("HiggsDecay", &HiggsDecay);
+    oldtree->SetBranchAddress("TTHLep_2L", &TTHLep_2L);
+    oldtree->SetBranchAddress("massL", &massL);
+    oldtree->SetBranchAddress("n_fakeablesel_tau", &n_fakeablesel_tau);
+    oldtree->SetBranchAddress("mass_dilep", &mass_dilep);
+    oldtree->SetBranchAddress("metLD", &metLD);
+    oldtree->SetBranchAddress("nLepTight", &nLepTight);
+    oldtree->SetBranchAddress("lep1_TightCharge", &lep1_TightCharge);
+    oldtree->SetBranchAddress("lep2_TightCharge", &lep2_TightCharge);
     oldtree->SetBranchAddress("lep1_pdgId", &lep1_pdgId);
     oldtree->SetBranchAddress("lep2_pdgId", &lep2_pdgId);
     oldtree->SetBranchAddress("lep3_pdgId", &lep3_pdgId);
@@ -149,6 +158,9 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
     float CMS_ttHl17_Clos_e_shape_em(0.), CMS_ttHl17_Clos_e_shape_em_SysUp(0.), CMS_ttHl17_Clos_e_shape_em_SysDown(0.);
     float CMS_ttHl17_Clos_m_shape_mm(0.), CMS_ttHl17_Clos_m_shape_mm_SysUp(0.), CMS_ttHl17_Clos_m_shape_mm_SysDown(0.);
     float CMS_ttHl17_Clos_m_shape_em(0.), CMS_ttHl17_Clos_m_shape_em_SysUp(0.), CMS_ttHl17_Clos_m_shape_em_SysDown(0.);
+    // cut flags 
+    float passTrigCut(0.), passMassllCut(0.), passTauNCut(0.), passZvetoCut(0.), passMetLDCut(0.);
+    float passTightChargeCut(0.), passLepTightNCut(0.), passGenMatchCut(0.);
 
     newtree = oldtree->CloneTree(0);
     newtree->Branch("TrueInteractions", &trueInteractions);
@@ -156,6 +168,14 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
     newtree->Branch("nEvt", &nEvt);
     newtree->Branch("xsec_rwgt", &xsec_rwgt);
     newtree->Branch("nLooseJet", &Jet_numLoose);
+    newtree->Branch("passTrigCut", &passTrigCut);
+    newtree->Branch("passMassllCut", &passMassllCut);
+    newtree->Branch("passTauNCut", &passTauNCut);
+    newtree->Branch("passZvetoCut", &passZvetoCut);
+    newtree->Branch("passMetLDCut", &passMetLDCut);
+    newtree->Branch("passTightChargeCut", &passTightChargeCut);
+    newtree->Branch("passLepTightNCut", &passLepTightNCut);
+    newtree->Branch("passGenMatchCut", &passGenMatchCut);
     newtree->Branch("CMS_ttHl_thu_shape_ttH", &CMS_ttHl_thu_shape_ttH);
     newtree->Branch("CMS_ttHl_thu_shape_ttH_SysUp", &CMS_ttHl_thu_shape_ttH_SysUp);
     newtree->Branch("CMS_ttHl_thu_shape_ttH_SysDown", &CMS_ttHl_thu_shape_ttH_SysDown);
@@ -182,6 +202,14 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
     //newtree = oldtree->CopyTree("jet4_pt>=30");
     
     for (Long64_t i=0;i<nentries; i++) {
+        passTrigCut=0;
+        passMassllCut=0;
+        passTauNCut=0; 
+        passZvetoCut=0;
+        passMetLDCut=0;
+        passTightChargeCut=0; 
+        passLepTightNCut=0;
+        passGenMatchCut=0;
         trueInteractions = -999;
         Jet_numLoose = -999;
         nBestVtx = -999;
@@ -264,10 +292,30 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
                 EventWeight = EventWeight * TriggerSF/old_trigSF;
             }
 
-            
+            // add flags
+            passTrigCut= TTHLep_2L==1 ? 1:0;
+            passMassllCut= massL>=12 ? 1:0;
+            passTauNCut= n_fakeablesel_tau<1 ? 1:0; 
+            passZvetoCut= (mass_dilep>101.2 || mass_dilep<81.2)? 1:0;
+            passMetLDCut= metLD>30 ? 1:0;
+            passTightChargeCut= (lep1_TightCharge ==1 && lep2_TightCharge==1) ? 1:0; 
+            passLepTightNCut= nLepTight<=2 ? 1:0;
+            if(FileName.Contains("TT_PSwgt") || FileName.Contains("TTTo")){// TTJets
+                passGenMatchCut=( firstLep_isMatchRightCharge==1 && secondLep_isMatchRightCharge ==1 )? 0 : 1;
+            }else{
+                passGenMatchCut=( firstLep_isMatchRightCharge==1 && secondLep_isMatchRightCharge ==1 )? 1 : 0;
+            }
             newtree->Fill();
         }
         HiggsDecay =0;
+        TTHLep_2L=0;
+        massL=0;
+        n_fakeablesel_tau=0;
+        mass_dilep=0;
+        metLD=0;
+        nLepTight=0;
+        lep1_TightCharge=0;
+        lep2_TightCharge=0;
         lep1_pdgId=0;
         lep2_pdgId=0;
         lep3_pdgId=0;

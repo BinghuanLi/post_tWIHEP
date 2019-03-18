@@ -634,7 +634,7 @@ void mvaTool::createHists(TString sampleName){
       if(varList[i]== "nBJetMedium") {nbins= 6; xmin= -0.5; xmax= 5.5;};
       if(varList[i]== "MHT") {nbins= 10; xmin= 0; xmax= 400;};
       if(varList[i]== "PFMET") {nbins= 50; xmin= 0; xmax= 500;};
-      if(varList[i]== "metLD") {nbins= 10; xmin= 0; xmax= 2;};
+      if(varList[i]== "metLD") {nbins= 20; xmin= 0; xmax= 200;};
       if(varList[i]== "Dilep_bestMVA") {nbins= 8; xmin= 0.6; xmax= 1;};
       if(varList[i]== "Dilep_worseMVA") {nbins= 8; xmin= 0.6; xmax= 1;};
       if(varList[i]== "Dilep_pdgId") {nbins= 3; xmin= -0.5; xmax= 2.5;};

@@ -10,6 +10,9 @@ cwd = os.getcwd()
 frameworkDir = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplizers/combJobs/"
 inputBaseDir = cwd 
 
+makeImpact = True
+impact = "estimateImpact_expected.sh"
+
 Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"]
 varPerCat={
 "SubCat2l":["Bin2l"],
@@ -84,7 +87,10 @@ def prepareCshJob(shFile,category, dirName):
     ExpLimit = "combine -M AsymptoticLimits "+datacardName + ".txt --expectSignal=1 -t -1 -m 125 > ExpLimit_"+datacardName+".log"
     print >> subFile, ExpLimit
     ExpSig = "combine -M FitDiagnostics --saveShapes --saveWithUncertainties --expectSignal=1 -t -1 "+datacardName + ".txt -m 125 > ExpSigStrength_"+datacardName+".log"
-    print >> subFile, ExpSig 
+    print >> subFile, ExpSig
+    if makeImpact:
+        ExpImpact = "./"+impact+" "+datacardName 
+        print >> subFile, ExpImpact
     subprocess.call("chmod 777 "+shFile, shell=True)
 
 allJobFile = 0
@@ -104,6 +110,9 @@ for category in Categories:
         logFileName = DirName_datacard + "/Fit_"+category+"_"+var+fix+"_Job.log"
         errorFileName = DirName_datacard + "/Fit_"+category+"_"+var+fix+"_Job.error"
         prepareCshJob(shFileName, category, DirName_datacard)
+        command_cp = "cp "+frameworkDir+impact+" "+DirName_datacard
+        print(command_cp)
+        os.system(command_cp)
         print >> allJobFile, "hep_sub "+ shFileName + " -o "+logFileName+ " -e "+errorFileName
 
 allJobFile.close()

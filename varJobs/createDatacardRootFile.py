@@ -23,6 +23,8 @@ subCats={
 "DNNCat":["ttHnode","ttJnode","ttWnode","ttZnode"],
 "DNNCat_option2":["ttHnode","ttJnode","ttWnode","ttZnode"],
 "DNNCat_option3":["ttHnode","ttJnode","ttWnode","ttZnode"],
+#"DNNCat_option2":["ttHnode","ttJnode","ttWnode","ttZnode"],
+#"DNNCat_option3":["ttHnode","ttJnode","ttWnode","ttZnode"],
 "DNNSubCat1_option1":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
 "DNNSubCat1_option2":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
 "DNNSubCat1_option3":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
@@ -66,6 +68,8 @@ includeDataInStack = False
 makeStatBins = False
 
 setNegToZero = True
+
+reScaleBins = False
 
 gROOT.SetBatch()
 
@@ -600,7 +604,8 @@ def makeDatacard(mvaName,regions,channeltr,savePostfix=""):
         #Here make a loop to find out the highest and lowest filled bins so get rid of zero occupancy bins?
     #    for key in nominal.keys():
 
-        (nominal,systHists) = findMaxAndMinBins(nominal,systHists)
+        if reScaleBins:
+            (nominal,systHists) = findMaxAndMinBins(nominal,systHists)
         outFile.cd()
         print sysDirNamesList
         for key in nominal.keys():

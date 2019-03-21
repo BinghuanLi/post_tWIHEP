@@ -79,10 +79,7 @@ Style={"Nominal":1001,"SystUp":1001,"SystDown":1001}
 #]
 
 Nuisances =[
-"CMS_ttHl16_lepEff_muloose","CMS_ttHl16_lepEff_mutight","CMS_ttHl16_lepEff_elloose","CMS_ttHl16_lepEff_eltight",
-"CMS_ttHl_thu_shape_ttW","CMS_ttHl_thu_shape_ttH","CMS_ttHl_thu_shape_ttZ","CMS_scale_j","CMS_ttHl17_btag_LFStats1","CMS_ttHl17_btag_LFStats2",
-"CMS_ttHl16_FRe_pt","CMS_ttHl17_Clos_m_shape",
-"PU"
+"CMS_scale_j"
 ]
 
 header_postfix += "," + SPLIT.replace("_","\_") 

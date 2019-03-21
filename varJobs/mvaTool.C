@@ -707,7 +707,7 @@ void mvaTool::createHists(TString sampleName){
             double *binning = new double[binEdge];
             for(int i=0; i<bins.size(); i++){
                 binning[i]=bins.at(i);
-                std::cout << " print the binEdges " << bins.at(i)<<std::endl;
+                //std::cout << " print the binEdges " << bins.at(i)<<std::endl;
             }
             // set first and last bin
             binning[0]=xmin;
@@ -974,10 +974,10 @@ std::vector<double> mvaTool::getBins(TFile* theBinFile, TString HistoName, float
         double* nYQ = new double[Bin+1];
         for(int i=0; i<Bin; i++)XQ[i]=Float_t(i+1)/Bin;
         h_bkg->GetQuantiles(Bin, YQ, XQ);// now YQ contains the low bin edge
-        std::cout << " Bin Size " << Bin <<" sig_yield "<< sig_yield<<std::endl;
+        //std::cout << " Bin Size " << Bin <<" sig_yield "<< sig_yield<<std::endl;
         for(int i=0; i<Bin; i++){
             nYQ[i+1]=YQ[i];//shift YQ
-            std::cout << " print the Quantiles " << YQ[i]<<std::endl;
+            //std::cout << " print the Quantiles " << YQ[i]<<std::endl;
         }
         // reBin h_sig
         TH1F* hnew;

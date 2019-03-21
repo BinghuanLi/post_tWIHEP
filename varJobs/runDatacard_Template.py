@@ -19,7 +19,7 @@ varPerCat={
 "DNNSubCat2_option3":["DNN_maxval_option3"],
 }
 
-version = "V0307.3.1_fakeable"
+version = "V0307.3.1_loose"
 
 for category in Categories:
     for var in varPerCat[category]:

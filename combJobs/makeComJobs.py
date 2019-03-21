@@ -10,10 +10,11 @@ cwd = os.getcwd()
 frameworkDir = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplizers/combJobs/"
 inputBaseDir = cwd 
 
-makeImpact = True
+makeImpact = False
 impact = "estimateImpact_expected.sh"
 
-Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"]
+#Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"]
+Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat2_option1","DNNSubCat2_option2"]
 varPerCat={
 "SubCat2l":["Bin2l"],
 "DNNCat":["DNN_maxval"],
@@ -100,12 +101,15 @@ else:
     allJobFile = open(os.getcwd()+"/all.sh","w")
     allJobFile.write("#!/bin/bash\n")
 
-for category in Categories:
+dirsToCheck = [f for f in os.listdir(".") if os.path.isdir(f)]
+
+for dirToCheck in dirsToCheck:
+  for category in Categories:
     for var in varPerCat[category]:
         fix =""
         for regionName in regPerCat[category]:
             fix += ("_"+regionName)
-        DirName_datacard = inputBaseDir+"/"+category+"/"+var
+        DirName_datacard = inputBaseDir+"/"+dirToCheck+"/"+category+"/"+var
         shFileName = DirName_datacard + "/Fit_"+category+"_"+var+fix+"_Job.sh"
         logFileName = DirName_datacard + "/Fit_"+category+"_"+var+fix+"_Job.log"
         errorFileName = DirName_datacard + "/Fit_"+category+"_"+var+fix+"_Job.error"

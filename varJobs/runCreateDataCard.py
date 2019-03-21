@@ -5,8 +5,8 @@ from threading import Thread
 
 
 
-Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"]
-#Categories=["DNNCat_option2"]
+#Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"]
+Categories=["DNNCat_option2","DNNCat"]
 varPerCat={
 "SubCat2l":["Bin2l"],
 "DNNCat":["DNN_maxval"],
@@ -21,8 +21,8 @@ varPerCat={
 "DNNSubCat2_option3":["DNN_maxval_option3"],
 }
 
-version = "V0307.3.1_fakeable"
-inputDir = "Output_V0307.3"
+version = "V0307.2.1_fakeable"
+inputDir = "Output_V0307.2"
 
 for category in Categories:
     if not os.path.exists(inputDir+"/"+category+"/Systs2lss"):

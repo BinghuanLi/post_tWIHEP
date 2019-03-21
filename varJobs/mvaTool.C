@@ -663,9 +663,9 @@ void mvaTool::createHists(TString sampleName){
       if(varList[i]== "lepSF") {nbins= 30; xmin= 0.6; xmax= 1.4;};
       if(varList[i]== "leadLep_BDT") {nbins= 10; xmin= -1; xmax= 1;};
       if(varList[i]== "secondLep_BDT") {nbins= 10; xmin= -1; xmax= 1;};
-      if(varList[i]== "mbb") {nbins= 20; xmin= 0; xmax= 1000;};
-      if(varList[i]== "mbb_loose") {nbins= 20; xmin= 0; xmax= 1000;};
-      if(varList[i]== "avg_dr_jet") {nbins= 10; xmin= 0.; xmax= 5.;};
+      if(varList[i]== "mbb") {nbins= 50; xmin= 0; xmax= 500;};
+      if(varList[i]== "mbb_loose") {nbins= 50; xmin= 0; xmax= 500;};
+      if(varList[i]== "avg_dr_jet") {nbins= 50; xmin= 0.; xmax= 10.;};
       if(varList[i]== "dr_leps") {nbins= 10; xmin= 0.; xmax= 5;};
       if(varList[i]== "mvaOutput_2lss_ttV") {nbins= 20; xmin= -1; xmax= 1;};
       if(varList[i]== "mvaOutput_2lss_ttbar") {nbins= 20; xmin= -1; xmax= 1;};
@@ -705,7 +705,10 @@ void mvaTool::createHists(TString sampleName){
             nbins = bins.size() - 1;
             const int binEdge = bins.size();
             double *binning = new double[binEdge];
-            for(int i=0; i<bins.size(); i++)binning[i]=bins.at(i);
+            for(int i=0; i<bins.size(); i++){
+                binning[i]=bins.at(i);
+                std::cout << " print the binEdges " << bins.at(i)<<std::endl;
+            }
             // set first and last bin
             binning[0]=xmin;
             binning[binEdge-1]=xmax;
@@ -971,7 +974,11 @@ std::vector<double> mvaTool::getBins(TFile* theBinFile, TString HistoName, float
         double* nYQ = new double[Bin+1];
         for(int i=0; i<Bin; i++)XQ[i]=Float_t(i+1)/Bin;
         h_bkg->GetQuantiles(Bin, YQ, XQ);// now YQ contains the low bin edge
-        for(int i=0; i<Bin; i++)nYQ[i+1]=YQ[i];//shift YQ
+        std::cout << " Bin Size " << Bin <<" sig_yield "<< sig_yield<<std::endl;
+        for(int i=0; i<Bin; i++){
+            nYQ[i+1]=YQ[i];//shift YQ
+            std::cout << " print the Quantiles " << YQ[i]<<std::endl;
+        }
         // reBin h_sig
         TH1F* hnew;
         hnew = (TH1F*) h_sig->Rebin(Bin,"hnew", nYQ);

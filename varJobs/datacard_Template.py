@@ -37,6 +37,8 @@ parser = optparse.OptionParser(usage)
 parser.add_option('-v', '--var',        dest='variable'  ,      help='variable name of final discriminator',      default='Bin2l',        type='string')
 parser.add_option('-i', '--inDir',        dest='inDir'  ,      help='inDir of histograms',      default='V0212_datacards/',        type='string')
 parser.add_option('-c', '--cat',        dest='category'  ,      help='type of channels',      default="SubCat2l",        type='string')
+parser.add_option('-s', '--syst', action='store_false',        dest='SystUnc'  ,      help='to exclude systematics',      default=True)
+parser.add_option('-m', '--mc', action='store_false',        dest='StatUnc'  ,      help='to exclude stats',      default=True)
 
 (opt, args) = parser.parse_args()
 
@@ -44,7 +46,8 @@ parser.add_option('-c', '--cat',        dest='category'  ,      help='type of ch
 inDir = opt.inDir
 variableName = opt.variable
 cat_str = opt.category
-
+SystUnc = opt.SystUnc
+StatUnc = opt.StatUnc
 
 
 AutoMC = True
@@ -202,6 +205,8 @@ ShapeSysts={
 "CMS_ttHl17_Clos_e_bt_norm":["Fakes"],#
 "CMS_ttHl17_Clos_m_bt_norm":["Fakes"],#
 }
+
+
 
 def read_rootfile(samplename, dirOfRootpla):
     ''' read a root file '''
@@ -394,17 +399,19 @@ def main():
                 print >> TemplateFile, "##------------------------------------"
                 
                 # write each systematics
-                for syst in Nuisances:
-                    writecard(TemplateFile, samplesToUse , syst, channel, inputfile, ErrorLog)
+                if SystUnc:
+                    for syst in Nuisances:
+                        writecard(TemplateFile, samplesToUse , syst, channel, inputfile, ErrorLog)
              
-                if not AutoMC: 
-                    # create statsBin list 
-                    binStatsList = createStatsList(region, samplesToUse, channel, numberOfBins[POI], inputfile)
+                if StatUnc:
+                    if not AutoMC: 
+                        # create statsBin list 
+                        binStatsList = createStatsList(region, samplesToUse, channel, numberOfBins[POI], inputfile)
                 
-                    # write each BinStats
-                    writeStatsCard(TemplateFile, samplesToUse , binStatsList)
-                else:
-                    print >> TemplateFile, "* autoMCStats 10 "
+                        # write each BinStats
+                        writeStatsCard(TemplateFile, samplesToUse , binStatsList)
+                    else:
+                        print >> TemplateFile, "* autoMCStats 10 "
                 
 
 main()

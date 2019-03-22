@@ -10,11 +10,14 @@ cwd = os.getcwd()
 frameworkDir = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplizers/combJobs/"
 inputBaseDir = cwd 
 
-makeImpact = False
+makeImpact = True
 impact = "estimateImpact_expected.sh"
 
-#Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"]
-Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat2_option1","DNNSubCat2_option2"]
+dirsToCheck = [f for f in os.listdir(".") if os.path.isdir(f)]
+dirsToIgnore = ["V0321_loose_datacards_All","V0321_loose_datacards_NoSyst","V0321_loose_datacards_NoStat"]
+
+Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"]
+#Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat2_option1","DNNSubCat2_option2"]
 varPerCat={
 "SubCat2l":["Bin2l"],
 "DNNCat":["DNN_maxval"],
@@ -73,6 +76,9 @@ def prepareCshJob(shFile,category, dirName):
     print >> subFile, "pwd"
     print >> subFile, "cd "+dirName+"/"
     print >> subFile, "eval `scramv1 runtime -sh`"
+    SystFix =""
+    if "None" in dirName:
+        SystFix = " -S 0 "
     datacardName = "ttH"
     combineCards = "combineCards.py"
     for region in regPerCat[category]:
@@ -85,9 +91,9 @@ def prepareCshJob(shFile,category, dirName):
             combineCards += (" ttH_"+region+"_"+subCat+"=ttH_"+region+"_"+subCat+".txt")
     combineCards += (" > "+datacardName+".txt")
     print >> subFile, combineCards
-    ExpLimit = "combine -M AsymptoticLimits "+datacardName + ".txt --expectSignal=1 -t -1 -m 125 > ExpLimit_"+datacardName+".log"
+    ExpLimit = "combine -M AsymptoticLimits "+datacardName + ".txt --expectSignal=1 -t -1 -m 125 "+SystFix+"> ExpLimit_"+datacardName+".log"
     print >> subFile, ExpLimit
-    ExpSig = "combine -M FitDiagnostics --saveShapes --saveWithUncertainties --expectSignal=1 -t -1 "+datacardName + ".txt -m 125 > ExpSigStrength_"+datacardName+".log"
+    ExpSig = "combine -M FitDiagnostics --saveShapes --saveWithUncertainties --expectSignal=1 -t -1 "+datacardName + ".txt -m 125 "+SystFix+"> ExpSigStrength_"+datacardName+".log"
     print >> subFile, ExpSig
     if makeImpact:
         ExpImpact = "./"+impact+" "+datacardName 
@@ -101,9 +107,9 @@ else:
     allJobFile = open(os.getcwd()+"/all.sh","w")
     allJobFile.write("#!/bin/bash\n")
 
-dirsToCheck = [f for f in os.listdir(".") if os.path.isdir(f)]
 
 for dirToCheck in dirsToCheck:
+  if dirToCheck in dirsToIgnore: continue
   for category in Categories:
     for var in varPerCat[category]:
         fix =""

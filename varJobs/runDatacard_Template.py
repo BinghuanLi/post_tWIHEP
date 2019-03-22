@@ -7,11 +7,13 @@ from threading import Thread
 #Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"]
 Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat2_option1","DNNSubCat2_option2"]
 #Categories=["DNNCat_option2"]
-Uncs = ["All","NoStat","NoSyst","None"]
+#Uncs = ["All","NoStat","NoSyst","None","NoShape"]
+Uncs = ["NoShape"]
 Opts = {
 "All":" ",
 "NoStat":" -m ",
 "NoSyst":" -s ",
+"NoShape":" -t ",
 "None":" -s -m ",
 }
 varPerCat={
@@ -27,7 +29,7 @@ varPerCat={
 "DNNSubCat2_option3":["DNN_maxval_option3"],
 }
 
-version = "V0319_loose"
+version = "V0321_loose"
 
 
 for Unc in Uncs:

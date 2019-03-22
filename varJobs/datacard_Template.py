@@ -39,6 +39,7 @@ parser.add_option('-i', '--inDir',        dest='inDir'  ,      help='inDir of hi
 parser.add_option('-c', '--cat',        dest='category'  ,      help='type of channels',      default="SubCat2l",        type='string')
 parser.add_option('-s', '--syst', action='store_false',        dest='SystUnc'  ,      help='to exclude systematics',      default=True)
 parser.add_option('-m', '--mc', action='store_false',        dest='StatUnc'  ,      help='to exclude stats',      default=True)
+parser.add_option('-t', '--template', action='store_false',        dest='ShapeUnc'  ,      help='to exclude shapes',      default=True)
 
 (opt, args) = parser.parse_args()
 
@@ -48,6 +49,7 @@ variableName = opt.variable
 cat_str = opt.category
 SystUnc = opt.SystUnc
 StatUnc = opt.StatUnc
+ShapeUnc = opt.ShapeUnc
 
 
 AutoMC = True
@@ -121,6 +123,9 @@ systTypes={
 #"CMS_ttHl16_lepEff_elloose","CMS_ttHl16_lepEff_muloose"
 ]
 }
+
+if not ShapeUnc:
+    Nuisances = ["QCDscale_ttW","pdf_Higgs_ttH","pdf_qqbar","QCDscale_ttZ","lumi_13TeV_2017","pdf_gg","QCDscale_ttH","CMS_ttHl_QF","CMS_ttHl_EWK_4j","CMS_ttHl_Convs","CMS_ttHl_Rares","QCDscale_ttWW","pdf_ttWW","BR_htt","BR_hvv","BR_hzz","QCDscale_tHq","QCDscale_tHW","pdf_qg"]
 
 channelSyst={
 #"CMS_ttHl16_lepEff_muloose":{"mm":"1.040","em":"1.020","ee":"-"}, #

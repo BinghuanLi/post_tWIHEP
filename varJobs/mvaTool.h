@@ -64,6 +64,7 @@ class mvaTool {
   std::map<Int_t,TString> ChannelNameMap;
   TString BinDir;
   TString RegName;
+  TFile* theBinFile;
   /*
   std::map<Int_t,TString> ChannelNameMap = {
       {0,"inclusive"},

@@ -9,6 +9,7 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t channel, TString Categor
   ChannelNameMap = channelNameMap;
   BinDir = binDir;
   RegName = regName;
+  theBinFile = new TFile((binDir+"/OptBin_"+regName+".root"));
   //  regionNames = {"3j1t","3j2t","2j1t","4j1t","4j2t"};
   regionNames = {""};
   //Start by initialising the list of variables we will base the MVA on
@@ -607,7 +608,6 @@ void mvaTool::createHists(TString sampleName){
 
     std::vector<TH1F*> histovect;
     std::vector<TH1F*> bdtVect;
-    TFile* theBinFile = new TFile((BinDir+"/OptBin_"+RegName+".root"));
 
 
     //Make a histogram per variable

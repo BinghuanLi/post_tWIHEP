@@ -628,7 +628,7 @@ void mvaTool::createHists(TString sampleName){
       if(varList[i]== "leadLep_corrpt") {nbins= 10; xmin= 0; xmax= 200;};
       if(varList[i]== "secondLep_corrpt") {nbins= 10; xmin= 0; xmax= 100;};
       if(varList[i]== "massll") {nbins= 10; xmin= 0; xmax= 400;};
-      if(varList[i]== "Sum2lCharge") {nbins= 2; xmin= -2; xmax= 2;};
+      if(varList[i]== "Sum2lCharge") {nbins= 5; xmin= -2.5; xmax= 2.5;};
       if(varList[i]== "n_presel_jet") {nbins= 4; xmin= 3.5; xmax= 7.5;};
       if(varList[i]== "nBJetLoose") {nbins= 6; xmin= -0.5; xmax= 5.5;};
       if(varList[i]== "nBJetMedium") {nbins= 6; xmin= -0.5; xmax= 5.5;};
@@ -637,7 +637,7 @@ void mvaTool::createHists(TString sampleName){
       if(varList[i]== "metLD") {nbins= 20; xmin= 0; xmax= 200;};
       if(varList[i]== "Dilep_bestMVA") {nbins= 8; xmin= 0.6; xmax= 1;};
       if(varList[i]== "Dilep_worseMVA") {nbins= 8; xmin= 0.6; xmax= 1;};
-      if(varList[i]== "Dilep_pdgId") {nbins= 3; xmin= -0.5; xmax= 2.5;};
+      if(varList[i]== "Dilep_pdgId") {nbins= 5; xmin= -0.5; xmax= 4.5;};
       if(varList[i]== "Dilep_htllv") {nbins= 10; xmin= 0; xmax= 600;};
       if(varList[i]== "Dilep_nTight") {nbins= 3; xmin= -0.5; xmax= 2.5;};
       if(varList[i]== "HighestJetCSV") {nbins= 15; xmin= 0; xmax= 1;};

@@ -26,10 +26,10 @@ vector<TString> ErrorTypes = {"All","NoSyst","NoShape","NoStat","None"};
 std::map<string,int> syst_color = {{"m2sig",4},{"m1sig",8},{"exp",1},{"p1sig",8},{"p2sig",4}};
 std::map<string,int> syst_mark = {{"m2sig",23},{"m1sig",23},{"exp",8},{"p1sig",22},{"p2sig",22}};
 
-string region = "2lss_ttWctrl";
-vector<TString> Versions = {"V0307.2.1_fakeable","V0319_loose","V0321_loose"};
-//string region = "2lss";
-//vector<TString> Versions = {"V0321_loose_regBin"};
+//string region = "2lss_ttWctrl";
+//vector<TString> Versions = {"V0307.2.1_fakeable","V0319_loose","V0321_loose"};
+string region = "2lss";
+vector<TString> Versions = {"V0321_loose_regBin"};
 vector<TString> CatNames = {"DNNCat","DNNCat_option2","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat2_option1","DNNSubCat2_option2"};
 std::map<string,string> Version_TR = {{"V0307.2.1_fakeable","TR1"},{"V0319_loose","TR2"},{"V0321_loose","TR3"},{"V0321_loose_regBin","TR4"}};
 std::map<string,string> CatName_OptCat = {{"DNNCat","Opt1CatA"},{"DNNCat_option2","Opt2CatA"},{"DNNSubCat1_option1","Opt1CatB"},{"DNNSubCat1_option2","Opt2CatB"},{"DNNSubCat2_option1","Opt1CatC"},{"DNNSubCat2_option2","Opt2CatC"}};
@@ -70,7 +70,7 @@ void plotLimits()
             limit_p2sig = -1.;
             //label = "";
             readTree->GetEntry(i);
-            if(label->Contains("SubCat2l") && limit_2DBDT.size()==0){
+            if(label->Contains(Versions[0]+"_SubCat2l_"+region) && limit_2DBDT.size()==0){
                 limit_2DBDT.push_back(limit_m2sig);
                 limit_2DBDT.push_back(limit_m1sig);
                 limit_2DBDT.push_back(limit_exp);

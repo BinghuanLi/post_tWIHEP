@@ -58,14 +58,15 @@ header_postfix = " 2lss "
 if region =="ttWctrl": header_postfix = " ttWctrl "
 
 
-Samples=["TTH","H","TTW+TTWW","TTZ","EWK","Rares","Conv","Fakes","Flips"]
+#Samples=["TTH","H","TTW+TTWW","TTZ","EWK","Rares","Conv","Fakes","Flips"]
+Samples=["TTH","TTW","TTZ","Fakes+Flips"]
 Process={
     "TTH":["TTH_hww","TTH_hzz","TTH_htt","TTH_hmm","TTH_hot"],
     "H":["THW_hww","THW_hzz","THW_htt","THQ_hww","THQ_hzz","THQ_htt"],
-    "TTZ":["TTZ"],"TTW+TTWW":["TTW","TTWW"],"Conv":["Conv"],"EWK":["EWK"],"Rares":["Rares"],"Fakes":["Fakes","FakeSub"],"Flips":["Flips"],"Data":["Data"]
+    "TTZ":["TTZ"],"TTW+TTWW":["TTW","TTWW"],"Conv":["Conv"],"EWK":["EWK"],"Rares":["Rares"],"Fakes":["Fakes","FakeSub"],"Flips":["Flips"],"Data":["Data"],"TTW":["TTW"],"Fakes+Flips":["Fakes","FakeSub","Flips"],
     }
-Color={"TTH":kRed,"H":kPink-4,"TTZ":kGreen,"TTW+TTWW":kGreen+3,"Conv":kOrange,"EWK":kViolet,"Rares":kCyan,"Fakes":kGray,"Flips":kBlack}
-Style={"TTH":1001,"H":1001,"TTZ":1001,"TTW+TTWW":1001,"Conv":1001,"EWK":1001,"Rares":1001,"Fakes":1001,"Flips":1001}
+Color={"TTH":kRed,"H":kPink-4,"TTZ":kGreen,"TTW+TTWW":kGreen+3,"Conv":kOrange,"EWK":kViolet,"Rares":kCyan,"Fakes":kGray,"Flips":kBlack,"TTW":kBlue,"Fakes+Flips":kBlack}
+Style={"TTH":1001,"H":1001,"TTZ":1001,"TTW+TTWW":1001,"Conv":1001,"EWK":1001,"Rares":1001,"Fakes":1001,"Flips":1001,"TTW":1001,"Fakes+Flips":1001}
 
 subCats={
 "SubCat2l":["inclusive","ee_neg","ee_pos", "em_bl_neg","em_bl_pos","em_bt_neg","em_bt_pos", "mm_bl_neg","mm_bl_pos","mm_bt_neg","mm_bt_pos" ],
@@ -181,7 +182,8 @@ def readHists():
                 gROOT.cd()
                 h1 = rootfile.Get(POI+"_"+p)
                 #h1.SetDirectory(0)
-                if p == "FakeSub" and sample == "Fakes":
+                #if p == "FakeSub" and sample == "Fakes":
+                if p == "FakeSub":
                     h_totalsig.Add(h1, -1)
                     hist.Add(h1, -1)
                 else:
@@ -204,7 +206,8 @@ def readHists():
                 #print " try to get histogram : " + POI+"_"+p
                 h1 = rootfile.Get(POI+"_"+p)
                 h1.SetDirectory(0)
-                if p == "FakeSub" and sample == "Fakes":
+                #if p == "FakeSub" and sample == "Fakes":
+                if p == "FakeSub":
                     h_totalbkg.Add(h1, -1)
                     hist.Add(h1, -1)
                 else:

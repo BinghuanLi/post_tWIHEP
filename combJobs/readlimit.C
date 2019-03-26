@@ -52,20 +52,20 @@ void readlimit()
     for(auto ErrorType : ErrorTypes){
         TString newTreeName = "limit_"+ErrorType;
         TTree* newTree = new TTree(newTreeName, newTreeName);
-        std::vector<double>* limit_m2sig=new std::vector<double>;
-        std::vector<double>* limit_m1sig= new std::vector<double>;
-        std::vector<double>* limit_exp= new std::vector<double>;
-        std::vector<double>* limit_p1sig= new std::vector<double>;
-        std::vector<double>* limit_p2sig= new std::vector<double>;
-        std::vector<double>* limit_obs= new std::vector<double>;
-        std::vector<TString>* label= new std::vector<TString>;
-        newTree->Branch("limit_m2sig",limit_m2sig);
-        newTree->Branch("limit_m1sig",limit_m1sig);
-        newTree->Branch("limit_exp",limit_exp);
-        newTree->Branch("limit_p1sig",limit_p1sig);
-        newTree->Branch("limit_p2sig",limit_p2sig);
-        newTree->Branch("limit_obs",limit_obs);
-        newTree->Branch("label",label);
+        double limit_m2sig;
+        double limit_m1sig;
+        double limit_exp;
+        double limit_p1sig;
+        double limit_p2sig;
+        double limit_obs;
+        TString label;
+        newTree->Branch("limit_m2sig",&limit_m2sig);
+        newTree->Branch("limit_m1sig",&limit_m1sig);
+        newTree->Branch("limit_exp",&limit_exp);
+        newTree->Branch("limit_p1sig",&limit_p1sig);
+        newTree->Branch("limit_p2sig",&limit_p2sig);
+        newTree->Branch("limit_obs",&limit_obs);
+        newTree->Branch("label",&label);
         
         // loop over Version
         for(auto Version : Versions){
@@ -85,25 +85,25 @@ void readlimit()
                     limit = -1;
                     limitTree->GetEntry(i);
                     if(i==0){
-                        limit_m2sig->push_back(limit);
+                        limit_m2sig = limit;
                         TString Region = Version_Region[Version.Data()];
                         TString TR_Opt_Cat = Version+"_"+CatName+"_"+Region;
-                        label->push_back(TR_Opt_Cat);
+                        label = TR_Opt_Cat;
                         std::cout<< " save " << oldFileName << std::endl;
                     }
-                    else if(i==1)limit_m1sig->push_back(limit);
-                    else if(i==2)limit_exp->push_back(limit);
-                    else if(i==3)limit_p1sig->push_back(limit);
-                    else if(i==4)limit_p2sig->push_back(limit);
-                    else if(i==5)limit_obs->push_back(limit);
+                    else if(i==1)limit_m1sig = limit;
+                    else if(i==2)limit_exp = limit;
+                    else if(i==3)limit_p1sig = limit;
+                    else if(i==4)limit_p2sig = limit;
+                    else if(i==5)limit_obs = limit;
                     else{
                         std::cout << " limit Tree Error " << std::endl;
                     }
                 }
+                newTree->Fill();
             }// end loop over CatName
         }// end loop over Version
         newFile->cd();
-        newTree->Fill();
         newTree->Write();
     }// end loop over ErrorType
 }

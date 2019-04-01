@@ -7,11 +7,12 @@ std::vector<TString> samplesAll = {"Rares","EWK","Conv","TTW","TTZ","TTWW","Fake
 //std::vector<TString> samplesAll = {"Rares","THW_hzz"};
 std::vector<TString> samplesJES = {"EWK","Rares","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hot","TTH_hmm","THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz","FakeSub"};
 // SubCatNames should be mapped to VarNames 1 to 1
-std::vector<TString> SubCatNames = {"DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"};
-std::vector<TString> VarNames = {"DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3"};
+std::vector<TString> SubCatNames = {"DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3","DNNSubCat3_option1","DNNSubCat3_option2","DNNSubCat3_option3","DNNSubCat4_option1","DNNSubCat4_option2","DNNSubCat4_option3"};
+std::vector<TString> VarNames = {"DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3"};
 //std::vector<TString> SubCatNames = {"DNNCat","DNNCat_option2","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat2_option1","DNNSubCat2_option2"};
 //std::vector<TString> VarNames = {"DNN_maxval","DNN_maxval_option2","DNN_maxval","DNN_maxval_option2","DNN_maxval","DNN_maxval_option2"};
 std::map<TString,std::vector<TH1F*>> theHistoMap;
+TString RegName;
 
 void createHists();
 void fillHists(TString SampleName, TString SubCatName, TString VarName, Int_t theChannel, float var, float theweight, Bool_t SigDNN);
@@ -19,6 +20,14 @@ void fillHists(TString SampleName, TString SubCatName, TString VarName, Int_t th
 void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool_t DNNSig = true, Bool_t SaveRoot= true, Bool_t OptBin = true){
     TString BinDataDir = "BinData_SigDNN"; 
     if (!DNNSig) BinDataDir = "BinData_SigTTH";
+    if(RegionName.Contains("ttWctrl")){
+        RegName = "ttWctrl";
+    }else if(RegionName.Contains("SigRegion")){
+        RegName = "SigRegion";
+    }else{
+        std::cout<< "ERROR: RegionName is "<<RegionName<< " RegionName must contains ttWctrl or SigRegion "<<std::endl;
+        return;
+    }
     TString BinRootFile = OutputDir +"/"+BinDataDir+"/OptBin_"+RegionName+".root";
     std::vector<TString> samples;
     if(RegionName.Contains("JES")){
@@ -80,6 +89,10 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
         float DNNSubCat1_option1(0.), DNNSubCat1_option2(0.), DNNSubCat1_option3(0.);
         // ee->DNN; em->DNN; mm->DNN
         float DNNSubCat2_option1(0.), DNNSubCat2_option2(0.), DNNSubCat2_option3(0.);
+        // ttHnode -> loose/tight; ttWnode; ttJnode; ttZnode; based on AMS2
+        float DNNSubCat3_option1(0.), DNNSubCat3_option2(0.), DNNSubCat3_option3(0.);
+        // ttHnode -> loose/tight; ttWnode; ttJnode; ttZnode; based on AMS3
+        float DNNSubCat4_option1(0.), DNNSubCat4_option2(0.), DNNSubCat4_option3(0.);
         newtree = oldtree->CloneTree(0);
         newtree->Branch("DNNSubCat1_option1",&DNNSubCat1_option1);
         newtree->Branch("DNNSubCat1_option2",&DNNSubCat1_option2);
@@ -87,6 +100,12 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
         newtree->Branch("DNNSubCat2_option1",&DNNSubCat2_option1);
         newtree->Branch("DNNSubCat2_option2",&DNNSubCat2_option2);
         newtree->Branch("DNNSubCat2_option3",&DNNSubCat2_option3);
+        newtree->Branch("DNNSubCat3_option1",&DNNSubCat3_option1);
+        newtree->Branch("DNNSubCat3_option2",&DNNSubCat3_option2);
+        newtree->Branch("DNNSubCat3_option3",&DNNSubCat3_option3);
+        newtree->Branch("DNNSubCat4_option1",&DNNSubCat4_option1);
+        newtree->Branch("DNNSubCat4_option2",&DNNSubCat4_option2);
+        newtree->Branch("DNNSubCat4_option3",&DNNSubCat4_option3);
     
         
         std::cout << " loop over entries in sample "<< s <<std::endl;
@@ -107,6 +126,12 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
             DNNSubCat2_option1=0;
             DNNSubCat2_option2=0;
             DNNSubCat2_option3=0;
+            DNNSubCat3_option1=0;
+            DNNSubCat3_option2=0;
+            DNNSubCat3_option3=0;
+            DNNSubCat4_option1=0;
+            DNNSubCat4_option2=0;
+            DNNSubCat4_option3=0;
             oldtree->GetEntry(i);
             // DNNSubCat1_option1
             if(Dilep_pdgId==3){//ee
@@ -143,6 +168,22 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
                 else if(Dilep_pdgId==2)DNNSubCat2_option1=8; //em
                 else if(Dilep_pdgId==1)DNNSubCat2_option1=12; //mm
                 else std::cout<< " Dilep_pdgId is "<<Dilep_pdgId<<std::endl;
+            }else{
+                std::cout<< " DNNCat is : "<<DNNCat << std::endl;
+            }
+            // DNNSubCat3/4_option1 cut based on AMS2/3
+            if(DNNCat==1){// ttH node
+                DNNSubCat3_option1 = DNN_maxval < AMS2_MapOfCuts["DNNSubCat3_option1"]["ttHnode_"+RegName]? 1:2;// loose_ttHnode: tight_ttHnode
+                DNNSubCat4_option1 = DNN_maxval < AMS3_MapOfCuts["DNNSubCat4_option1"]["ttHnode_"+RegName]? 1:2;// loose_ttHnode: tight_ttHnode
+            }else if(DNNCat==2){// ttJnode
+                DNNSubCat3_option1 = 3;
+                DNNSubCat4_option1 = 3;
+            }else if(DNNCat==3){// ttWnode
+                DNNSubCat3_option1 = 4;
+                DNNSubCat4_option1 = 4;
+            }else if(DNNCat==4){// ttZnode
+                DNNSubCat3_option1 = 5;
+                DNNSubCat4_option1 = 5;
             }else{
                 std::cout<< " DNNCat is : "<<DNNCat << std::endl;
             }
@@ -186,6 +227,23 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
                 std::cout<< " DNNCat_option2 is : "<<DNNCat_option2 << std::endl;
             }
             
+            // DNNSubCat3/4_option2 cut based on AMS2/3
+            if(DNNCat_option2==1){// ttH node
+                DNNSubCat3_option2 = DNN_maxval_option2 < AMS2_MapOfCuts["DNNSubCat3_option2"]["ttHnode_"+RegName]? 1:2;// loose_ttHnode: tight_ttHnode
+                DNNSubCat4_option2 = DNN_maxval_option2 < AMS3_MapOfCuts["DNNSubCat4_option2"]["ttHnode_"+RegName]? 1:2;// loose_ttHnode: tight_ttHnode
+            }else if(DNNCat_option2==2){// ttJnode
+                DNNSubCat3_option2 = 3;
+                DNNSubCat4_option2 = 3;
+            }else if(DNNCat_option2==3){// ttWnode
+                DNNSubCat3_option2 = 4;
+                DNNSubCat4_option2 = 4;
+            }else if(DNNCat_option2==4){// ttZnode
+                DNNSubCat3_option2 = 5;
+                DNNSubCat4_option2 = 5;
+            }else{
+                std::cout<< " DNNCat_option2 is : "<<DNNCat_option2 << std::endl;
+            }
+
             // DNNSubCat1_option3
             if(Dilep_pdgId==3){//ee
                 DNNSubCat1_option3 = Sum2lCharge<0? 1:2; // neg:pos
@@ -224,6 +282,23 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
             }else{
                 std::cout<< " DNNCat_option3 is : "<<DNNCat_option3 << std::endl;
             }
+            // DNNSubCat3/4_option3 cut based on AMS2/3
+            if(DNNCat_option3==1){// ttH node
+                DNNSubCat3_option3 = DNN_maxval_option3 < AMS2_MapOfCuts["DNNSubCat3_option3"]["ttHnode_"+RegName]? 1:2;// loose_ttHnode: tight_ttHnode
+                DNNSubCat4_option3 = DNN_maxval_option3 < AMS3_MapOfCuts["DNNSubCat4_option3"]["ttHnode_"+RegName]? 1:2;// loose_ttHnode: tight_ttHnode
+            }else if(DNNCat_option3==2){// ttJnode
+                DNNSubCat3_option3 = 3;
+                DNNSubCat4_option3 = 3;
+            }else if(DNNCat_option3==3){// ttWnode
+                DNNSubCat3_option3 = 4;
+                DNNSubCat4_option3 = 4;
+            }else if(DNNCat_option3==4){// ttZnode
+                DNNSubCat3_option3 = 5;
+                DNNSubCat4_option3 = 5;
+            }else{
+                std::cout<< " DNNCat_option3 is : "<<DNNCat_option3 << std::endl;
+            }
+
             if(SaveRoot) newtree->Fill();
             if(OptBin){
                 fillHists(s, "DNNCat" , "DNN_maxval", DNNCat, DNN_maxval, EventWeight, DNNSig);

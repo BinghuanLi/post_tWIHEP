@@ -16,6 +16,7 @@ inputBaseDir = cwd + "/Raw"
 outputBaseDir = cwd + "/Rootplas" 
 
 dirsToChecks = ["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"]
+#dirsToChecks = ["SigRegion","ttWctrl"]
 DNNSig = True
 SaveROOT = True
 

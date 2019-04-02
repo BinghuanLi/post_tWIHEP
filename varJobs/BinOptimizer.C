@@ -7,7 +7,7 @@ std::vector<TString> samplesAll = {"Rares","EWK","Conv","TTW","TTZ","TTWW","Fake
 //std::vector<TString> samplesAll = {"Rares","THW_hzz"};
 std::vector<TString> samplesJES = {"EWK","Rares","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hot","TTH_hmm","THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz","FakeSub"};
 // SubCatNames should be mapped to VarNames 1 to 1
-std::vector<TString> SubCatNames = {"DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3","DNNSubCat3_option1","DNNSubCat3_option2","DNNSubCat3_option3","DNNSubCat4_option1","DNNSubCat4_option2","DNNSubCat4_option3"};
+std::vector<TString> SubCatNames = {"DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3","DNNAMS2Cat1_option1","DNNAMS2Cat1_option2","DNNAMS2Cat1_option3","DNNAMS3Cat1_option1","DNNAMS3Cat1_option2","DNNAMS3Cat1_option3"};
 std::vector<TString> VarNames = {"DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3"};
 //std::vector<TString> SubCatNames = {"DNNCat","DNNCat_option2","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat2_option1","DNNSubCat2_option2"};
 //std::vector<TString> VarNames = {"DNN_maxval","DNN_maxval_option2","DNN_maxval","DNN_maxval_option2","DNN_maxval","DNN_maxval_option2"};
@@ -90,9 +90,9 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
         // ee->DNN; em->DNN; mm->DNN
         float DNNSubCat2_option1(0.), DNNSubCat2_option2(0.), DNNSubCat2_option3(0.);
         // ttHnode -> loose/tight; ttWnode; ttJnode; ttZnode; based on AMS2
-        float DNNSubCat3_option1(0.), DNNSubCat3_option2(0.), DNNSubCat3_option3(0.);
+        float DNNAMS2Cat1_option1(0.), DNNAMS2Cat1_option2(0.), DNNAMS2Cat1_option3(0.);
         // ttHnode -> loose/tight; ttWnode; ttJnode; ttZnode; based on AMS3
-        float DNNSubCat4_option1(0.), DNNSubCat4_option2(0.), DNNSubCat4_option3(0.);
+        float DNNAMS3Cat1_option1(0.), DNNAMS3Cat1_option2(0.), DNNAMS3Cat1_option3(0.);
         newtree = oldtree->CloneTree(0);
         newtree->Branch("DNNSubCat1_option1",&DNNSubCat1_option1);
         newtree->Branch("DNNSubCat1_option2",&DNNSubCat1_option2);
@@ -100,12 +100,12 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
         newtree->Branch("DNNSubCat2_option1",&DNNSubCat2_option1);
         newtree->Branch("DNNSubCat2_option2",&DNNSubCat2_option2);
         newtree->Branch("DNNSubCat2_option3",&DNNSubCat2_option3);
-        newtree->Branch("DNNSubCat3_option1",&DNNSubCat3_option1);
-        newtree->Branch("DNNSubCat3_option2",&DNNSubCat3_option2);
-        newtree->Branch("DNNSubCat3_option3",&DNNSubCat3_option3);
-        newtree->Branch("DNNSubCat4_option1",&DNNSubCat4_option1);
-        newtree->Branch("DNNSubCat4_option2",&DNNSubCat4_option2);
-        newtree->Branch("DNNSubCat4_option3",&DNNSubCat4_option3);
+        newtree->Branch("DNNAMS2Cat1_option1",&DNNAMS2Cat1_option1);
+        newtree->Branch("DNNAMS2Cat1_option2",&DNNAMS2Cat1_option2);
+        newtree->Branch("DNNAMS2Cat1_option3",&DNNAMS2Cat1_option3);
+        newtree->Branch("DNNAMS3Cat1_option1",&DNNAMS3Cat1_option1);
+        newtree->Branch("DNNAMS3Cat1_option2",&DNNAMS3Cat1_option2);
+        newtree->Branch("DNNAMS3Cat1_option3",&DNNAMS3Cat1_option3);
     
         
         std::cout << " loop over entries in sample "<< s <<std::endl;
@@ -126,12 +126,12 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
             DNNSubCat2_option1=0;
             DNNSubCat2_option2=0;
             DNNSubCat2_option3=0;
-            DNNSubCat3_option1=0;
-            DNNSubCat3_option2=0;
-            DNNSubCat3_option3=0;
-            DNNSubCat4_option1=0;
-            DNNSubCat4_option2=0;
-            DNNSubCat4_option3=0;
+            DNNAMS2Cat1_option1=0;
+            DNNAMS2Cat1_option2=0;
+            DNNAMS2Cat1_option3=0;
+            DNNAMS3Cat1_option1=0;
+            DNNAMS3Cat1_option2=0;
+            DNNAMS3Cat1_option3=0;
             oldtree->GetEntry(i);
             // DNNSubCat1_option1
             if(Dilep_pdgId==3){//ee
@@ -171,19 +171,19 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
             }else{
                 std::cout<< " DNNCat is : "<<DNNCat << std::endl;
             }
-            // DNNSubCat3/4_option1 cut based on AMS2/3
+            // DNNAMS2Cat1/4_option1 cut based on AMS2/3
             if(DNNCat==1){// ttH node
-                DNNSubCat3_option1 = DNN_maxval < AMS2_MapOfCuts["DNNSubCat3_option1"]["ttHnode_"+RegName]? 1:2;// loose_ttHnode: tight_ttHnode
-                DNNSubCat4_option1 = DNN_maxval < AMS3_MapOfCuts["DNNSubCat4_option1"]["ttHnode_"+RegName]? 1:2;// loose_ttHnode: tight_ttHnode
+                DNNAMS2Cat1_option1 = DNN_maxval < AMS_MapOfCuts["DNNAMS2Cat1_option1"]["ttHnode_"+RegName]? 1:2;// loose_ttHnode: tight_ttHnode
+                DNNAMS3Cat1_option1 = DNN_maxval < AMS_MapOfCuts["DNNAMS3Cat1_option1"]["ttHnode_"+RegName]? 1:2;// loose_ttHnode: tight_ttHnode
             }else if(DNNCat==2){// ttJnode
-                DNNSubCat3_option1 = 3;
-                DNNSubCat4_option1 = 3;
+                DNNAMS2Cat1_option1 = 3;
+                DNNAMS3Cat1_option1 = 3;
             }else if(DNNCat==3){// ttWnode
-                DNNSubCat3_option1 = 4;
-                DNNSubCat4_option1 = 4;
+                DNNAMS2Cat1_option1 = 4;
+                DNNAMS3Cat1_option1 = 4;
             }else if(DNNCat==4){// ttZnode
-                DNNSubCat3_option1 = 5;
-                DNNSubCat4_option1 = 5;
+                DNNAMS2Cat1_option1 = 5;
+                DNNAMS3Cat1_option1 = 5;
             }else{
                 std::cout<< " DNNCat is : "<<DNNCat << std::endl;
             }
@@ -227,19 +227,19 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
                 std::cout<< " DNNCat_option2 is : "<<DNNCat_option2 << std::endl;
             }
             
-            // DNNSubCat3/4_option2 cut based on AMS2/3
+            // DNNAMS2Cat1/4_option2 cut based on AMS2/3
             if(DNNCat_option2==1){// ttH node
-                DNNSubCat3_option2 = DNN_maxval_option2 < AMS2_MapOfCuts["DNNSubCat3_option2"]["ttHnode_"+RegName]? 1:2;// loose_ttHnode: tight_ttHnode
-                DNNSubCat4_option2 = DNN_maxval_option2 < AMS3_MapOfCuts["DNNSubCat4_option2"]["ttHnode_"+RegName]? 1:2;// loose_ttHnode: tight_ttHnode
+                DNNAMS2Cat1_option2 = DNN_maxval_option2 < AMS_MapOfCuts["DNNAMS2Cat1_option2"]["ttHnode_"+RegName]? 1:2;// loose_ttHnode: tight_ttHnode
+                DNNAMS3Cat1_option2 = DNN_maxval_option2 < AMS_MapOfCuts["DNNAMS3Cat1_option2"]["ttHnode_"+RegName]? 1:2;// loose_ttHnode: tight_ttHnode
             }else if(DNNCat_option2==2){// ttJnode
-                DNNSubCat3_option2 = 3;
-                DNNSubCat4_option2 = 3;
+                DNNAMS2Cat1_option2 = 3;
+                DNNAMS3Cat1_option2 = 3;
             }else if(DNNCat_option2==3){// ttWnode
-                DNNSubCat3_option2 = 4;
-                DNNSubCat4_option2 = 4;
+                DNNAMS2Cat1_option2 = 4;
+                DNNAMS3Cat1_option2 = 4;
             }else if(DNNCat_option2==4){// ttZnode
-                DNNSubCat3_option2 = 5;
-                DNNSubCat4_option2 = 5;
+                DNNAMS2Cat1_option2 = 5;
+                DNNAMS3Cat1_option2 = 5;
             }else{
                 std::cout<< " DNNCat_option2 is : "<<DNNCat_option2 << std::endl;
             }
@@ -282,19 +282,19 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
             }else{
                 std::cout<< " DNNCat_option3 is : "<<DNNCat_option3 << std::endl;
             }
-            // DNNSubCat3/4_option3 cut based on AMS2/3
+            // DNNAMS2Cat1/4_option3 cut based on AMS2/3
             if(DNNCat_option3==1){// ttH node
-                DNNSubCat3_option3 = DNN_maxval_option3 < AMS2_MapOfCuts["DNNSubCat3_option3"]["ttHnode_"+RegName]? 1:2;// loose_ttHnode: tight_ttHnode
-                DNNSubCat4_option3 = DNN_maxval_option3 < AMS3_MapOfCuts["DNNSubCat4_option3"]["ttHnode_"+RegName]? 1:2;// loose_ttHnode: tight_ttHnode
+                DNNAMS2Cat1_option3 = DNN_maxval_option3 < AMS_MapOfCuts["DNNAMS2Cat1_option3"]["ttHnode_"+RegName]? 1:2;// loose_ttHnode: tight_ttHnode
+                DNNAMS3Cat1_option3 = DNN_maxval_option3 < AMS_MapOfCuts["DNNAMS3Cat1_option3"]["ttHnode_"+RegName]? 1:2;// loose_ttHnode: tight_ttHnode
             }else if(DNNCat_option3==2){// ttJnode
-                DNNSubCat3_option3 = 3;
-                DNNSubCat4_option3 = 3;
+                DNNAMS2Cat1_option3 = 3;
+                DNNAMS3Cat1_option3 = 3;
             }else if(DNNCat_option3==3){// ttWnode
-                DNNSubCat3_option3 = 4;
-                DNNSubCat4_option3 = 4;
+                DNNAMS2Cat1_option3 = 4;
+                DNNAMS3Cat1_option3 = 4;
             }else if(DNNCat_option3==4){// ttZnode
-                DNNSubCat3_option3 = 5;
-                DNNSubCat4_option3 = 5;
+                DNNAMS2Cat1_option3 = 5;
+                DNNAMS3Cat1_option3 = 5;
             }else{
                 std::cout<< " DNNCat_option3 is : "<<DNNCat_option3 << std::endl;
             }
@@ -304,18 +304,18 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
                 fillHists(s, "DNNCat" , "DNN_maxval", DNNCat, DNN_maxval, EventWeight, DNNSig);
                 fillHists(s, "DNNSubCat1_option1" , "DNN_maxval", DNNSubCat1_option1, DNN_maxval, EventWeight, DNNSig);
                 fillHists(s, "DNNSubCat2_option1" , "DNN_maxval", DNNSubCat2_option1, DNN_maxval, EventWeight, DNNSig);
-                fillHists(s, "DNNSubCat3_option1" , "DNN_maxval", DNNSubCat3_option1, DNN_maxval, EventWeight, DNNSig);
-                fillHists(s, "DNNSubCat4_option1" , "DNN_maxval", DNNSubCat4_option1, DNN_maxval, EventWeight, DNNSig);
+                fillHists(s, "DNNAMS2Cat1_option1" , "DNN_maxval", DNNAMS2Cat1_option1, DNN_maxval, EventWeight, DNNSig);
+                fillHists(s, "DNNAMS3Cat1_option1" , "DNN_maxval", DNNAMS3Cat1_option1, DNN_maxval, EventWeight, DNNSig);
                 fillHists(s, "DNNCat_option2" , "DNN_maxval_option2", DNNCat_option2, DNN_maxval_option2, EventWeight, DNNSig);
                 fillHists(s, "DNNSubCat1_option2" , "DNN_maxval_option2", DNNSubCat1_option2, DNN_maxval_option2, EventWeight, DNNSig);
                 fillHists(s, "DNNSubCat2_option2" , "DNN_maxval_option2", DNNSubCat2_option2, DNN_maxval_option2, EventWeight, DNNSig);
-                fillHists(s, "DNNSubCat3_option2" , "DNN_maxval_option2", DNNSubCat3_option2, DNN_maxval_option2, EventWeight, DNNSig);
-                fillHists(s, "DNNSubCat4_option2" , "DNN_maxval_option2", DNNSubCat4_option2, DNN_maxval_option2, EventWeight, DNNSig);
+                fillHists(s, "DNNAMS2Cat1_option2" , "DNN_maxval_option2", DNNAMS2Cat1_option2, DNN_maxval_option2, EventWeight, DNNSig);
+                fillHists(s, "DNNAMS3Cat1_option2" , "DNN_maxval_option2", DNNAMS3Cat1_option2, DNN_maxval_option2, EventWeight, DNNSig);
                 fillHists(s, "DNNCat_option3" , "DNN_maxval_option3", DNNCat_option3, DNN_maxval_option3, EventWeight, DNNSig);
                 fillHists(s, "DNNSubCat1_option3" , "DNN_maxval_option3", DNNSubCat1_option3, DNN_maxval_option3, EventWeight, DNNSig);
                 fillHists(s, "DNNSubCat2_option3" , "DNN_maxval_option3", DNNSubCat2_option3, DNN_maxval_option3, EventWeight, DNNSig);
-                fillHists(s, "DNNSubCat3_option3" , "DNN_maxval_option3", DNNSubCat3_option3, DNN_maxval_option3, EventWeight, DNNSig);
-                fillHists(s, "DNNSubCat4_option3" , "DNN_maxval_option3", DNNSubCat4_option3, DNN_maxval_option3, EventWeight, DNNSig);
+                fillHists(s, "DNNAMS2Cat1_option3" , "DNN_maxval_option3", DNNAMS2Cat1_option3, DNN_maxval_option3, EventWeight, DNNSig);
+                fillHists(s, "DNNAMS3Cat1_option3" , "DNN_maxval_option3", DNNAMS3Cat1_option3, DNN_maxval_option3, EventWeight, DNNSig);
             }
         }
         std::cout << " end of loop over entries in sample "<< s <<std::endl;
@@ -357,6 +357,13 @@ void createHists(){
         for(it = MapOfChannelMap[subCatName].begin(); it!=MapOfChannelMap[subCatName].end(); it++){
             TString subChannel = it->second;
             if(subChannel=="inclusive")continue;
+            if(subChannel.Contains("loose_ttHnode")){
+                xmin=0;
+                xmax=AMS_MapOfCuts[subCatName]["ttHnode_"+RegName];
+            }else if(subChannel.Contains("tight_ttHnode")){
+                xmax=1;
+                xmin=AMS_MapOfCuts[subCatName]["ttHnode_"+RegName];
+            }
             TH1F* histo_sig = new TH1F((subCatName + "_" + varName+"_"+subChannel+"_Sig").Data(), (subCatName + "_" + varName+"_"+subChannel+"_Sig").Data(),nbins,xmin,xmax);
             histo_sig->Sumw2();
             TH1F* histo_bkg = new TH1F((subCatName + "_" + varName+"_"+subChannel+"_Bkg").Data(), (subCatName + "_" + varName+"_"+subChannel+"_Bkg").Data(),nbins,xmin,xmax);

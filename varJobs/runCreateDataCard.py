@@ -5,7 +5,7 @@ from threading import Thread
 
 
 
-Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat3_option1","DNNSubCat3_option2","DNNSubCat3_option3","DNNSubCat4_option1","DNNSubCat4_option2","DNNSubCat4_option3"]
+Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNAMS2Cat1_option1","DNNAMS2Cat1_option2","DNNAMS2Cat1_option3","DNNAMS3Cat1_option1","DNNAMS3Cat1_option2","DNNAMS3Cat1_option3"]
 #Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat2_option1","DNNSubCat2_option2"]
 #Categories=["DNNCat","DNNCat_option2"]
 varPerCat={
@@ -20,12 +20,12 @@ varPerCat={
 "DNNSubCat2_option1":["DNN_maxval"],
 "DNNSubCat2_option2":["DNN_maxval_option2"],
 "DNNSubCat2_option3":["DNN_maxval_option3"],
-"DNNSubCat3_option1":["DNN_maxval"],
-"DNNSubCat3_option2":["DNN_maxval_option2"],
-"DNNSubCat3_option3":["DNN_maxval_option3"],
-"DNNSubCat4_option1":["DNN_maxval"],
-"DNNSubCat4_option2":["DNN_maxval_option2"],
-"DNNSubCat4_option3":["DNN_maxval_option3"],
+"DNNAMS2Cat1_option1":["DNN_maxval"],
+"DNNAMS2Cat1_option2":["DNN_maxval_option2"],
+"DNNAMS2Cat1_option3":["DNN_maxval_option3"],
+"DNNAMS3Cat1_option1":["DNN_maxval"],
+"DNNAMS3Cat1_option2":["DNN_maxval_option2"],
+"DNNAMS3Cat1_option3":["DNN_maxval_option3"],
 }
 
 version = "V0321_loose_AMSBin"

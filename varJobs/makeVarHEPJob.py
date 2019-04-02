@@ -37,12 +37,12 @@ ListOfCats={
     #"DNNSubCat2_option1":{1:"ee_ttHnode",2:"ee_ttJnode",3:"ee_ttWnode",4:"ee_ttZnode",5:"em_ttHnode",6:"em_ttJnode",7:"em_ttWnode",8:"em_ttZnode",9:"mm_ttHnode",10:"mm_ttJnode",11:"mm_ttWnode",12:"mm_ttZnode"},
     #"DNNSubCat2_option2":{1:"ee_ttHnode",2:"ee_ttJnode",3:"ee_ttWnode",4:"ee_ttZnode",5:"em_ttHnode",6:"em_ttJnode",7:"em_ttWnode",8:"em_ttZnode",9:"mm_ttHnode",10:"mm_ttJnode",11:"mm_ttWnode",12:"mm_ttZnode"},
     #"DNNSubCat2_option3":{1:"ee_ttHnode",2:"ee_ttJnode",3:"ee_ttWnode",4:"ee_ttZnode",5:"em_ttHnode",6:"em_ttJnode",7:"em_ttWnode",8:"em_ttZnode",9:"mm_ttHnode",10:"mm_ttJnode",11:"mm_ttWnode",12:"mm_ttZnode"}
-    "DNNSubCat3_option1":{1:"loose_ttHnode",2:"tight_ttHnode",3:"ttJnode",4:"ttWnode",5:"ttZnode"},
-    "DNNSubCat3_option2":{1:"loose_ttHnode",2:"tight_ttHnode",3:"ttJnode",4:"ttWnode",5:"ttZnode"},
-    "DNNSubCat3_option3":{1:"loose_ttHnode",2:"tight_ttHnode",3:"ttJnode",4:"ttWnode",5:"ttZnode"},
-    "DNNSubCat4_option1":{1:"loose_ttHnode",2:"tight_ttHnode",3:"ttJnode",4:"ttWnode",5:"ttZnode"},
-    "DNNSubCat4_option2":{1:"loose_ttHnode",2:"tight_ttHnode",3:"ttJnode",4:"ttWnode",5:"ttZnode"},
-    "DNNSubCat4_option3":{1:"loose_ttHnode",2:"tight_ttHnode",3:"ttJnode",4:"ttWnode",5:"ttZnode"},
+    "DNNAMS2Cat1_option1":{1:"loose_ttHnode",2:"tight_ttHnode",3:"ttJnode",4:"ttWnode",5:"ttZnode"},
+    "DNNAMS2Cat1_option2":{1:"loose_ttHnode",2:"tight_ttHnode",3:"ttJnode",4:"ttWnode",5:"ttZnode"},
+    "DNNAMS2Cat1_option3":{1:"loose_ttHnode",2:"tight_ttHnode",3:"ttJnode",4:"ttWnode",5:"ttZnode"},
+    "DNNAMS3Cat1_option1":{1:"loose_ttHnode",2:"tight_ttHnode",3:"ttJnode",4:"ttWnode",5:"ttZnode"},
+    "DNNAMS3Cat1_option2":{1:"loose_ttHnode",2:"tight_ttHnode",3:"ttJnode",4:"ttWnode",5:"ttZnode"},
+    "DNNAMS3Cat1_option3":{1:"loose_ttHnode",2:"tight_ttHnode",3:"ttJnode",4:"ttWnode",5:"ttZnode"},
     }
 
 dirsToCheck = {
@@ -57,12 +57,12 @@ dirsToCheck = {
 "DNNSubCat2_option1":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
 "DNNSubCat2_option2":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
 "DNNSubCat2_option3":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
-"DNNSubCat3_option1":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
-"DNNSubCat3_option2":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
-"DNNSubCat3_option3":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
-"DNNSubCat4_option1":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
-"DNNSubCat4_option2":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
-"DNNSubCat4_option3":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"]
+"DNNAMS2Cat1_option1":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
+"DNNAMS2Cat1_option2":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
+"DNNAMS2Cat1_option3":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
+"DNNAMS3Cat1_option1":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
+"DNNAMS3Cat1_option2":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"],
+"DNNAMS3Cat1_option3":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"]
 }
 
 ignorefiles = ["TTH","H"]
@@ -79,12 +79,12 @@ treeNames={
 "DNNSubCat2_option1":"syncTree",
 "DNNSubCat2_option2":"syncTree",
 "DNNSubCat2_option3":"syncTree",
-"DNNSubCat3_option1":"syncTree",
-"DNNSubCat3_option2":"syncTree",
-"DNNSubCat3_option3":"syncTree",
-"DNNSubCat4_option1":"syncTree",
-"DNNSubCat4_option2":"syncTree",
-"DNNSubCat4_option3":"syncTree",
+"DNNAMS2Cat1_option1":"syncTree",
+"DNNAMS2Cat1_option2":"syncTree",
+"DNNAMS2Cat1_option3":"syncTree",
+"DNNAMS3Cat1_option1":"syncTree",
+"DNNAMS3Cat1_option2":"syncTree",
+"DNNAMS3Cat1_option3":"syncTree",
 }
 
 

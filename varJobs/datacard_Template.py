@@ -17,12 +17,12 @@ regPerCat={
 "DNNSubCat2_option1":["2lss","ttWctrl"],
 "DNNSubCat2_option2":["2lss","ttWctrl"],
 "DNNSubCat2_option3":["2lss","ttWctrl"],
-"DNNSubCat3_option1":["2lss","ttWctrl"],
-"DNNSubCat3_option2":["2lss","ttWctrl"],
-"DNNSubCat3_option3":["2lss","ttWctrl"],
-"DNNSubCat4_option1":["2lss","ttWctrl"],
-"DNNSubCat4_option2":["2lss","ttWctrl"],
-"DNNSubCat4_option3":["2lss","ttWctrl"],
+"DNNAMS2Cat1_option1":["2lss","ttWctrl"],
+"DNNAMS2Cat1_option2":["2lss","ttWctrl"],
+"DNNAMS2Cat1_option3":["2lss","ttWctrl"],
+"DNNAMS3Cat1_option1":["2lss","ttWctrl"],
+"DNNAMS3Cat1_option2":["2lss","ttWctrl"],
+"DNNAMS3Cat1_option3":["2lss","ttWctrl"],
 }
 subCats={
 #"SubCat2l":["inclusive","ee_neg","ee_pos", "em_bl_neg","em_bl_pos","em_bt_neg","em_bt_pos", "mm_bl_neg","mm_bl_pos","mm_bt_neg","mm_bt_pos" ]
@@ -36,12 +36,12 @@ subCats={
 "DNNSubCat2_option1":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
 "DNNSubCat2_option2":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
 "DNNSubCat2_option3":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
-"DNNSubCat3_option1":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
-"DNNSubCat3_option2":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
-"DNNSubCat3_option3":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
-"DNNSubCat4_option1":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
-"DNNSubCat4_option2":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
-"DNNSubCat4_option3":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNAMS2Cat1_option1":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNAMS2Cat1_option2":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNAMS2Cat1_option3":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNAMS3Cat1_option1":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNAMS3Cat1_option2":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNAMS3Cat1_option3":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
 }
 
 usage = 'usage: %prog [options]'

@@ -359,10 +359,18 @@ void createHists(){
             if(subChannel=="inclusive")continue;
             if(subChannel.Contains("loose_ttHnode")){
                 xmin=0;
-                xmax=AMS_MapOfCuts[subCatName]["ttHnode_"+RegName];
+                if(AMS_MapOfCuts[subCatName]["ttHnode_"+RegName]>0){
+                    xmax=AMS_MapOfCuts[subCatName]["ttHnode_"+RegName];
+                }else{
+                    xmax = 0.5;
+                }
             }else if(subChannel.Contains("tight_ttHnode")){
                 xmax=1;
-                xmin=AMS_MapOfCuts[subCatName]["ttHnode_"+RegName];
+                if(AMS_MapOfCuts[subCatName]["ttHnode_"+RegName]>0){
+                    xmin=AMS_MapOfCuts[subCatName]["ttHnode_"+RegName];
+                }else{
+                    xmin=0.5;
+                }
             }
             TH1F* histo_sig = new TH1F((subCatName + "_" + varName+"_"+subChannel+"_Sig").Data(), (subCatName + "_" + varName+"_"+subChannel+"_Sig").Data(),nbins,xmin,xmax);
             histo_sig->Sumw2();

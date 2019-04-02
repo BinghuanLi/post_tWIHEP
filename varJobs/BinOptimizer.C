@@ -304,12 +304,18 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
                 fillHists(s, "DNNCat" , "DNN_maxval", DNNCat, DNN_maxval, EventWeight, DNNSig);
                 fillHists(s, "DNNSubCat1_option1" , "DNN_maxval", DNNSubCat1_option1, DNN_maxval, EventWeight, DNNSig);
                 fillHists(s, "DNNSubCat2_option1" , "DNN_maxval", DNNSubCat2_option1, DNN_maxval, EventWeight, DNNSig);
+                fillHists(s, "DNNSubCat3_option1" , "DNN_maxval", DNNSubCat3_option1, DNN_maxval, EventWeight, DNNSig);
+                fillHists(s, "DNNSubCat4_option1" , "DNN_maxval", DNNSubCat4_option1, DNN_maxval, EventWeight, DNNSig);
                 fillHists(s, "DNNCat_option2" , "DNN_maxval_option2", DNNCat_option2, DNN_maxval_option2, EventWeight, DNNSig);
                 fillHists(s, "DNNSubCat1_option2" , "DNN_maxval_option2", DNNSubCat1_option2, DNN_maxval_option2, EventWeight, DNNSig);
                 fillHists(s, "DNNSubCat2_option2" , "DNN_maxval_option2", DNNSubCat2_option2, DNN_maxval_option2, EventWeight, DNNSig);
+                fillHists(s, "DNNSubCat3_option2" , "DNN_maxval_option2", DNNSubCat3_option2, DNN_maxval_option2, EventWeight, DNNSig);
+                fillHists(s, "DNNSubCat4_option2" , "DNN_maxval_option2", DNNSubCat4_option2, DNN_maxval_option2, EventWeight, DNNSig);
                 fillHists(s, "DNNCat_option3" , "DNN_maxval_option3", DNNCat_option3, DNN_maxval_option3, EventWeight, DNNSig);
                 fillHists(s, "DNNSubCat1_option3" , "DNN_maxval_option3", DNNSubCat1_option3, DNN_maxval_option3, EventWeight, DNNSig);
                 fillHists(s, "DNNSubCat2_option3" , "DNN_maxval_option3", DNNSubCat2_option3, DNN_maxval_option3, EventWeight, DNNSig);
+                fillHists(s, "DNNSubCat3_option3" , "DNN_maxval_option3", DNNSubCat3_option3, DNN_maxval_option3, EventWeight, DNNSig);
+                fillHists(s, "DNNSubCat4_option3" , "DNN_maxval_option3", DNNSubCat4_option3, DNN_maxval_option3, EventWeight, DNNSig);
             }
         }
         std::cout << " end of loop over entries in sample "<< s <<std::endl;

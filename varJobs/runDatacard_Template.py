@@ -4,11 +4,11 @@ from ROOT import TString, TFile, TTree
 from threading import Thread
 
 
-#Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"]
-Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat2_option1","DNNSubCat2_option2"]
+Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat3_option1","DNNSubCat3_option2","DNNSubCat3_option3","DNNSubCat4_option1","DNNSubCat4_option2","DNNSubCat4_option3"]
+#Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat2_option1","DNNSubCat2_option2"]
 #Categories=["DNNCat_option2"]
-#Uncs = ["All","NoStat","NoSyst","None","NoShape"]
-Uncs = ["NoShape"]
+Uncs = ["All","NoStat","NoSyst","None","NoShape"]
+#Uncs = ["NoShape"]
 Opts = {
 "All":" ",
 "NoStat":" -m ",
@@ -27,9 +27,15 @@ varPerCat={
 "DNNSubCat2_option1":["DNN_maxval"],
 "DNNSubCat2_option2":["DNN_maxval_option2"],
 "DNNSubCat2_option3":["DNN_maxval_option3"],
+"DNNSubCat3_option1":["DNN_maxval"],
+"DNNSubCat3_option2":["DNN_maxval_option2"],
+"DNNSubCat3_option3":["DNN_maxval_option3"],
+"DNNSubCat4_option1":["DNN_maxval"],
+"DNNSubCat4_option2":["DNN_maxval_option2"],
+"DNNSubCat4_option3":["DNN_maxval_option3"],
 }
 
-version = "V0321_loose"
+version = "V0321_loose_AMSBin"
 
 
 for Unc in Uncs:

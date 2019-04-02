@@ -31,11 +31,12 @@ TString POI = "Bin2l";
 TString ErrorType = "All";
 */
 
-vector<TString> Versions = {"V0307.2.1_fakeable","V0319_loose","V0321_loose","V0321_loose_regBin"};
-vector<TString> CatNames = {"SubCat2l","DNNCat","DNNCat_option2","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat2_option1","DNNSubCat2_option2"};
+//vector<TString> Versions = {"V0307.2.1_fakeable","V0319_loose","V0321_loose","V0321_loose_regBin"};
+vector<TString> Versions = {"V0321_loose_AMSBin"};
+vector<TString> CatNames = {"SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat3_option1","DNNSubCat3_option2","DNNSubCat3_option3","DNNSubCat4_option1","DNNSubCat4_option2","DNNSubCat4_option3"};
 vector<TString> ErrorTypes = {"All","NoSyst","NoShape","NoStat","None"};
-std::map<string,string> CatName_POI = {{"SubCat2l","Bin2l"},{"DNNCat","DNN_maxval"},{"DNNCat_option2","DNN_maxval_option2"},{"DNNSubCat1_option1","DNN_maxval"},{"DNNSubCat1_option2","DNN_maxval_option2"},{"DNNSubCat2_option1","DNN_maxval"},{"DNNSubCat2_option2","DNN_maxval_option2"}};
-std::map<string,string> Version_Region = {{"V0307.2.1_fakeable","2lss_ttWctrl"},{"V0319_loose","2lss_ttWctrl"},{"V0321_loose","2lss_ttWctrl"},{"V0321_loose_regBin","2lss"}};
+std::map<string,string> CatName_POI = {{"SubCat2l","Bin2l"},{"DNNCat","DNN_maxval"},{"DNNCat_option2","DNN_maxval_option2"},{"DNNCat_option3","DNN_maxval_option3"},{"DNNSubCat1_option1","DNN_maxval"},{"DNNSubCat1_option2","DNN_maxval_option2"},{"DNNSubCat1_option3","DNN_maxval_option3"},{"DNNSubCat2_option1","DNN_maxval"},{"DNNSubCat2_option2","DNN_maxval_option2"},{"DNNSubCat2_option3","DNN_maxval_option3"},{"DNNSubCat3_option1","DNN_maxval"},{"DNNSubCat3_option2","DNN_maxval_option2"},{"DNNSubCat3_option3","DNN_maxval_option3"},{"DNNSubCat4_option1","DNN_maxval"},{"DNNSubCat4_option2","DNN_maxval_option2"},{"DNNSubCat4_option3","DNN_maxval_option3"}};
+std::map<string,string> Version_Region = {{"V0307.2.1_fakeable","2lss_ttWctrl"},{"V0319_loose","2lss_ttWctrl"},{"V0321_loose","2lss_ttWctrl"},{"V0321_loose_regBin","2lss"},{"V0321_loose_AMSBin","2lss_ttWctrl"}};
 
 void readlimit()
 {

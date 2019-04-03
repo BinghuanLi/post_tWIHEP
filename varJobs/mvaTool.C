@@ -17,7 +17,7 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t channel, TString Categor
   
   baseName = "";
 
-    varList.push_back("Bin2l");
+    /*
     varList.push_back("TrueInteractions");
     varList.push_back("nBestVTX");
     
@@ -63,9 +63,6 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t channel, TString Categor
     varList.push_back("dr_leps");
     varList.push_back("mvaOutput_2lss_ttV");
     varList.push_back("mvaOutput_2lss_ttbar");
-    varList.push_back("DNN_maxval");
-    varList.push_back("DNN_maxval_option2");
-    varList.push_back("DNN_maxval_option3");
     varList.push_back("resTop_BDT");
     varList.push_back("jet1_pt");
     varList.push_back("jet2_pt");
@@ -80,6 +77,11 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t channel, TString Categor
     varList.push_back("lep1_eta");
     varList.push_back("lep2_eta");
     varList.push_back("massL");
+    */
+    varList.push_back("Bin2l");
+    varList.push_back("DNN_maxval");
+    varList.push_back("DNN_maxval_option2");
+    varList.push_back("DNN_maxval_option3");
 
   
   //At some point this should be filled out with the names of the systematics so that we can read those too
@@ -616,13 +618,11 @@ void mvaTool::createHists(TString sampleName){
       double xmin = -1000;
       double xmax = 1000;
     
-      
       if(varList[i]== "Hj_tagger_resTop") {nbins= 20; xmin= -1.01; xmax= 1.01;};
       if(varList[i]== "Hj_tagger_hadTop") {nbins= 20; xmin= -1.01; xmax= 1.01;};
       if(varList[i]== "Dilep_mtWmin") {nbins= 10; xmin= 0; xmax= 200;};
       if(varList[i]== "mT_lep1") {nbins= 10; xmin= 0; xmax= 200;};
       if(varList[i]== "mT_lep2") {nbins= 10; xmin= 0; xmax= 200;};
-      if(varList[i]== "Bin2l") {nbins= 11; xmin= 0.5; xmax= 11.5;};
       if(varList[i]== "TrueInteractions") {nbins= 100; xmin= -0.5; xmax= 99.5;};
       if(varList[i]== "nBestVTX") {nbins= 100; xmin= -0.5; xmax= 99.5;};
       if(varList[i]== "leadLep_corrpt") {nbins= 10; xmin= 0; xmax= 200;};
@@ -669,9 +669,6 @@ void mvaTool::createHists(TString sampleName){
       if(varList[i]== "dr_leps") {nbins= 10; xmin= 0.; xmax= 5;};
       if(varList[i]== "mvaOutput_2lss_ttV") {nbins= 20; xmin= -1; xmax= 1;};
       if(varList[i]== "mvaOutput_2lss_ttbar") {nbins= 20; xmin= -1; xmax= 1;};
-      if(varList[i]== "DNN_maxval") {nbins= 20; xmin= 0; xmax= 1;};
-      if(varList[i]== "DNN_maxval_option2") {nbins= 20; xmin= 0; xmax= 1;};
-      if(varList[i]== "DNN_maxval_option3") {nbins= 20; xmin= 0; xmax= 1;};
       if(varList[i]== "resTop_BDT") {nbins= 20; xmin= -1; xmax= 1;};
       if(varList[i]== "massL") {nbins= 20; xmin= 0; xmax= 400;};
       if(varList[i]== "jet1_pt") {nbins= 20; xmin= 0; xmax= 800;};
@@ -686,17 +683,34 @@ void mvaTool::createHists(TString sampleName){
       if(varList[i]== "lep2_conePt") {nbins= 20; xmin= 0; xmax= 100;};
       if(varList[i]== "lep1_eta") {nbins= 20; xmin= -4; xmax= 4;};
       if(varList[i]== "lep2_eta") {nbins= 20; xmin= -4; xmax= 4;};
+      if(varList[i]== "Bin2l") {nbins= 11; xmin= 0.5; xmax= 11.5;};
+      if(varList[i]== "DNN_maxval") {nbins= 20; xmin= 0; xmax= 1;};
+      if(varList[i]== "DNN_maxval_option2") {nbins= 20; xmin= 0; xmax= 1;};
+      if(varList[i]== "DNN_maxval_option3") {nbins= 20; xmin= 0; xmax= 1;};
       
       TString histoName = subCat2l+"_"+varList[i]+"_"+ChannelNameMap[_channel];
       TH1F* h_sig = (TH1F*) theBinFile->Get(histoName+"_Sig");
-      if(h_sig==0){
+      if(BinDir.Contains("Regular")){
+        if(h_sig==0){
+            TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),nbins,xmin,xmax);
+            histo->Sumw2();
+            histovect.push_back(histo);
+        }else{
+            TH1F* h_bkg = (TH1F*) theBinFile->Get(histoName+"_Bkg");
+            nbins = 2 * floor((h_sig->Integral() + h_bkg->Integral())/10.);
+            std::cout<< " rebin the regular bin to nbins "<< nbins << std::endl;
+            TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),nbins,xmin,xmax);
+            histo->Sumw2();
+            histovect.push_back(histo);
+        }
+      }else if(h_sig==0){
         TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),nbins,xmin,xmax);
         histo->Sumw2();
         histovect.push_back(histo);
       }else{
         std::vector<double> bins;
         bins.clear();
-        bins=getBins(theBinFile, histoName, 5 , 0.1);
+        bins=getBins(theBinFile, histoName, 5 , 0.1, xmin, xmax);
         if(bins.size()<=1){
             TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),1,xmin,xmax);
             histo->Sumw2();
@@ -959,10 +973,12 @@ void mvaTool::calculateLepTightEffSyst(float Dilep_flav, float& eltight_up, floa
   mutight_down = 1./mutight_up;
 };
 
-std::vector<double> mvaTool::getBins(TFile* theBinFile, TString HistoName, float minN_total, float minN_sig){
+std::vector<double> mvaTool::getBins(TFile* theBinFile, TString HistoName, float minN_total, float minN_sig, double& xmin, double& xmax){
     TH1F* h_sig = (TH1F*) theBinFile->Get(HistoName+"_Sig");
     TH1F* h_bkg =(TH1F*) theBinFile->Get(HistoName+"_Bkg");
     int binN = h_sig->GetNbinsX();
+    xmin = h_sig->GetBinLowEdge(1);
+    xmax = h_sig->GetBinLowEdge(binN+1);
     Float_t N_total = h_sig->Integral()+h_bkg->Integral();
     Int_t Bin = floor(N_total/minN_total);
     std::cout << "Nsig, Ntot "<<h_sig->Integral()<<","<<h_bkg->Integral()<<" getBins: initial bin "<< Bin   << std::endl;

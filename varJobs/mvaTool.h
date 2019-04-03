@@ -78,7 +78,7 @@ class mvaTool {
   void processMCSample(TString sampleName,TString inDir,TString outDir, float * treevars, bool isData, bool doMVA = true);
   void loopInSample(TString dirName, TString sampleName, float* treevars, bool isData, bool doMVA = true);
   void createHists(TString sampleName);
-  std::vector<double> getBins(TFile* theBinFile, TString HistoName, float minN_total, float minN_sig);
+  std::vector<double> getBins(TFile* theBinFile, TString HistoName, float minN_total, float minN_sig, double& xmin, double& xmax);
   void fillHists(TString sampleName, float* treevars, double mvaValue, double mvawJets, double theweight, float met, float mtw, int theChannel);
   void saveHists(std::vector<TFile *> outFile);
   void setbTagVars(TChain* theTree); 

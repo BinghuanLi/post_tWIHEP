@@ -13,11 +13,15 @@ inputBaseDir = cwd
 makeImpact = True
 impact = "estimateImpact_expected.sh"
 
-dirsToCheck = [f for f in os.listdir(".") if os.path.isdir(f)]
-dirsToIgnore = []
+makeSignificance = False
+makeSigStrenght = False
+makeLimit = False
 
-Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat3_option1","DNNSubCat3_option2","DNNSubCat3_option3","DNNSubCat4_option1","DNNSubCat4_option2","DNNSubCat4_option3"]
-#Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"]
+dirsToCheck = [f for f in os.listdir(".") if os.path.isdir(f)]
+dirsToIgnore = ["V0403_loose_PreProcess_datacards_None","V0403_loose_PreProcess_datacards_NoShape","V0403_loose_PreProcess_datacards_NoSyst","V0403_loose_PreProcess_datacards_NoStat"]
+
+#Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNAMS2Cat1_option1","DNNAMS2Cat1_option2","DNNAMS2Cat1_option3","DNNAMS3Cat1_option1","DNNAMS3Cat1_option2","DNNAMS3Cat1_option3"]
+Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"]
 varPerCat={
 "SubCat2l":["Bin2l"],
 "DNNCat":["DNN_maxval"],
@@ -29,12 +33,12 @@ varPerCat={
 "DNNSubCat2_option1":["DNN_maxval"],
 "DNNSubCat2_option2":["DNN_maxval_option2"],
 "DNNSubCat2_option3":["DNN_maxval_option3"],
-"DNNSubCat3_option1":["DNN_maxval"],
-"DNNSubCat3_option2":["DNN_maxval_option2"],
-"DNNSubCat3_option3":["DNN_maxval_option3"],
-"DNNSubCat4_option1":["DNN_maxval"],
-"DNNSubCat4_option2":["DNN_maxval_option2"],
-"DNNSubCat4_option3":["DNN_maxval_option3"],
+"DNNAMS2Cat1_option1":["DNN_maxval"],
+"DNNAMS2Cat1_option2":["DNN_maxval_option2"],
+"DNNAMS2Cat1_option3":["DNN_maxval_option3"],
+"DNNAMS3Cat1_option1":["DNN_maxval"],
+"DNNAMS3Cat1_option2":["DNN_maxval_option2"],
+"DNNAMS3Cat1_option3":["DNN_maxval_option3"],
 }
 
 regPerCat={
@@ -48,12 +52,12 @@ regPerCat={
 "DNNSubCat2_option1":["2lss","ttWctrl"],
 "DNNSubCat2_option2":["2lss","ttWctrl"],
 "DNNSubCat2_option3":["2lss","ttWctrl"],
-"DNNSubCat3_option1":["2lss","ttWctrl"],
-"DNNSubCat3_option2":["2lss","ttWctrl"],
-"DNNSubCat3_option3":["2lss","ttWctrl"],
-"DNNSubCat4_option1":["2lss","ttWctrl"],
-"DNNSubCat4_option2":["2lss","ttWctrl"],
-"DNNSubCat4_option3":["2lss","ttWctrl"],
+"DNNAMS2Cat1_option1":["2lss","ttWctrl"],
+"DNNAMS2Cat1_option2":["2lss","ttWctrl"],
+"DNNAMS2Cat1_option3":["2lss","ttWctrl"],
+"DNNAMS3Cat1_option1":["2lss","ttWctrl"],
+"DNNAMS3Cat1_option2":["2lss","ttWctrl"],
+"DNNAMS3Cat1_option3":["2lss","ttWctrl"],
 #"SubCat2l":["2lss"],
 #"DNNCat":["2lss"],
 #"DNNCat_option2":["2lss"],
@@ -64,12 +68,12 @@ regPerCat={
 #"DNNSubCat2_option1":["2lss"],
 #"DNNSubCat2_option2":["2lss"],
 #"DNNSubCat2_option3":["2lss"],
-#"DNNSubCat3_option1":["2lss"],
-#"DNNSubCat3_option2":["2lss"],
-#"DNNSubCat3_option3":["2lss"],
-#"DNNSubCat4_option1":["2lss"],
-#"DNNSubCat4_option2":["2lss"],
-#"DNNSubCat4_option3":["2lss"],
+#"DNNAMS2Cat1_option1":["2lss"],
+#"DNNAMS2Cat1_option2":["2lss"],
+#"DNNAMS2Cat1_option3":["2lss"],
+#"DNNAMS3Cat1_option1":["2lss"],
+#"DNNAMS3Cat1_option2":["2lss"],
+#"DNNAMS3Cat1_option3":["2lss"],
 }
 
 subCats={
@@ -84,12 +88,12 @@ subCats={
 "DNNSubCat2_option1":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
 "DNNSubCat2_option2":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
 "DNNSubCat2_option3":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
-"DNNSubCat3_option1":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
-"DNNSubCat3_option2":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
-"DNNSubCat3_option3":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
-"DNNSubCat4_option1":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
-"DNNSubCat4_option2":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
-"DNNSubCat4_option3":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNAMS2Cat1_option1":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNAMS2Cat1_option2":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNAMS2Cat1_option3":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNAMS3Cat1_option1":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNAMS3Cat1_option2":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNAMS3Cat1_option3":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
 }
 
 def prepareCshJob(shFile,category, dirName):
@@ -115,12 +119,15 @@ def prepareCshJob(shFile,category, dirName):
             combineCards += (" ttH_"+region+"_"+subCat+"=ttH_"+region+"_"+subCat+".txt")
     combineCards += (" > "+datacardName+".txt")
     print >> subFile, combineCards
-    ExpLimit = "combine -M AsymptoticLimits "+datacardName + ".txt --expectSignal=1 -t -1 -m 125 "+SystFix+"> ExpLimit_"+datacardName+".log"
-    print >> subFile, ExpLimit
-    ExpSig = "combine -M FitDiagnostics --saveShapes --saveWithUncertainties --expectSignal=1 -t -1 "+datacardName + ".txt -m 125 "+SystFix+"> ExpSigStrength_"+datacardName+".log"
-    print >> subFile, ExpSig
-    ExpSignific = "combine -M Significance "+datacardName + ".txt --expectSignal=1 -t -1 -m 125 "+SystFix+"> ExpSignificance_"+datacardName+".log"
-    print >> subFile, ExpSignific
+    if makeLimit:
+        ExpLimit = "combine -M AsymptoticLimits "+datacardName + ".txt --expectSignal=1 -t -1 -m 125 "+SystFix+"> ExpLimit_"+datacardName+".log"
+        print >> subFile, ExpLimit
+    if makeSigStrenght:
+        ExpSig = "combine -M FitDiagnostics --saveShapes --saveWithUncertainties --expectSignal=1 -t -1 "+datacardName + ".txt -m 125 "+SystFix+"> ExpSigStrength_"+datacardName+".log"
+        print >> subFile, ExpSig
+    if makeSignificance:
+        ExpSignific = "combine -M Significance "+datacardName + ".txt --expectSignal=1 -t -1 -m 125 "+SystFix+"> ExpSignificance_"+datacardName+".log"
+        print >> subFile, ExpSignific
     if makeImpact:
         ExpImpact = "./"+impact+" "+datacardName 
         print >> subFile, ExpImpact

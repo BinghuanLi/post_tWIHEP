@@ -697,7 +697,7 @@ void mvaTool::createHists(TString sampleName){
             histovect.push_back(histo);
         }else{
             TH1F* h_bkg = (TH1F*) theBinFile->Get(histoName+"_Bkg");
-            nbins = 2 * floor((h_sig->Integral() + h_bkg->Integral())/10.);
+            nbins = 2 * floor((h_sig->Integral() + h_bkg->Integral())/1.);
             std::cout<< " rebin the regular bin to nbins "<< nbins << std::endl;
             TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),nbins,xmin,xmax);
             histo->Sumw2();

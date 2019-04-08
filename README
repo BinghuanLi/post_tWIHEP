@@ -1,1 +1,65 @@
 These are scripts running on post tWIHEPFrameworks
+How to use IHEP farm:
+   export PATH=$PATH:/afs/ihep.ac.cn/soft/common/sysgroup/hep_job/bin/
+   to submit job:
+    hep_sub job.sh -o job.log -e job.error
+    job.sh is the shell script to run, IHEP farm needs execute right of job.sh, chmode + 777 job.sh
+    job.log save the log of the job
+    job.error save the error of the job
+   to check job status:
+    hep_q -u username
+   to kill all job:
+    hep_rm -a  
+   to kill job by id:
+    hep_rm jobid
+
+
+varJobs:
+
+    scripts used to prepare datecard template and txt files
+
+    Step 1:
+        Pre-process the rootplas with DNN branches to add Flags for subcategories and save histograms for rebinning
+        Current Working Directory is BaseDir, please save the rootplas with DNN in BaseDir/Raw/SigRegion(ttWctrl) BaseDir/Raw/JESUpSigRegion(ttWctrl) BaseDir/Raw/JESDownSigRegion(ttWctrl)
+        cp makeBinOptHEPJob.py to BaseDir
+        <python makeBinOptHEPJob.py>
+        this command will create a script all.sh, directory Rootplas/SigRegion Rootplas/ttWctrl ...
+        <bash all.sh> 
+        this will submit all the jobs to IHEP farm to create Rootplas with subcategory flags and histograms for rebinning use
+        each job runs BinOptimizer.C
+        ~ 20 mins to finish the jobs 
+
+    Step 2:
+        Create Template Variations
+        <cd Rootplas>
+        cp makeVarHEPJob.py to current working dir
+        <python makeVarHEPJob.py>
+        this command will create a script all.sh, directory Output
+        <bash all.sh>
+        this will submit all the jobs to IHEP farm to create all the template needed for all the sub categories with specified rebin strategy
+        each job runs mvaTool.C 
+        ~ 2h to finish the jobs
+
+    Step 3 :
+        cp runCreateDataCard.py runDatacard_Template.py datacard_Template.py createDatacardRootFile.py into BaseDir/Rootplas
+        <python runCreateDataCard.py> to create all the root files ~ 10 mins
+        <python runDatacard_Template.py> to create all the txt files ~ 5 mins
+
+    now you have everything needed for combine fitting
+
+combJobs:
+    
+    Here are the scripts used for submit combine fitting jobs
+    goes into CMSSW/src/HiggsAnalysis/
+    create a directory "test"(for example)
+    cd test/
+    copy the datacard directory created above to current working directory
+    cp makeComJobs.py
+    <python makeComJobs.py>
+    this will create a script all.sh
+    <bash all.sh>
+    this will submit all the combine fitting job to IHEP farm
+    it produce expLimit expSignificance and profile likelihood uncertainties with post-fit shape saved
+    ~30 mins if no impact plot
+    ~few hours if impact plot needed
+        

@@ -31,9 +31,9 @@ TString POI = "Bin2l";
 TString ErrorType = "All";
 */
 
-//vector<TString> Versions = {"V0321_loose","V0403_loose_newVar","V0403_loose_PreProcess"};
+vector<TString> Versions = {"V0319_loose","V0403_loose_newVar","V0405_loose_Preprocess","V0403_loose_PreProcess"};
 //vector<TString> Versions = {"V0321_loose","V0321_loose_regBin1","V0321_loose_regBin3","V0321_loose_regBin5"};
-vector<TString> Versions = {"V0321_loose","V0321_loose_regBin3","V0321_loose_regBin5"};
+//vector<TString> Versions = {"V0321_loose","V0321_loose_regBin3","V0321_loose_regBin5"};
 //vector<TString> Versions = {"V0321.1_loose_AMSBin"};
 //vector<TString> CatNames = {"SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNAMS2Cat1_option1","DNNAMS2Cat1_option2","DNNAMS2Cat1_option3","DNNAMS3Cat1_option1","DNNAMS3Cat1_option2","DNNAMS3Cat1_option3"};
 //vector<TString> CatNames = {"SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"};
@@ -41,7 +41,7 @@ vector<TString> CatNames = {"SubCat2l","DNNCat","DNNCat_option2","DNNSubCat1_opt
 vector<TString> ErrorTypes = {"All","NoSyst","NoShape","NoStat","None"};
 //vector<TString> ErrorTypes = {"All"};
 std::map<string,string> CatName_POI = {{"SubCat2l","Bin2l"},{"DNNCat","DNN_maxval"},{"DNNCat_option2","DNN_maxval_option2"},{"DNNCat_option3","DNN_maxval_option3"},{"DNNSubCat1_option1","DNN_maxval"},{"DNNSubCat1_option2","DNN_maxval_option2"},{"DNNSubCat1_option3","DNN_maxval_option3"},{"DNNSubCat2_option1","DNN_maxval"},{"DNNSubCat2_option2","DNN_maxval_option2"},{"DNNSubCat2_option3","DNN_maxval_option3"},{"DNNAMS2Cat1_option1","DNN_maxval"},{"DNNAMS2Cat1_option2","DNN_maxval_option2"},{"DNNAMS2Cat1_option3","DNN_maxval_option3"},{"DNNAMS3Cat1_option1","DNN_maxval"},{"DNNAMS3Cat1_option2","DNN_maxval_option2"},{"DNNAMS3Cat1_option3","DNN_maxval_option3"}};
-std::map<string,string> Version_Region = {{"V0307.2.1_fakeable","2lss_ttWctrl"},{"V0319_loose","2lss_ttWctrl"},{"V0321_loose","2lss_ttWctrl"},{"V0321_loose_regBin","2lss"},{"V0321_loose_AMSBin","2lss_ttWctrl"},{"V0402_loose_NTrainFake","2lss_ttWctrl"},{"V0403_loose_PreProcess","2lss_ttWctrl"},{"V0321_loose_regBin5","2lss_ttWctrl"},{"V0321_loose_regBin10","2lss_ttWctrl"},{"V0321_loose_regBin15","2lss_ttWctrl"},{"V0403_loose_newVar","2lss_ttWctrl"},{"V0321_loose_regBin1","2lss_ttWctrl"},{"V0321_loose_regBin3","2lss_ttWctrl"}};
+std::map<string,string> Version_Region = {{"V0307.2.1_fakeable","2lss_ttWctrl"},{"V0319_loose","2lss_ttWctrl"},{"V0321_loose","2lss_ttWctrl"},{"V0321_loose_regBin","2lss"},{"V0321_loose_AMSBin","2lss_ttWctrl"},{"V0402_loose_NTrainFake","2lss_ttWctrl"},{"V0403_loose_PreProcess","2lss_ttWctrl"},{"V0321_loose_regBin5","2lss_ttWctrl"},{"V0321_loose_regBin10","2lss_ttWctrl"},{"V0321_loose_regBin15","2lss_ttWctrl"},{"V0403_loose_newVar","2lss_ttWctrl"},{"V0321_loose_regBin1","2lss_ttWctrl"},{"V0321_loose_regBin3","2lss_ttWctrl"},{"V0405_loose_Preprocess","2lss_ttWctrl"}};
 
 void readlimit()
 {

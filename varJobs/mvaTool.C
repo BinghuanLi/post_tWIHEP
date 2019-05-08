@@ -17,7 +17,6 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t channel, TString Categor
   
   baseName = "";
 
-    /*
     varList.push_back("TrueInteractions");
     varList.push_back("nBestVTX");
     
@@ -30,8 +29,6 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t channel, TString Categor
     varList.push_back("massll");
     varList.push_back("Sum2lCharge");
     varList.push_back("n_presel_jet");
-    varList.push_back("nBJetLoose");
-    varList.push_back("nBJetMedium");
     varList.push_back("MHT");
     varList.push_back("metLD");
     varList.push_back("Dilep_bestMVA");
@@ -77,11 +74,12 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t channel, TString Categor
     varList.push_back("lep1_eta");
     varList.push_back("lep2_eta");
     varList.push_back("massL");
-    */
+    varList.push_back("nBJetLoose");
+    varList.push_back("nBJetMedium"); // please always load nBJetMedium
     varList.push_back("Bin2l");
     varList.push_back("DNN_maxval");
     varList.push_back("DNN_maxval_option2");
-    varList.push_back("DNN_maxval_option3");
+    //varList.push_back("DNN_maxval_option3");
 
   
   //At some point this should be filled out with the names of the systematics so that we can read those too
@@ -697,7 +695,7 @@ void mvaTool::createHists(TString sampleName){
             histovect.push_back(histo);
         }else{
             TH1F* h_bkg = (TH1F*) theBinFile->Get(histoName+"_Bkg");
-            nbins = 2 * floor((h_sig->Integral() + h_bkg->Integral())/1.);
+            nbins = 2 * floor((h_sig->Integral() + h_bkg->Integral())/5.);
             std::cout<< " rebin the regular bin to nbins "<< nbins << std::endl;
             TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),nbins,xmin,xmax);
             histo->Sumw2();

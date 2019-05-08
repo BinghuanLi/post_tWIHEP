@@ -15,7 +15,8 @@ frameworkDir = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuf
 inputBaseDir = cwd + "/Raw"
 outputBaseDir = cwd + "/Rootplas" 
 
-dirsToChecks = ["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"]
+#dirsToChecks = ["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"]
+dirsToChecks = ["DiLepRegion","JESUpDiLepRegion","JESDownDiLepRegion"]
 #dirsToChecks = ["SigRegion","ttWctrl"]
 DNNSig = True
 SaveROOT = True

@@ -7,10 +7,10 @@ std::vector<TString> samplesAll = {"Rares","EWK","Conv","TTW","TTZ","TTWW","Fake
 //std::vector<TString> samplesAll = {"Rares","THW_hzz"};
 std::vector<TString> samplesJES = {"EWK","Rares","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hot","TTH_hmm","THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz","FakeSub"};
 // SubCatNames should be mapped to VarNames 1 to 1
-std::vector<TString> SubCatNames = {"DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3","DNNAMS2Cat1_option1","DNNAMS2Cat1_option2","DNNAMS2Cat1_option3","DNNAMS3Cat1_option1","DNNAMS3Cat1_option2","DNNAMS3Cat1_option3"};
-std::vector<TString> VarNames = {"DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3"};
-//std::vector<TString> SubCatNames = {"DNNCat","DNNCat_option2","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat2_option1","DNNSubCat2_option2"};
-//std::vector<TString> VarNames = {"DNN_maxval","DNN_maxval_option2","DNN_maxval","DNN_maxval_option2","DNN_maxval","DNN_maxval_option2"};
+//std::vector<TString> SubCatNames = {"DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3","DNNAMS2Cat1_option1","DNNAMS2Cat1_option2","DNNAMS2Cat1_option3","DNNAMS3Cat1_option1","DNNAMS3Cat1_option2","DNNAMS3Cat1_option3"};
+//std::vector<TString> VarNames = {"DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3","DNN_maxval","DNN_maxval_option2","DNN_maxval_option3"};
+std::vector<TString> SubCatNames = {"DNNCat","DNNSubCat1_option1","DNNSubCat2_option1"};
+std::vector<TString> VarNames = {"DNN_maxval","DNN_maxval","DNN_maxval"};
 std::map<TString,std::vector<TH1F*>> theHistoMap;
 TString RegName;
 
@@ -24,8 +24,10 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
         RegName = "ttWctrl";
     }else if(RegionName.Contains("SigRegion")){
         RegName = "SigRegion";
+    }else if(RegionName.Contains("DiLepRegion")){
+        RegName = "DiLepRegion";
     }else{
-        std::cout<< "ERROR: RegionName is "<<RegionName<< " RegionName must contains ttWctrl or SigRegion "<<std::endl;
+        std::cout<< "ERROR: RegionName is "<<RegionName<< " RegionName must contains ttWctrl/DiLepRegion or SigRegion "<<std::endl;
         return;
     }
     TString BinRootFile = OutputDir +"/"+BinDataDir+"/OptBin_"+RegionName+".root";
@@ -57,6 +59,7 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
         Long64_t nentries = oldtree->GetEntries(); 
         float Dilep_pdgId=0; // 1 mm; 2 em; 3 ee
         float Sum2lCharge=0; // >0 ss+; =0 os; <0 ss-
+        float lep1_charge=0; // >0 pos; <0 neg
         float nBJetMedium=0; // >=2 bt
         float DNNCat=0;
         float DNNCat_option2=0;
@@ -69,13 +72,14 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
         oldtree->SetBranchAddress("Dilep_pdgId", &Dilep_pdgId);
         oldtree->SetBranchAddress("EventWeight", &EventWeight);
         oldtree->SetBranchAddress("Sum2lCharge", &Sum2lCharge);
+        oldtree->SetBranchAddress("lep1_charge", &lep1_charge);
         oldtree->SetBranchAddress("nBJetMedium", &nBJetMedium);
         oldtree->SetBranchAddress("DNNCat", &DNNCat);
-        oldtree->SetBranchAddress("DNNCat_option2", &DNNCat_option2);
-        oldtree->SetBranchAddress("DNNCat_option3", &DNNCat_option3);
+        //oldtree->SetBranchAddress("DNNCat_option2", &DNNCat_option2);
+        //oldtree->SetBranchAddress("DNNCat_option3", &DNNCat_option3);
         oldtree->SetBranchAddress("DNN_maxval", &DNN_maxval);
-        oldtree->SetBranchAddress("DNN_maxval_option2", &DNN_maxval_option2);
-        oldtree->SetBranchAddress("DNN_maxval_option3", &DNN_maxval_option3);
+        //oldtree->SetBranchAddress("DNN_maxval_option2", &DNN_maxval_option2);
+        //oldtree->SetBranchAddress("DNN_maxval_option3", &DNN_maxval_option3);
         oldtree->SetBranchStatus("*", 1);
     
         TFile *newfile;
@@ -113,6 +117,7 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
             EventWeight=0;
             Dilep_pdgId=0;
             Sum2lCharge=0;
+            lep1_charge=0;
             nBJetMedium=0;
             DNNCat=0;
             DNNCat_option2=0;
@@ -133,9 +138,12 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
             DNNAMS3Cat1_option2=0;
             DNNAMS3Cat1_option3=0;
             oldtree->GetEntry(i);
+            DNNCat +=1;
+            //DNNCat_option2 +=1;
+            //DNNCat_option3 +=1;
             // DNNSubCat1_option1
             if(Dilep_pdgId==3){//ee
-                DNNSubCat1_option1 = Sum2lCharge<0? 1:2; // neg:pos
+                DNNSubCat1_option1 = lep1_charge<0? 1:2; // neg:pos
             }else if(DNNCat==1){// ttH node
                 DNNSubCat1_option1 = Dilep_pdgId>1.5? 3:7;// em:mm
             }else if(DNNCat==2){// ttJnode
@@ -190,7 +198,7 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
             
             // DNNSubCat1_option2
             if(Dilep_pdgId==3){//ee
-                DNNSubCat1_option2 = Sum2lCharge<0? 1:2; // neg:pos
+                DNNSubCat1_option2 = lep1_charge<0? 1:2; // neg:pos
             }else if(DNNCat_option2==1){// ttH node
                 DNNSubCat1_option2 = Dilep_pdgId>1.5? 3:7;// em:mm
             }else if(DNNCat_option2==2){// ttJnode
@@ -246,7 +254,7 @@ void BinOptimizer(TString InputDir, TString OutputDir, TString RegionName , Bool
 
             // DNNSubCat1_option3
             if(Dilep_pdgId==3){//ee
-                DNNSubCat1_option3 = Sum2lCharge<0? 1:2; // neg:pos
+                DNNSubCat1_option3 = lep1_charge<0? 1:2; // neg:pos
             }else if(DNNCat_option3==1){// ttH node
                 DNNSubCat1_option3 = Dilep_pdgId>1.5? 3:7;// em:mm
             }else if(DNNCat_option3==2){// ttJnode

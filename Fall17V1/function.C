@@ -24,8 +24,8 @@ double get_rewgtlumi(TString FileName){
     //if(FileName.Contains("ttZ_ext_Jets")) wgt=8455616./18134307.;
     //if(FileName.Contains("ttZ_Jets")) wgt=9678691./18134307.;
     if(FileName.Contains("WZTo3LNu")) wgt=4.42965/5.063;
-    if(FileName.Contains("THQ")) wgt=0.07096*8837.23781460*123798.0/(0.7927*25.69875024);
-    if(FileName.Contains("THW")) wgt=0.01561*5458.47479968*49936.0/(0.1472*3.21369648);
+    //if(FileName.Contains("THQ")) wgt=0.07096*8837.23781460*123798.0/(0.7927*25.69875024);
+    //if(FileName.Contains("THW")) wgt=0.01561*5458.47479968*49936.0/(0.1472*3.21369648);
     return wgt;
 }
 double deltaPhi(double phi1, double phi2){
@@ -414,6 +414,22 @@ void SetOldTreeBranchStatus(TTree* readtree){
    readtree->SetBranchStatus("jet3_phi",1);
    readtree->SetBranchStatus("jet3_E",1);
    readtree->SetBranchStatus("jet3_CSV",1);
+   readtree->SetBranchStatus("jetFwd4_pt",1);
+   readtree->SetBranchStatus("jetFwd4_eta",1);
+   readtree->SetBranchStatus("jetFwd4_phi",1);
+   readtree->SetBranchStatus("jetFwd4_E",1);
+   readtree->SetBranchStatus("jetFwd1_pt",1);
+   readtree->SetBranchStatus("jetFwd1_eta",1);
+   readtree->SetBranchStatus("jetFwd1_phi",1);
+   readtree->SetBranchStatus("jetFwd1_E",1);
+   readtree->SetBranchStatus("jetFwd2_pt",1);
+   readtree->SetBranchStatus("jetFwd2_eta",1);
+   readtree->SetBranchStatus("jetFwd2_phi",1);
+   readtree->SetBranchStatus("jetFwd2_E",1);
+   readtree->SetBranchStatus("jetFwd3_pt",1);
+   readtree->SetBranchStatus("jetFwd3_eta",1);
+   readtree->SetBranchStatus("jetFwd3_phi",1);
+   readtree->SetBranchStatus("jetFwd3_E",1);
    readtree->SetBranchStatus("PFMET",1);
    readtree->SetBranchStatus("PFMETphi",1);
    readtree->SetBranchStatus("MHT",1);
@@ -440,6 +456,8 @@ void SetOldTreeBranchStatus(TTree* readtree){
    readtree->SetBranchStatus("HTT",1);
    readtree->SetBranchStatus("nBJetLoose",1);
    readtree->SetBranchStatus("nBJetMedium",1);
+   readtree->SetBranchStatus("n_presel_jetFwd",1);
+   readtree->SetBranchStatus("nLightJet",1);
    readtree->SetBranchStatus("FR_weight",1);
    readtree->SetBranchStatus("triggerSF_weight",1);
    readtree->SetBranchStatus("bTagSF_weight",1);
@@ -523,7 +541,7 @@ void SetOldTreeBranchStatus(TTree* readtree){
    readtree->SetBranchStatus("secondLep_isFromC",1);
    readtree->SetBranchStatus("secondLep_mcPromptGamma",1);
    readtree->SetBranchStatus("secondLep_mcPromptFS",1);
-   readtree->SetBranchStatus("Jet_numLoose",1);
+   //readtree->SetBranchStatus("Jet_numLoose",1);
    readtree->SetBranchStatus("leadLep_corrpt",1);
    readtree->SetBranchStatus("secondLep_corrpt",1);
    readtree->SetBranchStatus("leadLep_jetdr",1);
@@ -532,6 +550,7 @@ void SetOldTreeBranchStatus(TTree* readtree){
    readtree->SetBranchStatus("secondLep_jetcsv",1);
    readtree->SetBranchStatus("Mt_metleadlep",1);
    readtree->SetBranchStatus("hadTop_BDT",1);
+   readtree->SetBranchStatus("hadTop_pt",1);
    readtree->SetBranchStatus("leadLep_BDT",1);
    readtree->SetBranchStatus("secondLep_BDT",1);
    readtree->SetBranchStatus("thirdLep_jetcsv",1);

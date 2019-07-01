@@ -4,7 +4,7 @@
 //      Region cuts : 
 //      SigRegion: n_presel_jets >=4
 //      ttWctrl: n_presel_jets ==3
-//      NoJetNCut: ""
+//      DiLepRegion: ""
 // Output:
 // rootplas for plotting and statistics study
 
@@ -27,9 +27,9 @@ std::map<std::string,TH2F*> _ElectronFakeRate;
 
 void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileName, TString Postfix){
 
-    if(Postfix!="SigRegion" && Postfix!="ttWctrl" && Postfix!="NoJetNCut"){
+    if(Postfix!="SigRegion" && Postfix!="ttWctrl" && Postfix!="DiLepRegion"){
         std::cout<< " ##################  ERROR ############ "<<std::endl;
-        std::cout<< " Postfix must be SigRegion,ttWctrl or NoJetNCut, please pass a correct Postfix "<< std::endl;
+        std::cout<< " Postfix must be SigRegion,ttWctrl or DiLepRegion, please pass a correct Postfix "<< std::endl;
         return;
     }
     TString Input = InputDir +"/"+ FileName + "Skim.root";
@@ -50,7 +50,10 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
 
     Long64_t nentries = oldtree->GetEntries(); 
     
-    int nLooseJet=0;
+    float nLooseJet=0;
+    float nLightJet=0;
+    float nBJetLoose=0;
+    float nBJetMedium=0;
     int HiggsDecay=0;
     double rtrueInteractions=0;
     int rnBestVtx=0;
@@ -75,7 +78,10 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
 
     oldtree->SetBranchAddress("trueInteractions", &rtrueInteractions);
     oldtree->SetBranchAddress("nBestVtx", &rnBestVtx);
-    oldtree->SetBranchAddress("Jet_numLoose", &nLooseJet);
+    oldtree->SetBranchAddress("n_presel_jet", &nLooseJet);
+    oldtree->SetBranchAddress("nBJetLoose", &nBJetLoose);
+    oldtree->SetBranchAddress("nBJetMedium", &nBJetMedium);
+    oldtree->SetBranchAddress("nLightJet", &nLightJet);
     oldtree->SetBranchAddress("HiggsDecay", &HiggsDecay);
     oldtree->SetBranchAddress("TTHLep_2L", &TTHLep_2L);
     oldtree->SetBranchAddress("massL", &massL);
@@ -148,7 +154,7 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
 
     float trueInteractions=0;
     float nBestVtx=0;
-    float Jet_numLoose=0;
+    float n_presel_jet=0;
     // shape theoretical uncertainties 
     float CMS_ttHl_thu_shape_ttH(0.), CMS_ttHl_thu_shape_ttH_SysUp(0.), CMS_ttHl_thu_shape_ttH_SysDown(0.);
     float CMS_ttHl_thu_shape_ttW(0.), CMS_ttHl_thu_shape_ttW_SysUp(0.), CMS_ttHl_thu_shape_ttW_SysDown(0.);
@@ -161,13 +167,15 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
     // cut flags 
     float passTrigCut(0.), passMassllCut(0.), passTauNCut(0.), passZvetoCut(0.), passMetLDCut(0.);
     float passTightChargeCut(0.), passLepTightNCut(0.), passGenMatchCut(0.);
+    float is_tH_like_and_not_ttH_like=0.;
 
     newtree = oldtree->CloneTree(0);
     newtree->Branch("TrueInteractions", &trueInteractions);
     newtree->Branch("nBestVTX", &nBestVtx);
+    newtree->Branch("is_tH_like_and_not_ttH_like", &is_tH_like_and_not_ttH_like);
     newtree->Branch("nEvt", &nEvt);
     newtree->Branch("xsec_rwgt", &xsec_rwgt);
-    newtree->Branch("nLooseJet", &Jet_numLoose);
+    newtree->Branch("nLooseJet", &n_presel_jet);
     newtree->Branch("passTrigCut", &passTrigCut);
     newtree->Branch("passMassllCut", &passMassllCut);
     newtree->Branch("passTauNCut", &passTauNCut);
@@ -211,23 +219,30 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
         passLepTightNCut=0;
         passGenMatchCut=0;
         trueInteractions = -999;
-        Jet_numLoose = -999;
+        n_presel_jet = -999;
+        nBJetLoose = -999;
+        nBJetMedium = -999;
+        nLightJet = -999;
         nBestVtx = -999;
         nEvt = -999;
         xsec_rwgt = 1.;
         oldtree->GetEntry(i);
         Bool_t pass2LRegionCut = kTRUE;
+        Bool_t passTHSelectionCut = kFALSE;
         Bool_t passCut = kFALSE;
-        if(Postfix=="SigRegion" && nLooseJet <4)pass2LRegionCut = kFALSE;
-        if(Postfix=="ttWctrl" && nLooseJet !=3)pass2LRegionCut = kFALSE;
-        passCut = pass2LRegionCut;
+        if(Postfix=="SigRegion" && ( (nBJetLoose < 2 && nBJetMedium < 1) || nLooseJet <4))pass2LRegionCut = kFALSE;
+        if(Postfix=="ttWctrl" && ( (nBJetLoose < 2 && nBJetMedium < 1) || nLooseJet !=3))pass2LRegionCut = kFALSE;
+        if(Postfix=="DiLepRegion" && ( (nBJetLoose < 2 && nBJetMedium < 1) || nLooseJet <3))pass2LRegionCut = kFALSE;
+        if(nBJetMedium >0 && nLightJet >0)passTHSelectionCut=kTRUE;
+        passCut = pass2LRegionCut || passTHSelectionCut;
     
         if(passCut){
             trueInteractions = rtrueInteractions;
             nBestVtx = rnBestVtx;
             nEvt = nEvent;
             //xsec_rwgt = get_rewgtlumi(FileName);
-            Jet_numLoose = nLooseJet;
+            n_presel_jet = nLooseJet;
+            is_tH_like_and_not_ttH_like = (passTHSelectionCut && !pass2LRegionCut)? 1:0;
             if (nEvent <0) nEvt = nEvent + 4294967296; // 4294967296 = 2^32, this is to fix the problem saving EVENT_event as a wrong type
             else nEvt = nEvent;
             // fill lnN1D_p1()
@@ -308,6 +323,7 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
             newtree->Fill();
         }
         HiggsDecay =0;
+        is_tH_like_and_not_ttH_like =0;
         TTHLep_2L=0;
         massL=0;
         n_fakeablesel_tau=0;

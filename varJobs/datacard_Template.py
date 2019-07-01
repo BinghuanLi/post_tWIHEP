@@ -7,14 +7,14 @@ import optparse
 import distutils.util
 
 regPerCat={
-"SubCat2l":["2lss","ttWctrl"],
-"DNNCat":["2lss","ttWctrl"],
+"SubCat2l":["DiLepRegion"],
+"DNNCat":["DiLepRegion"],
 "DNNCat_option2":["2lss","ttWctrl"],
 "DNNCat_option3":["2lss","ttWctrl"],
-"DNNSubCat1_option1":["2lss","ttWctrl"],
+"DNNSubCat1_option1":["DiLepRegion"],
 "DNNSubCat1_option2":["2lss","ttWctrl"],
 "DNNSubCat1_option3":["2lss","ttWctrl"],
-"DNNSubCat2_option1":["2lss","ttWctrl"],
+"DNNSubCat2_option1":["DiLepRegion"],
 "DNNSubCat2_option2":["2lss","ttWctrl"],
 "DNNSubCat2_option3":["2lss","ttWctrl"],
 "DNNAMS2Cat1_option1":["2lss","ttWctrl"],
@@ -85,37 +85,39 @@ h_data_name ="data_obs"
 samplesToUse=[]
 
 samples = [
-#"TTH_hww","TTH_hzz","TTH_htt","TTH_hot",
-"TTH_hww","TTH_hzz","TTH_htt","TTH_hmm","TTH_hot",
-"THQ_hww","THQ_hzz","THQ_htt",
-"THW_hww","THW_hzz","THW_htt",
+#"ttH_hww","ttH_hzz","ttH_htt","ttH_hot",
+"ttH_hww","ttH_hzz","ttH_htt","ttH_hmm","ttH_hot",
+"tHq_hww","tHq_hzz","tHq_htt",
+"tHW_hww","tHW_hzz","tHW_htt",
 "TTWW","TTW","TTZ","EWK","Rares","Conv","Fakes","Flips"]
 
 samplesMM = [
-#"TTH_hww","TTH_hzz","TTH_htt","TTH_hot",
-"TTH_hww","TTH_hzz","TTH_htt","TTH_hmm","TTH_hot",
-"THQ_hww","THQ_hzz","THQ_htt",
-"THW_hww","THW_hzz","THW_htt",
+#"ttH_hww","ttH_hzz","ttH_htt","ttH_hot",
+"ttH_hww","ttH_hzz","ttH_htt","ttH_hmm","ttH_hot",
+"tHq_hww","tHq_hzz","tHq_htt",
+"tHW_hww","tHW_hzz","tHW_htt",
 "TTWW","TTW","TTZ","EWK","Rares","Fakes"]
 
-samplesEE = ["TTH_hww","TTH_hzz","TTH_htt","TTH_hot",
-"THQ_hww","THQ_hzz","THQ_htt",
-"THW_hww","THW_hzz","THW_htt",
+samplesEE = ["ttH_hww","ttH_hzz","ttH_htt","ttH_hot",
+"tHq_hww","tHq_hzz","tHq_htt",
+"tHW_hww","tHW_hzz","tHW_htt",
 "TTWW","TTW","TTZ","EWK","Rares","Conv","Fakes","Flips"]
 
 Rates = {
 "Rares":0, "EWK":0, "Conv":0, "TTW":0, "TTWW":0, "TTZ":0, "Fakes":0, "Flips":0, 
-"TTH_htt":0,"TTH_hww":0,"TTH_hzz":0,"TTH_hot":0,"TTH_hmm":0,
-"THQ_htt":0,"THQ_hww":0,"THQ_hzz":0,
-"THW_htt":0,"THW_hww":0,"THW_hzz":0
+"ttH_htt":0,"ttH_hww":0,"ttH_hzz":0,"ttH_hot":0,"ttH_hmm":0,
+"tHq_htt":0,"tHq_hww":0,"tHq_hzz":0,
+"tHW_htt":0,"tHW_hww":0,"tHW_hzz":0
 
  }
 
 Labels = {
 "Rares":11, "EWK":10, "Conv":12, "TTW":8, "TTWW":7, "TTZ":9, "Fakes":13, "Flips":25, 
-"TTH_htt":-7,"TTH_hww":-9,"TTH_hzz":-8,"TTH_hot":-5,"TTH_hmm":-6,
-"THQ_htt":3,"THQ_hww":1,"THQ_hzz":2,
-"THW_htt":6,"THW_hww":4,"THW_hzz":5
+"ttH_htt":-7,"ttH_hww":-9,"ttH_hzz":-8,"ttH_hot":-5,"ttH_hmm":-6,
+#"tHq_htt":3,"tHq_hww":1,"tHq_hzz":2,
+#"tHW_htt":6,"tHW_hww":4,"tHW_hzz":5
+"tHq_htt":-13,"tHq_hww":-11,"tHq_hzz":-12,
+"tHW_htt":-16,"tHW_hww":-14,"tHW_hzz":-15
  }
 
 ### the nuisances that will be written into the datacards
@@ -159,49 +161,49 @@ channelSyst={
 }
 
 YieldSysts={
-"QCDscale_ttW":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "TTH_htt":"-","TTH_hww":"-","TTH_hzz":"-","TTH_hot":"-","TTH_hmm": "-", "TTW" : "0.885/1.129", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
-"pdf_Higgs_ttH":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "TTH_htt":"1.036","TTH_hww":"1.036","TTH_hzz":"1.036","TTH_hot":"1.036","TTH_hmm": "1.036", "TTW" : "-", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
-"pdf_qqbar":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "TTH_htt":"-","TTH_hww":"-","TTH_hzz":"-","TTH_hot":"-","TTH_hmm": "-", "TTW" : "1.040", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
-"QCDscale_ttZ":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "TTH_htt":"-","TTH_hww":"-","TTH_hzz":"-","TTH_hot":"-","TTH_hmm": "-", "TTW" : "-", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"-", "TTZ": "0.904/1.112", "Fakes": "-", "Flips": "-"},
-"lumi_13TeV_2017":{"EWK": "1.023" , "Rares": "1.023" , "Conv" : "1.023", "TTH_htt":"1.023","TTH_hww":"1.023","TTH_hzz":"1.023","TTH_hot":"1.023","TTH_hmm": "1.023", "TTW" : "1.023", "THQ_htt":"1.023","THQ_hww":"1.023","THQ_hzz":"1.023","THW_htt":"1.023","THW_hww":"1.023","THW_hzz":"1.023", "TTWW":"1.023", "TTZ": "1.023", "Fakes": "-", "Flips":"-"},
-"pdf_gg":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "TTH_htt":"-","TTH_hww":"-","TTH_hzz":"-","TTH_hot":"-","TTH_hmm": "-", "TTW" : "-", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"-", "TTZ": "0.966", "Fakes": "-", "Flips": "-"},
-"pdf_ttWW":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "TTH_htt":"-","TTH_hww":"-","TTH_hzz":"-","TTH_hot":"-","TTH_hmm": "-", "TTW" : "-", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"1.030", "TTZ": "-", "Fakes": "-", "Flips": "-"},
-"QCDscale_ttH":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "TTH_htt":"0.907/1.058","TTH_hww":"0.907/1.058","TTH_hzz":"0.907/1.058","TTH_hot":"0.907/1.058","TTH_hmm": "0.907/1.058", "TTW" : "-", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
-"QCDscale_ttWW":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "TTH_htt":"-","TTH_hww":"-","TTH_hzz":"-","TTH_hot":"-","TTH_hmm": "-", "TTW" : "-", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"0.891/1.081", "TTZ": "-", "Fakes": "-", "Flips": "-"},
-"CMS_ttHl_QF":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "TTH_htt":"-","TTH_hww":"-","TTH_hzz":"-","TTH_hot":"-","TTH_hmm": "-", "TTW" : "-", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "1.300"},
-"CMS_ttHl_EWK_4j":{"EWK": "2.000" , "Rares": "-" , "Conv" : "-", "TTH_htt":"-","TTH_hww":"-","TTH_hzz":"-","TTH_hot":"-","TTH_hmm": "-", "TTW" : "-", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
-"CMS_ttHl_Convs":{"EWK": "-" , "Rares": "-" , "Conv" : "1.300", "TTH_htt":"-","TTH_hww":"-","TTH_hzz":"-","TTH_hot":"-","TTH_hmm": "-", "TTW" : "-", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
-"CMS_ttHl_Rares":{"EWK": "-" , "Rares": "1.500" , "Conv" : "-", "TTH_htt":"-","TTH_hww":"-","TTH_hzz":"-","TTH_hot":"-","TTH_hmm": "-", "TTW" : "-", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
-"BR_htt":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "TTH_htt":"1.016","TTH_hww":"-","TTH_hzz":"-","TTH_hot":"-","TTH_hmm": "-", "TTW" : "-", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
-"BR_hvv":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "TTH_htt":"-","TTH_hww":"1.015","TTH_hzz":"-","TTH_hot":"-","TTH_hmm": "-", "TTW" : "-", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
-"BR_hzz":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "TTH_htt":"-","TTH_hww":"-","TTH_hzz":"1.015","TTH_hot":"-","TTH_hmm": "-", "TTW" : "-", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
-#"CMS_ttHl16_lepEff_muloose":{"EWK": "1.020" , "Rares": "1.020" , "Conv" : "1.020", "TTH_htt":"1.020","TTH_hww":"1.020","TTH_hzz":"1.020","TTH_hot":"1.020","TTH_hmm": "1.020", "TTW" : "1.020", "THQ_htt":"1.020","THQ_hww":"1.020","THQ_hzz":"1.020","THW_htt":"1.020","THW_hww":"1.020","THW_hzz":"1.020", "TTWW":"1.020", "TTZ": "1.020", "Fakes": "-", "Flips": "-"},
-"CMS_ttHl16_lepEff_mutight":{"EWK": "1.030" , "Rares": "1.030" , "Conv" : "1.030", "TTH_htt":"1.030","TTH_hww":"1.030","TTH_hzz":"1.030","TTH_hot":"1.030","TTH_hmm": "1.030", "TTW" : "1.030", "THQ_htt":"1.030","THQ_hww":"1.030","THQ_hzz":"1.030","THW_htt":"1.030","THW_hww":"1.030","THW_hzz":"1.030", "TTWW":"1.030", "TTZ": "1.030", "Fakes": "-", "Flips": "-"},
-#"CMS_ttHl16_lepEff_elloose":{"EWK": "1.020" , "Rares": "1.020" , "Conv" : "1.020", "TTH_htt":"1.020","TTH_hww":"1.020","TTH_hzz":"1.020","TTH_hot":"1.020","TTH_hmm": "1.020", "TTW" : "1.020", "THQ_htt":"1.020","THQ_hww":"1.020","THQ_hzz":"1.020","THW_htt":"1.020","THW_hww":"1.020","THW_hzz":"1.020", "TTWW":"1.020", "TTZ": "1.020", "Fakes": "-", "Flips": "-"},
-"CMS_ttHl16_lepEff_eltight":{"EWK": "1.030" , "Rares": "1.030" , "Conv" : "1.030", "TTH_htt":"1.030","TTH_hww":"1.030","TTH_hzz":"1.030","TTH_hot":"1.030","TTH_hmm": "1.030", "TTW" : "1.030", "THQ_htt":"1.030","THQ_hww":"1.030","THQ_hzz":"1.030","THW_htt":"1.030","THW_hww":"1.030","THW_hzz":"1.030", "TTWW":"1.030", "TTZ": "1.030", "Fakes": "-", "Flips": "-"},
-"CMS_ttHl17_Clos_e_norm":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "TTH_htt":"-","TTH_hww":"-","TTH_hzz":"-","TTH_hot":"-","TTH_hmm": "-", "TTW" : "-", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "1.100", "Flips": "-"},
-"CMS_ttHl17_Clos_e_bt_norm":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "TTH_htt":"-","TTH_hww":"-","TTH_hzz":"-","TTH_hot":"-","TTH_hmm": "-", "TTW" : "-", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "1.100", "Flips": "-"},
-"CMS_ttHl17_Clos_m_norm":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "TTH_htt":"-","TTH_hww":"-","TTH_hzz":"-","TTH_hot":"-","TTH_hmm": "-", "TTW" : "-", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "1.100", "Flips": "-"},
-"CMS_ttHl17_Clos_m_bt_norm":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "TTH_htt":"-","TTH_hww":"-","TTH_hzz":"-","TTH_hot":"-","TTH_hmm": "-", "TTW" : "-", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "1.150", "Flips": "-"},
-"QCDscale_tHq":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "TTH_htt":"-","TTH_hww":"-","TTH_hzz":"-","TTH_hot":"-","TTH_hmm": "-", "TTW" : "-", "THQ_htt":"0.933/1.041","THQ_hww":"0.933/1.041","THQ_hzz":"0.933/1.041","THW_htt":"-","THW_hww":"-","THW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
-"QCDscale_tHW":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "TTH_htt":"-","TTH_hww":"-","TTH_hzz":"-","TTH_hot":"-","TTH_hmm": "-", "TTW" : "-", "THQ_htt":"-","THQ_hww":"-","THQ_hzz":"-","THW_htt":"0.939/1.046","THW_hww":"0.939/1.046","THW_hzz":"0.939/1.046", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
-"pdf_qg":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "TTH_htt":"-","TTH_hww":"-","TTH_hzz":"-","TTH_hot":"-","TTH_hmm": "-", "TTW" : "-", "THQ_htt":"1.010","THQ_hww":"1.010","THQ_hzz":"1.010","THW_htt":"1.027","THW_hww":"1.027","THW_hzz":"1.027", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
+"QCDscale_ttW":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "ttH_htt":"-","ttH_hww":"-","ttH_hzz":"-","ttH_hot":"-","ttH_hmm": "-", "TTW" : "0.885/1.129", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
+"pdf_Higgs_ttH":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "ttH_htt":"1.036","ttH_hww":"1.036","ttH_hzz":"1.036","ttH_hot":"1.036","ttH_hmm": "1.036", "TTW" : "-", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
+"pdf_qqbar":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "ttH_htt":"-","ttH_hww":"-","ttH_hzz":"-","ttH_hot":"-","ttH_hmm": "-", "TTW" : "1.040", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
+"QCDscale_ttZ":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "ttH_htt":"-","ttH_hww":"-","ttH_hzz":"-","ttH_hot":"-","ttH_hmm": "-", "TTW" : "-", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"-", "TTZ": "0.904/1.112", "Fakes": "-", "Flips": "-"},
+"lumi_13TeV_2017":{"EWK": "1.023" , "Rares": "1.023" , "Conv" : "1.023", "ttH_htt":"1.023","ttH_hww":"1.023","ttH_hzz":"1.023","ttH_hot":"1.023","ttH_hmm": "1.023", "TTW" : "1.023", "tHq_htt":"1.023","tHq_hww":"1.023","tHq_hzz":"1.023","tHW_htt":"1.023","tHW_hww":"1.023","tHW_hzz":"1.023", "TTWW":"1.023", "TTZ": "1.023", "Fakes": "-", "Flips":"-"},
+"pdf_gg":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "ttH_htt":"-","ttH_hww":"-","ttH_hzz":"-","ttH_hot":"-","ttH_hmm": "-", "TTW" : "-", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"-", "TTZ": "0.966", "Fakes": "-", "Flips": "-"},
+"pdf_ttWW":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "ttH_htt":"-","ttH_hww":"-","ttH_hzz":"-","ttH_hot":"-","ttH_hmm": "-", "TTW" : "-", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"1.030", "TTZ": "-", "Fakes": "-", "Flips": "-"},
+"QCDscale_ttH":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "ttH_htt":"0.907/1.058","ttH_hww":"0.907/1.058","ttH_hzz":"0.907/1.058","ttH_hot":"0.907/1.058","ttH_hmm": "0.907/1.058", "TTW" : "-", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
+"QCDscale_ttWW":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "ttH_htt":"-","ttH_hww":"-","ttH_hzz":"-","ttH_hot":"-","ttH_hmm": "-", "TTW" : "-", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"0.891/1.081", "TTZ": "-", "Fakes": "-", "Flips": "-"},
+"CMS_ttHl_QF":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "ttH_htt":"-","ttH_hww":"-","ttH_hzz":"-","ttH_hot":"-","ttH_hmm": "-", "TTW" : "-", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "1.300"},
+"CMS_ttHl_EWK_4j":{"EWK": "2.000" , "Rares": "-" , "Conv" : "-", "ttH_htt":"-","ttH_hww":"-","ttH_hzz":"-","ttH_hot":"-","ttH_hmm": "-", "TTW" : "-", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
+"CMS_ttHl_Convs":{"EWK": "-" , "Rares": "-" , "Conv" : "1.300", "ttH_htt":"-","ttH_hww":"-","ttH_hzz":"-","ttH_hot":"-","ttH_hmm": "-", "TTW" : "-", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
+"CMS_ttHl_Rares":{"EWK": "-" , "Rares": "1.500" , "Conv" : "-", "ttH_htt":"-","ttH_hww":"-","ttH_hzz":"-","ttH_hot":"-","ttH_hmm": "-", "TTW" : "-", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
+"BR_htt":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "ttH_htt":"1.016","ttH_hww":"-","ttH_hzz":"-","ttH_hot":"-","ttH_hmm": "-", "TTW" : "-", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
+"BR_hvv":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "ttH_htt":"-","ttH_hww":"1.015","ttH_hzz":"-","ttH_hot":"-","ttH_hmm": "-", "TTW" : "-", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
+"BR_hzz":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "ttH_htt":"-","ttH_hww":"-","ttH_hzz":"1.015","ttH_hot":"-","ttH_hmm": "-", "TTW" : "-", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
+#"CMS_ttHl16_lepEff_muloose":{"EWK": "1.020" , "Rares": "1.020" , "Conv" : "1.020", "ttH_htt":"1.020","ttH_hww":"1.020","ttH_hzz":"1.020","ttH_hot":"1.020","ttH_hmm": "1.020", "TTW" : "1.020", "tHq_htt":"1.020","tHq_hww":"1.020","tHq_hzz":"1.020","tHW_htt":"1.020","tHW_hww":"1.020","tHW_hzz":"1.020", "TTWW":"1.020", "TTZ": "1.020", "Fakes": "-", "Flips": "-"},
+"CMS_ttHl16_lepEff_mutight":{"EWK": "1.030" , "Rares": "1.030" , "Conv" : "1.030", "ttH_htt":"1.030","ttH_hww":"1.030","ttH_hzz":"1.030","ttH_hot":"1.030","ttH_hmm": "1.030", "TTW" : "1.030", "tHq_htt":"1.030","tHq_hww":"1.030","tHq_hzz":"1.030","tHW_htt":"1.030","tHW_hww":"1.030","tHW_hzz":"1.030", "TTWW":"1.030", "TTZ": "1.030", "Fakes": "-", "Flips": "-"},
+#"CMS_ttHl16_lepEff_elloose":{"EWK": "1.020" , "Rares": "1.020" , "Conv" : "1.020", "ttH_htt":"1.020","ttH_hww":"1.020","ttH_hzz":"1.020","ttH_hot":"1.020","ttH_hmm": "1.020", "TTW" : "1.020", "tHq_htt":"1.020","tHq_hww":"1.020","tHq_hzz":"1.020","tHW_htt":"1.020","tHW_hww":"1.020","tHW_hzz":"1.020", "TTWW":"1.020", "TTZ": "1.020", "Fakes": "-", "Flips": "-"},
+"CMS_ttHl16_lepEff_eltight":{"EWK": "1.030" , "Rares": "1.030" , "Conv" : "1.030", "ttH_htt":"1.030","ttH_hww":"1.030","ttH_hzz":"1.030","ttH_hot":"1.030","ttH_hmm": "1.030", "TTW" : "1.030", "tHq_htt":"1.030","tHq_hww":"1.030","tHq_hzz":"1.030","tHW_htt":"1.030","tHW_hww":"1.030","tHW_hzz":"1.030", "TTWW":"1.030", "TTZ": "1.030", "Fakes": "-", "Flips": "-"},
+"CMS_ttHl17_Clos_e_norm":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "ttH_htt":"-","ttH_hww":"-","ttH_hzz":"-","ttH_hot":"-","ttH_hmm": "-", "TTW" : "-", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "1.100", "Flips": "-"},
+"CMS_ttHl17_Clos_e_bt_norm":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "ttH_htt":"-","ttH_hww":"-","ttH_hzz":"-","ttH_hot":"-","ttH_hmm": "-", "TTW" : "-", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "1.100", "Flips": "-"},
+"CMS_ttHl17_Clos_m_norm":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "ttH_htt":"-","ttH_hww":"-","ttH_hzz":"-","ttH_hot":"-","ttH_hmm": "-", "TTW" : "-", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "1.100", "Flips": "-"},
+"CMS_ttHl17_Clos_m_bt_norm":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "ttH_htt":"-","ttH_hww":"-","ttH_hzz":"-","ttH_hot":"-","ttH_hmm": "-", "TTW" : "-", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "1.150", "Flips": "-"},
+"QCDscale_tHq":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "ttH_htt":"-","ttH_hww":"-","ttH_hzz":"-","ttH_hot":"-","ttH_hmm": "-", "TTW" : "-", "tHq_htt":"0.933/1.041","tHq_hww":"0.933/1.041","tHq_hzz":"0.933/1.041","tHW_htt":"-","tHW_hww":"-","tHW_hzz":"-", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
+"QCDscale_tHW":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "ttH_htt":"-","ttH_hww":"-","ttH_hzz":"-","ttH_hot":"-","ttH_hmm": "-", "TTW" : "-", "tHq_htt":"-","tHq_hww":"-","tHq_hzz":"-","tHW_htt":"0.939/1.046","tHW_hww":"0.939/1.046","tHW_hzz":"0.939/1.046", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
+"pdf_qg":{"EWK": "-" , "Rares": "-" , "Conv" : "-", "ttH_htt":"-","ttH_hww":"-","ttH_hzz":"-","ttH_hot":"-","ttH_hmm": "-", "TTW" : "-", "tHq_htt":"1.010","tHq_hww":"1.010","tHq_hzz":"1.010","tHW_htt":"1.027","tHW_hww":"1.027","tHW_hzz":"1.027", "TTWW":"-", "TTZ": "-", "Fakes": "-", "Flips": "-"},
 }
 
 ShapeSysts={
-#"PU": ["Rares","EWK","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hmm","TTH_hot", "THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz"],
-"CMS_scale_j": ["Rares","EWK","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hmm","TTH_hot", "THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz"],
-"CMS_ttHl17_trigger":["Rares","EWK","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hmm","TTH_hot", "THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz"],
-"CMS_ttHl17_btag_HFStats1":["Rares","EWK","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hmm","TTH_hot", "THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz"],
-"CMS_ttHl17_btag_HFStats2":["Rares","EWK","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hmm","TTH_hot", "THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz"],
-"CMS_ttHl16_btag_cErr1":["Rares","EWK","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hmm","TTH_hot", "THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz"],
-"CMS_ttHl16_btag_cErr2":["Rares","EWK","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hmm","TTH_hot", "THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz"],
-"CMS_ttHl16_btag_LF":["Rares","EWK","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hmm","TTH_hot", "THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz"],
-"CMS_ttHl16_btag_HF":["Rares","EWK","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hmm","TTH_hot", "THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz"],
-"CMS_ttHl17_btag_LFStats1":["Rares","EWK","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hmm","TTH_hot", "THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz"],
-"CMS_ttHl17_btag_LFStats2":["Rares","EWK","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hmm","TTH_hot", "THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz"],
+#"PU": ["Rares","EWK","Conv","TTW","TTZ","TTWW","ttH_htt","ttH_hww","ttH_hzz","ttH_hmm","ttH_hot", "tHq_htt","tHq_hww","tHq_hzz","tHW_htt","tHW_hww","tHW_hzz"],
+"CMS_scale_j": ["Rares","EWK","Conv","TTW","TTZ","TTWW","ttH_htt","ttH_hww","ttH_hzz","ttH_hmm","ttH_hot", "tHq_htt","tHq_hww","tHq_hzz","tHW_htt","tHW_hww","tHW_hzz"],
+"CMS_ttHl17_trigger":["Rares","EWK","Conv","TTW","TTZ","TTWW","ttH_htt","ttH_hww","ttH_hzz","ttH_hmm","ttH_hot", "tHq_htt","tHq_hww","tHq_hzz","tHW_htt","tHW_hww","tHW_hzz"],
+"CMS_ttHl17_btag_HFStats1":["Rares","EWK","Conv","TTW","TTZ","TTWW","ttH_htt","ttH_hww","ttH_hzz","ttH_hmm","ttH_hot", "tHq_htt","tHq_hww","tHq_hzz","tHW_htt","tHW_hww","tHW_hzz"],
+"CMS_ttHl17_btag_HFStats2":["Rares","EWK","Conv","TTW","TTZ","TTWW","ttH_htt","ttH_hww","ttH_hzz","ttH_hmm","ttH_hot", "tHq_htt","tHq_hww","tHq_hzz","tHW_htt","tHW_hww","tHW_hzz"],
+"CMS_ttHl16_btag_cErr1":["Rares","EWK","Conv","TTW","TTZ","TTWW","ttH_htt","ttH_hww","ttH_hzz","ttH_hmm","ttH_hot", "tHq_htt","tHq_hww","tHq_hzz","tHW_htt","tHW_hww","tHW_hzz"],
+"CMS_ttHl16_btag_cErr2":["Rares","EWK","Conv","TTW","TTZ","TTWW","ttH_htt","ttH_hww","ttH_hzz","ttH_hmm","ttH_hot", "tHq_htt","tHq_hww","tHq_hzz","tHW_htt","tHW_hww","tHW_hzz"],
+"CMS_ttHl16_btag_LF":["Rares","EWK","Conv","TTW","TTZ","TTWW","ttH_htt","ttH_hww","ttH_hzz","ttH_hmm","ttH_hot", "tHq_htt","tHq_hww","tHq_hzz","tHW_htt","tHW_hww","tHW_hzz"],
+"CMS_ttHl16_btag_HF":["Rares","EWK","Conv","TTW","TTZ","TTWW","ttH_htt","ttH_hww","ttH_hzz","ttH_hmm","ttH_hot", "tHq_htt","tHq_hww","tHq_hzz","tHW_htt","tHW_hww","tHW_hzz"],
+"CMS_ttHl17_btag_LFStats1":["Rares","EWK","Conv","TTW","TTZ","TTWW","ttH_htt","ttH_hww","ttH_hzz","ttH_hmm","ttH_hot", "tHq_htt","tHq_hww","tHq_hzz","tHW_htt","tHW_hww","tHW_hzz"],
+"CMS_ttHl17_btag_LFStats2":["Rares","EWK","Conv","TTW","TTZ","TTWW","ttH_htt","ttH_hww","ttH_hzz","ttH_hmm","ttH_hot", "tHq_htt","tHq_hww","tHq_hzz","tHW_htt","tHW_hww","tHW_hzz"],
 "CMS_ttHl_thu_shape_ttW":["TTW"],
-"CMS_ttHl_thu_shape_ttH":["TTH_htt","TTH_hzz","TTH_hww","TTH_hmm","TTH_hot"],
+"CMS_ttHl_thu_shape_ttH":["ttH_htt","ttH_hzz","ttH_hww","ttH_hmm","ttH_hot"],
 "CMS_ttHl_thu_shape_ttZ":["TTZ"],
 
 "CMS_ttHl16_FRm_norm":["Fakes"],
@@ -213,10 +215,10 @@ ShapeSysts={
 "CMS_ttHl16_FRe_be":["Fakes"],
 "CMS_ttHl17_Clos_e_shape":["Fakes"],
 
-"CMS_ttHl16_lepEff_muloose":["Rares","EWK","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hmm","TTH_hot", "THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz"], #
-"CMS_ttHl16_lepEff_mutight":["Rares","EWK","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hmm","TTH_hot", "THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz"], #
-"CMS_ttHl16_lepEff_elloose":["Rares","EWK","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hmm","TTH_hot", "THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz"], #
-"CMS_ttHl16_lepEff_eltight":["Rares","EWK","Conv","TTW","TTZ","TTWW","TTH_htt","TTH_hww","TTH_hzz","TTH_hmm","TTH_hot", "THQ_htt","THQ_hww","THQ_hzz","THW_htt","THW_hww","THW_hzz"], #
+"CMS_ttHl16_lepEff_muloose":["Rares","EWK","Conv","TTW","TTZ","TTWW","ttH_htt","ttH_hww","ttH_hzz","ttH_hmm","ttH_hot", "tHq_htt","tHq_hww","tHq_hzz","tHW_htt","tHW_hww","tHW_hzz"], #
+"CMS_ttHl16_lepEff_mutight":["Rares","EWK","Conv","TTW","TTZ","TTWW","ttH_htt","ttH_hww","ttH_hzz","ttH_hmm","ttH_hot", "tHq_htt","tHq_hww","tHq_hzz","tHW_htt","tHW_hww","tHW_hzz"], #
+"CMS_ttHl16_lepEff_elloose":["Rares","EWK","Conv","TTW","TTZ","TTWW","ttH_htt","ttH_hww","ttH_hzz","ttH_hmm","ttH_hot", "tHq_htt","tHq_hww","tHq_hzz","tHW_htt","tHW_hww","tHW_hzz"], #
+"CMS_ttHl16_lepEff_eltight":["Rares","EWK","Conv","TTW","TTZ","TTWW","ttH_htt","ttH_hww","ttH_hzz","ttH_hmm","ttH_hot", "tHq_htt","tHq_hww","tHq_hzz","tHW_htt","tHW_hww","tHW_hzz"], #
 "CMS_ttHl17_Clos_e_norm":["Fakes"], #
 "CMS_ttHl17_Clos_m_norm":["Fakes"], #
 "CMS_ttHl17_Clos_e_bt_norm":["Fakes"],#

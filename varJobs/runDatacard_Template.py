@@ -4,11 +4,12 @@ from ROOT import TString, TFile, TTree
 from threading import Thread
 
 
-Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNAMS2Cat1_option1","DNNAMS2Cat1_option2","DNNAMS2Cat1_option3","DNNAMS3Cat1_option1","DNNAMS3Cat1_option2","DNNAMS3Cat1_option3"]
-#Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat2_option1","DNNSubCat2_option2"]
-#Categories=["DNNCat_option2"]
-Uncs = ["All","NoStat","NoSyst","None","NoShape"]
-#Uncs = ["NoShape"]
+#Categories=["SubCat2l","DNNCat","DNNCat_option2","DNNCat_option3","DNNAMS2Cat1_option1","DNNAMS2Cat1_option2","DNNAMS2Cat1_option3","DNNAMS3Cat1_option1","DNNAMS3Cat1_option2","DNNAMS3Cat1_option3"]
+#Categories=["DNNCat","DNNSubCat1_option1","DNNSubCat2_option1"]
+#Categories=["DNNSubCat2_option1"]
+Categories=["DNNSubCat2_option1"]
+#Uncs = ["All","NoStat","NoSyst","None","NoShape"]
+Uncs = ["All","NoShape"]
 Opts = {
 "All":" ",
 "NoStat":" -m ",
@@ -35,8 +36,7 @@ varPerCat={
 "DNNAMS3Cat1_option3":["DNN_maxval_option3"],
 }
 
-version = "V0321_loose_AMSBin"
-
+version = "V0626_DNN_GT1"
 
 for Unc in Uncs:
     command_cp = "cp -r "+version+"_datacards "+version+"_datacards_"+Unc

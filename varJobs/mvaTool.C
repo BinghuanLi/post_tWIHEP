@@ -1,9 +1,10 @@
 #define mvaTool_cxx
 #include "mvaTool.h"
 
-mvaTool::mvaTool(TString regName, TString binDir, Int_t channel, TString Category, TString TreeName, std::map<Int_t, TString> channelNameMap){
+mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, TString Category, TString TreeName, std::map<Int_t, TString> channelNameMap){
   
   _channel = channel;
+  _nPerBin = nPerBin;
   subCat2l = Category;
   treeName = TreeName;
   ChannelNameMap = channelNameMap;
@@ -29,6 +30,8 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t channel, TString Categor
     varList.push_back("massll");
     varList.push_back("Sum2lCharge");
     varList.push_back("n_presel_jet");
+    varList.push_back("n_presel_ele");
+    varList.push_back("n_presel_mu");
     varList.push_back("MHT");
     varList.push_back("metLD");
     varList.push_back("Dilep_bestMVA");
@@ -655,6 +658,8 @@ void mvaTool::createHists(TString sampleName){
       if(varList[i]== "minMllSFOS") {nbins= 10; xmin= 0; xmax= 300;};
       if(varList[i]== "nLepFO") {nbins= 6; xmin= -0.5; xmax= 5.5;};
       if(varList[i]== "nLepTight") {nbins= 6; xmin= -0.5; xmax= 5.5;};
+      if(varList[i]== "n_presel_ele") {nbins= 6; xmin= -0.5; xmax= 5.5;};
+      if(varList[i]== "n_presel_mu") {nbins= 6; xmin= -0.5; xmax= 5.5;};
       if(varList[i]== "puWeight") {nbins= 30; xmin= 0.6; xmax= 1.4;};
       if(varList[i]== "bWeight") {nbins= 30; xmin= 0.6; xmax= 1.4;};
       if(varList[i]== "TriggerSF") {nbins= 30; xmin= 0.88; xmax= 1.12;};
@@ -708,7 +713,7 @@ void mvaTool::createHists(TString sampleName){
       }else{
         std::vector<double> bins;
         bins.clear();
-        bins=getBins(theBinFile, histoName, 5 , 0.1, xmin, xmax);
+        bins=getBins(theBinFile, histoName, _nPerBin , 0.1, xmin, xmax);
         if(bins.size()<=1){
             TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),1,xmin,xmax);
             histo->Sumw2();
@@ -978,7 +983,7 @@ std::vector<double> mvaTool::getBins(TFile* theBinFile, TString HistoName, float
     xmin = h_sig->GetBinLowEdge(1);
     xmax = h_sig->GetBinLowEdge(binN+1);
     Float_t N_total = h_sig->Integral()+h_bkg->Integral();
-    Int_t Bin = floor(N_total/minN_total);
+    Int_t Bin = min(100, int(floor(N_total/minN_total)));
     std::cout << "Nsig, Ntot "<<h_sig->Integral()<<","<<h_bkg->Integral()<<" getBins: initial bin "<< Bin   << std::endl;
     float sig_yield = 0.;
     std::vector<double> bins;

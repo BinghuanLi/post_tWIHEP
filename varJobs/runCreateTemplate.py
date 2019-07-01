@@ -31,7 +31,15 @@ varPerCat={
 "DNNAMS3Cat1_option3":["DNN_maxval_option3"],
 }
 
-version = "V0626_DNN_GT3"
+Uncs = ["All","NoShape"]
+Opts = {
+"All":" ",
+"NoStat":" -m ",
+"NoSyst":" -s ",
+"NoShape":" -t ",
+"None":" -s -m ",
+}
+version = "V0626_DNN_GT5"
 inputDir = "Output"
 
 for category in Categories:
@@ -47,3 +55,18 @@ for category in Categories:
         command_run = "python createDatacardRootFile.py -i "+inputDir+"/"+category+"/ -o "+DirName_datacard+"/ -v "+var+" -c "+category+" > "+DirName_datacard+"/Information.txt"
         print(command_run) 
         os.system(command_run)
+
+
+for Unc in Uncs:
+    command_cp = "cp -r "+version+"_datacards "+version+"_datacards_"+Unc
+    print(command_cp)
+    os.system(command_cp)
+    for category in Categories:
+        for var in varPerCat[category]:
+            DirName_datacard = version+"_datacards_"+Unc+"/"+category+"/"+var
+            print ( "write txt for var: "+var+ " in cat: "+ category)
+            if not os.path.exists(DirName_datacard):
+                os.popen("mkdir -p "+DirName_datacard)
+            command_run = "python datacard_Template.py -i "+version+"_datacards_"+Unc+"/ -v "+var+" -c "+category+Opts[Unc]+" > "+DirName_datacard+"/datacard.log"
+            print(command_run) 
+            os.system(command_run)

@@ -6,14 +6,14 @@ import optparse
 import distutils.util
 
 regPerCat={
-"SubCat2l":["SigRegion","ttWctrl"],
-"DNNCat":["SigRegion","ttWctrl"],
+"SubCat2l":["DiLepRegion"],
+"DNNCat":["DiLepRegion"],
 "DNNCat_option2":["SigRegion","ttWctrl"],
 "DNNCat_option3":["SigRegion","ttWctrl"],
-"DNNSubCat1_option1":["SigRegion","ttWctrl"],
+"DNNSubCat1_option1":["DiLepRegion"],
 "DNNSubCat1_option2":["SigRegion","ttWctrl"],
 "DNNSubCat1_option3":["SigRegion","ttWctrl"],
-"DNNSubCat2_option1":["SigRegion","ttWctrl"],
+"DNNSubCat2_option1":["DiLepRegion"],
 "DNNSubCat2_option2":["SigRegion","ttWctrl"],
 "DNNSubCat2_option3":["SigRegion","ttWctrl"],
 "DNNAMS2Cat1_option1":["SigRegion","ttWctrl"],
@@ -24,8 +24,8 @@ regPerCat={
 "DNNAMS3Cat1_option3":["SigRegion","ttWctrl"],
 }
 subCats={
-#"SubCat2l":["inclusive","ee_neg","ee_pos", "em_bl_neg","em_bl_pos","em_bt_neg","em_bt_pos", "mm_bl_neg","mm_bl_pos","mm_bt_neg","mm_bt_pos" ]
-"SubCat2l":["ee_neg","ee_pos", "em_bl_neg","em_bl_pos","em_bt_neg","em_bt_pos", "mm_bl_neg","mm_bl_pos","mm_bt_neg","mm_bt_pos" ],
+"SubCat2l":["inclusive","ee_neg","ee_pos", "em_bl_neg","em_bl_pos","em_bt_neg","em_bt_pos", "mm_bl_neg","mm_bl_pos","mm_bt_neg","mm_bt_pos" ],
+#"SubCat2l":["ee_neg","ee_pos", "em_bl_neg","em_bl_pos","em_bt_neg","em_bt_pos", "mm_bl_neg","mm_bl_pos","mm_bt_neg","mm_bt_pos" ],
 "DNNCat":["ttHnode","ttJnode","ttWnode","ttZnode"],
 #"DNNCat_option2":["inclusive","ttHnode","ttJnode","ttWnode","ttZnode"],
 #"DNNCat_option3":["inclusive","ttHnode","ttJnode","ttWnode","ttZnode"],
@@ -46,9 +46,12 @@ subCats={
 }
 
 histoGramPerSample = {"EWK":"EWK","Conv":"Conv","TTW":"TTW","TTZ":"TTZ","Rares":"Rares","TTWW":"TTWW","Fakes":"Fakes", "Flips":"Flips",
-"THQ_htt":"THQ_htt","THQ_hww":"THQ_hww","THQ_hzz":"THQ_hzz",
-"THW_htt":"THW_htt","THW_hww":"THW_hww","THW_hzz":"THW_hzz",
-"TTH_htt":"TTH_htt","TTH_hww":"TTH_hww","TTH_hzz":"TTH_hzz","TTH_hot":"TTH_hot","TTH_hmm":"TTH_hmm"
+#"THQ_htt":"THQ_htt","THQ_hww":"THQ_hww","THQ_hzz":"THQ_hzz",
+#"THW_htt":"THW_htt","THW_hww":"THW_hww","THW_hzz":"THW_hzz",
+#"TTH_htt":"TTH_htt","TTH_hww":"TTH_hww","TTH_hzz":"TTH_hzz","TTH_hot":"TTH_hot","TTH_hmm":"TTH_hmm"
+"THQ_htt":"tHq_htt","THQ_hww":"tHq_hww","THQ_hzz":"tHq_hzz",
+"THW_htt":"tHW_htt","THW_hww":"tHW_hww","THW_hzz":"tHW_hzz",
+"TTH_htt":"ttH_htt","TTH_hww":"ttH_hww","TTH_hzz":"ttH_hzz","TTH_hot":"ttH_hot","TTH_hmm":"ttH_hmm"
 }
 
 

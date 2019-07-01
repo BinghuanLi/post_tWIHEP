@@ -9,18 +9,19 @@ from string import digits
 #####
 #analysis and task
 #Regions=["SigRegion","ttWctrl","NoJetNCut"]
-Regions=["SigRegion"]
+Regions=["DiLepRegion"]
 
-#DirOfRegions = ["ttH2LAll2L","ttH2LAllJESUp","ttH2LAllJESDown","ttHData2LAll2L"]
-DirOfRegions = ["ttH2LAll2L"]
+DirOfRegions = ["ttH2LAll2L","ttH2LAllJESUp","ttH2LAllJESDown","ttHData2LAll2L"]
+#DirOfRegions = ["ttH2LAll2L","ttH2LAllJESUp","ttH2LAllJESDown"]
+
 
 analysis = ""
 taskname = "EvtSel"
 frameworkDir = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplizers/Fall17V1/"
-inputBaseDir =  "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/skims_20190212/"
-outputBaseDir = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplas_angle_20190212/"
+inputBaseDir =  "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/skims_withTH_20190629/"
+outputBaseDir = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplas_withTH_20190629/"
 
-usePromptFake = False
+usePromptFake = True
 
 executable_Prompt_2lss = "Rootplas_Prompt_2lss.C"
 executable_Prompt_fake = "Rootplas_Prompt_fake.C"
@@ -41,14 +42,17 @@ samples94XConv = [
 samples94XPrompt = [
 "TTHnobb","TTZToLLNuNu_M10","TTZToLL_M1to10","TT_PSwgt_To2L2Nu","TT_PSwgt_ToSemiLep","TT_PSwgt_ToHadron",
 "TTWToLNu","TTWW","W1JetsToLNu","W2JetsToLNu","W3JetsToLNu","W4JetsToLNu","WZTo3LNu","ZZ_ext_To4L",
-"THQ","THW","DY_M10to50","DY_ext_M50","WW_DoubleScatter","WWW","WWZ","WZZ","ZZZ","TTTT_Tune","tWll","tZq","WpWpJJ","TTTW","TTWH","GGH_ext_ToZZ4L","VHToNobb"
+"THQ","THW","DY_M10to50","DY_ext_M50","WW_DoubleScatter","WWW","WWZ","WZZ","ZZZ","TTTT_Tune","tWll","tZq","WpWpJJ","TTTW","TTWH","GGH_ext_ToZZ4L","VHToNobb","THW_ctcvcp","THQ_ctcvcp","TTH_ctcvcp"
 ]
 samplesIgnored=[
-"TT_PSwgt_To2L2Nu","TT_PSwgt_ToSemiLep","TT_PSwgt_ToHadron",
-"TTWW","W1JetsToLNu","W2JetsToLNu","W3JetsToLNu","W4JetsToLNu","WZTo3LNu","ZZ_ext_To4L",
-"TTGJets","TGJets_Lep","W1JetsToLNu","W2JetsToLNu","W3JetsToLNu","W4JetsToLNu","DY1JetsToLL_M50","DY2JetsToLL_M50", "DY3JetsToLL_M50", "DY4JetsToLL_M50", "DYJetsToLL_M4to50_HT70to100","DYJetsToLL_M4to50_HT100to200", "DYJetsToLL_M4to50_HT200to400", "DYJetsToLL_M4to50_HT400to600", "DYJetsToLL_M4to50_HT600toInf",
-"THQ","THW","DY_M10to50","DY_ext_M50","WW_DoubleScatter","WWW","WWZ","WZZ","ZZZ","TTTT_Tune","tWll","tZq","WpWpJJ","TTTW","TTWH","GGH_ext_ToZZ4L","VHToNobb",
-"WJets","WZG"
+#"TTHnobb","TTZToLLNuNu_M10","TTZToLL_M1to10","TTWToLNu",
+#"TT_PSwgt_To2L2Nu","TT_PSwgt_ToSemiLep","TT_PSwgt_ToHadron",
+#"TTWW","W1JetsToLNu","W2JetsToLNu","W3JetsToLNu","W4JetsToLNu","ZZ_ext_To4L",
+#"TTGJets","TGJets_Lep","W1JetsToLNu","W2JetsToLNu","W3JetsToLNu","W4JetsToLNu","DY1JetsToLL_M50","DY2JetsToLL_M50", "DY3JetsToLL_M50", "DY4JetsToLL_M50", "DYJetsToLL_M4to50_HT70to100","DYJetsToLL_M4to50_HT100to200", "DYJetsToLL_M4to50_HT200to400", "DYJetsToLL_M4to50_HT400to600", "DYJetsToLL_M4to50_HT600toInf",
+#"DY_M10to50","DY_ext_M50","WW_DoubleScatter","WWW","WWZ","WZZ","ZZZ","TTTT_Tune","tWll","tZq","WpWpJJ","TTTW","TTWH","GGH_ext_ToZZ4L","VHToNobb",
+"WJets","WZG",
+"THQ","THW",
+#"WZTo3LNu",
 ]
 
 samples = samplesIgnored 

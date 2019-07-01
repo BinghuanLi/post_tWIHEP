@@ -20,21 +20,24 @@
 using namespace RooFit ;
 
 TString inputBaseDir = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/CombineStuff/CMSSW_8_1_0/src/HiggsAnalysis/";
-TString FileName = "LimitSummary_2019M4D9";
+TString FileName = "LimitSummary_2019M5D1";
 TString TreeName = "limit";
 vector<TString> ErrorTypes = {"All","NoSyst","NoShape","NoStat","None"};
+//vector<TString> ErrorTypes = {"All","NoSyst","NoShape"};
 //vector<TString> ErrorTypes = {"All","NoStat"};
 std::map<string,int> syst_color = {{"m2sig",4},{"m1sig",8},{"exp",1},{"p1sig",8},{"p2sig",4}};
 std::map<string,int> syst_mark = {{"m2sig",23},{"m1sig",23},{"exp",8},{"p1sig",22},{"p2sig",22}};
 
-string region = "2lss_ttWctrl";
-vector<TString> Versions = {"V0319_loose","V0405_loose_Preprocess","V0403_loose_newVar","V0403_loose_PreProcess"};
+string region = "DiLepRegion";
+vector<TString> Versions = {"V0426_loose_newVar"};
+//vector<TString> Versions = {"V0319_loose","V0405_loose_Preprocess","V0403_loose_newVar","V0403_loose_PreProcess"};
 //vector<TString> Versions = {"V0321_loose","V0321_loose_regBin3","V0321_loose_regBin5"};
 //string region = "2lss";
 //vector<TString> Versions = {"V0321_loose_regBin5","V0321_loose","V0321_loose_regBin10","V0321_loose_regBin15"};
-vector<TString> CatNames = {"DNNCat","DNNCat_option2","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat2_option1","DNNSubCat2_option2"};
+//vector<TString> CatNames = {"DNNCat","DNNCat_option2","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat2_option1","DNNSubCat2_option2"};
+vector<TString> CatNames = {"DNNCat","DNNSubCat1_option1","DNNSubCat2_option1"};
 //vector<TString> CatNames = {"DNNCat","DNNCat_option2","DNNCat_option3","DNNSubCat1_option1","DNNSubCat1_option2","DNNSubCat1_option3","DNNSubCat2_option1","DNNSubCat2_option2","DNNSubCat2_option3"};
-std::map<string,string> Version_TR = {{"V0307.2.1_fakeable","TR1"},{"V0319_loose","TR2"},{"V0321_loose","TR3"},{"V0321_loose_regBin","TR4"},{"V0402_loose_NTrainFake","TR5"},{"V0403_loose_PreProcess","TR6"},{"V0321_loose_regBin5","TR7"},{"V0321_loose_regBin10","TR8"},{"V0321_loose_regBin15","TR9"},{"V0403_loose_newVar","TR10"},{"V0321_loose_regBin1","TR11"},{"V0321_loose_regBin3","TR12"},{"V0405_loose_Preprocess","TR13"}};
+std::map<string,string> Version_TR = {{"V0307.2.1_fakeable","TR1"},{"V0319_loose","TR2"},{"V0321_loose","TR3"},{"V0321_loose_regBin","TR4"},{"V0402_loose_NTrainFake","TR5"},{"V0403_loose_PreProcess","TR6"},{"V0321_loose_regBin5","TR7"},{"V0321_loose_regBin10","TR8"},{"V0321_loose_regBin15","TR9"},{"V0403_loose_newVar","TR10"},{"V0321_loose_regBin1","TR11"},{"V0321_loose_regBin3","TR12"},{"V0405_loose_Preprocess","TR13"},{"V0409_loose_loose_newVars","OTNV"},{"V0409_newsel_loose_newVars","NTNV"},{"V0409_newsel_loose_StdScalar_newVars","NTNVP"},{"V0426_loose_newVar","OTNV"}};
 std::map<string,string> CatName_OptCat = {{"DNNCat","Opt1CatA"},{"DNNCat_option2","Opt2CatA"},{"DNNCat_option3","Opt3CatA"},{"DNNSubCat1_option1","Opt1CatB"},{"DNNSubCat1_option2","Opt2CatB"},{"DNNSubCat1_option3","Opt3CatB"},{"DNNSubCat2_option1","Opt1CatC"},{"DNNSubCat2_option2","Opt2CatC"},{"DNNSubCat2_option3","Opt3CatC"}};
 
 

@@ -56,8 +56,8 @@ SPLIT = opt.SPLIT
 blind = opt.blind
 
 #header_postfix = "2lss l^{#pm}l^{#pm} "
-header_postfix = " 2lss "
-if region =="ttWctrl": header_postfix = " ttWctrl "
+#header_postfix = " 2lss "
+header_postfix = region
 
 Expected = "expected" 
 if blind !=1 : Expected = "observed"
@@ -82,6 +82,12 @@ subCats={
 "DNNSubCat2_option1":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
 "DNNSubCat2_option2":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
 "DNNSubCat2_option3":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+"DNNAMS2Cat1_option1":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNAMS2Cat1_option2":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNAMS2Cat1_option3":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNAMS3Cat1_option1":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNAMS3Cat1_option2":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
+"DNNAMS3Cat1_option3":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
 }
 
 signals=["TTH"]
@@ -101,7 +107,7 @@ else:
     header_postfix += "," + SPLIT.replace("_","\_") 
     print (" Plot channel "+SPLIT)
 
-outputDir = DirOfRootplas+"plots/"+SubCat+"/"+region+"/"+SPLIT
+outputDir = DirOfRootplas+"plots/"
 inputRegName = region
 if region == "2lss": inputRegName = "SigRegion"
 

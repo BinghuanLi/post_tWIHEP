@@ -3,7 +3,8 @@ double getMTlepmet(double phi1, double phi2, double pt1, double pt2);
 double deltaPhi(double phi1, double phi2);
 double get_rewgtlumi(TString FileName);
 float lnN1D_p1(float kappa, float x, float xmin, float xmax); 
-double getAngleOfPlanes(TVector3 plane1_vectA, TVector3 plane1_vectB, TVector3 plane2_vectA, TVector3 plane2_vectB);
+double getAngleOfPlanes(TVector3 plane1_vectA, TVector3 plane1_vectB, TVector3 plane2_vectA, TVector3 plane2_vectB, float &cosa);
+double getAngleOfVecs(TLorentzVector vectA, TLorentzVector vectB, float& cosa);
 // fake rate
 void setFakeRateHistograms(TString FakeRateFileName,TString FakeRateMuonHistName, TString FakeRateElectronHistName, std::map<std::string, TH2F*> &_MuonFakeRate, std::map<std::string, TH2F*> &_ElectronFakeRate, std::string muSystName="central", std::string eleSystName="central");
 Double_t getFakeRateWeight(float lep1_ismvasel, float lep1_pdgId, float lep1_conept, float lep1_eta, float lep2_ismvasel, float lep2_pdgId, float lep2_conept, float lep2_eta , std::map<std::string,TH2F*> _MuonFakeRate, std::map<std::string,TH2F*> _ElectronFakeRate, std::string muSystName="central", std::string eleSystName="central");
@@ -13,7 +14,7 @@ std::tuple<Double_t,Double_t,Double_t> getTriggerWeight(float lep1_pdgId, float 
 void setChargeMisHistograms(TString ChargeMisFileName,TString ChargeMisHistName, TH2F** _chargeMis);
 std::tuple<Double_t,Double_t,Double_t> getChargeMisWeight(float lep1_pdgId, float lep1_charge, float lep1_conept, float lep1_eta, float lep2_pdgId, float lep2_charge, float lep2_conept, float lep2_eta, TH2F* _chargeMis);
 // Calculate Lorentz boosted angle
-double get_boostedAngle(TLorentzVector Particle1_CMS, TLorentzVector Particle2_CMS, TLorentzVector plane1_vectA, TLorentzVector plane1_vectB, TLorentzVector plane2_vectA, TLorentzVector plane2_vectB);
+double get_boostedAngle(TLorentzVector Particle1_CMS, TLorentzVector Particle2_CMS, TLorentzVector plane1_vectA, TLorentzVector plane1_vectB, TLorentzVector plane2_vectA, TLorentzVector plane2_vectB, float& cosa);
 // read trees
 void SetOldTreeBranchStatus(TTree* readtree);
 //utils
@@ -45,19 +46,43 @@ float lnN1D_p1(float kappa, float x, float xmin, float xmax) {
         return std::pow(kappa,(x-xmin)/(xmax-xmin));
 }
 
-double getAngleOfPlanes(TVector3 plane1_vectA, TVector3 plane1_vectB, TVector3 plane2_vectA, TVector3 plane2_vectB){
-    double angle = -999;
+double getAngleOfVecs(TLorentzVector vectA, TLorentzVector vectB, float& cosa){
+    double angle = -9;
+    TVector3 v3A = vectA.Vect();
+    TVector3 v3B = vectB.Vect();
+    if(v3A.Mag()==0){
+        angle = -5;
+        cosa = -5;
+        return angle; 
+    }
+    if(v3B.Mag()==0){
+        angle = -5;
+        cosa = -5;
+        return angle; 
+    }
+    angle = v3A.Angle(v3B);
+    cosa = v3A.Dot(v3B)/(v3A.Mag()*v3B.Mag());
+    return angle;
+};
+  
+double getAngleOfPlanes(TVector3 plane1_vectA, TVector3 plane1_vectB, TVector3 plane2_vectA, TVector3 plane2_vectB, float & cosa){
+    double angle = -9;
     TVector3 plane1_norm = plane1_vectA.Cross(plane1_vectB);// get the vector perp to plane 1
     TVector3 plane2_norm = plane2_vectA.Cross(plane2_vectB);// get the vector perp to plane 2
     if(plane1_norm.Mag()==0){
-        std::cout<< "two vectors provided to plane1 cannot determine a plane" << std::endl;
+        //std::cout<< "two vectors provided to plane1 cannot determine a plane" << std::endl;
+        angle = -5;
+        cosa = -5;
         return angle;
     }
     if(plane2_norm.Mag()==0){
-        std::cout<< "two vectors provided to plane2 cannot determine a plane" << std::endl;
+        //std::cout<< "two vectors provided to plane2 cannot determine a plane" << std::endl;
+        angle = -5;
+        cosa = -5;
         return angle;
     }
     angle = plane1_norm.Angle(plane2_norm);
+    cosa = plane1_norm.Dot(plane2_norm)/(plane1_norm.Mag()*plane2_norm.Mag());
     return angle;
 }
 
@@ -220,13 +245,13 @@ std::tuple<Double_t,Double_t,Double_t> getChargeMisWeight(float lep1_pdgId, floa
 }
 
 // Lorentz Boost
-double get_boostedAngle(TLorentzVector Particle1_CMS, TLorentzVector Particle2_CMS, TLorentzVector plane1_vectA, TLorentzVector plane1_vectB, TLorentzVector plane2_vectA, TLorentzVector plane2_vectB){
+double get_boostedAngle(TLorentzVector Particle1_CMS, TLorentzVector Particle2_CMS, TLorentzVector plane1_vectA, TLorentzVector plane1_vectB, TLorentzVector plane2_vectA, TLorentzVector plane2_vectB, float& cosa){
     // Input : All six vectors are in lab frame
     //  Particle1_CMS and Particle2_CMS => rod frame
     //  plane1(2)_vectA and plane1(2)_vectB => vectors to determine plane 1 and plane 2
     // Output : the angle of plane1 and plane2 in the center of mass system of Particle1_CMS and Particle2_CMS
     // https://root-forum.cern.ch/t/how-to-use-boost-in-tlorentzvector/4102
-    double angle = -99;
+    double angle = -9;
     TLorentzVector MyParticleCombi;
     MyParticleCombi.SetPxPyPzE(Particle1_CMS.Px()+Particle2_CMS.Px(),Particle1_CMS.Py()+Particle2_CMS.Py(), Particle1_CMS.Pz()+Particle2_CMS.Pz(), Particle1_CMS.E()+Particle2_CMS.E());
     TVector3  MyParticleCombi_BoostVector = MyParticleCombi.BoostVector();
@@ -236,7 +261,7 @@ double get_boostedAngle(TLorentzVector Particle1_CMS, TLorentzVector Particle2_C
     plane2_vectA.Boost(-MyParticleCombi_BoostVector); 
     plane2_vectB.Boost(-MyParticleCombi_BoostVector); 
 
-    angle = getAngleOfPlanes( plane1_vectA.Vect(),  plane1_vectB.Vect(),  plane2_vectA.Vect(),  plane2_vectB.Vect());
+    angle = getAngleOfPlanes( plane1_vectA.Vect(),  plane1_vectB.Vect(),  plane2_vectA.Vect(),  plane2_vectB.Vect(), cosa);
 
     return angle;
     
@@ -551,6 +576,7 @@ void SetOldTreeBranchStatus(TTree* readtree){
    readtree->SetBranchStatus("Mt_metleadlep",1);
    readtree->SetBranchStatus("hadTop_BDT",1);
    readtree->SetBranchStatus("hadTop_pt",1);
+   readtree->SetBranchStatus("hadTop_eta",1);
    readtree->SetBranchStatus("leadLep_BDT",1);
    readtree->SetBranchStatus("secondLep_BDT",1);
    readtree->SetBranchStatus("thirdLep_jetcsv",1);
@@ -560,6 +586,15 @@ void SetOldTreeBranchStatus(TTree* readtree){
    readtree->SetBranchStatus("resTop_BDT",1);
    readtree->SetBranchStatus("TTHLep_2L",1);
    //readtree->SetBranchStatus("Hj1_BDT",1);
+   readtree->SetBranchStatus("Jet25_bDiscriminator",1);
+   readtree->SetBranchStatus("Jet25_pt",1);
+   readtree->SetBranchStatus("Jet25_eta",1);
+   readtree->SetBranchStatus("Jet25_phi",1);
+   readtree->SetBranchStatus("Jet25_energy",1);
+   readtree->SetBranchStatus("Jet25_isFromH",1);
+   readtree->SetBranchStatus("Jet25_isFromTop",1);
+   readtree->SetBranchStatus("Jet25_matchId",1);
+   readtree->SetBranchStatus("EVENT_rWeights",1);
    //if(skimType ==0){
    /*
        readtree->SetBranchStatus("HadTop_Dr_leph_bfromlTop",1);
@@ -578,7 +613,6 @@ void SetOldTreeBranchStatus(TTree* readtree){
        readtree->SetBranchStatus("Jet25_isResToptag",1);
        readtree->SetBranchStatus("Jet25_axis2",1);
        readtree->SetBranchStatus("Jet25_qg",1);
-       readtree->SetBranchStatus("Jet25_bDiscriminator",1);
        readtree->SetBranchStatus("Jet25_pfCombinedInclusiveSecondaryVertexV2BJetTags",1);
        readtree->SetBranchStatus("Jet25_pfCombinedMVAV2BJetTags",1);
        readtree->SetBranchStatus("Jet25_pfJetProbabilityBJetTags",1);
@@ -588,17 +622,10 @@ void SetOldTreeBranchStatus(TTree* readtree){
        readtree->SetBranchStatus("Jet25_mult",1);
        readtree->SetBranchStatus("Jet25_pfCombinedCvsLJetTags",1);
        readtree->SetBranchStatus("Jet25_pfCombinedCvsBJetTags",1);
-       readtree->SetBranchStatus("Jet25_pt",1);
-       readtree->SetBranchStatus("Jet25_eta",1);
-       readtree->SetBranchStatus("Jet25_phi",1);
-       readtree->SetBranchStatus("Jet25_energy",1);
        readtree->SetBranchStatus("Jet25_px",1);
        readtree->SetBranchStatus("Jet25_py",1);
        readtree->SetBranchStatus("Jet25_pz",1);
        readtree->SetBranchStatus("Jet25_mass",1);
-       readtree->SetBranchStatus("Jet25_isFromH",1);
-       readtree->SetBranchStatus("Jet25_isFromTop",1);
-       readtree->SetBranchStatus("Jet25_matchId",1);
        readtree->SetBranchStatus("Jet25_neutralHadEnergyFraction",1);
        //readtree->SetBranchStatus("Jet25_neutralEmEnergyFraction",1);
        readtree->SetBranchStatus("Jet25_chargedHadronEnergyFraction",1);
@@ -844,6 +871,14 @@ void SetOldTreeBranchStatus(TTree* readtree){
    readtree->SetBranchStatus("FakeRate_e_be2",1);
    readtree->SetBranchStatus("FakeRate_e_QCD",1);
    readtree->SetBranchStatus("FakeRate_e_TT",1);
+   readtree->SetBranchStatus("angle_bbpp_truth2l2b",1);
+   readtree->SetBranchStatus("cosa_bbpp_truth2l2b",1);
+   readtree->SetBranchStatus("truth_H_pt",1);
+   readtree->SetBranchStatus("truth_H_eta",1);
+   readtree->SetBranchStatus("truth_hadTop_pt",1);
+   readtree->SetBranchStatus("truth_hadTop_eta",1);
+   readtree->SetBranchStatus("truth_deta_2b",1);
+   readtree->SetBranchStatus("truth_cosa_2b",1);
    // Hmass variables
    /*
    readtree->SetBranchStatus("Gen_pt",1);

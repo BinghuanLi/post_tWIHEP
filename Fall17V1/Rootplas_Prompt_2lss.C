@@ -52,14 +52,18 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
     float lep1_phi(0.), lep2_phi(0.), lep3_phi(0.);
     float lep1_E(0.), lep2_E(0.), lep3_E(0.);
     float Sum2lCharge(0.), Dilep_nTight(0.), massL_SFOS(0.), Trilep_nTight(0.), Dilep_pdgId(0.), Sum3LCharge(0.);
-    float xsec_rwgt(0.), EventWeight(0.);
+    float xsec_rwgt(0.), EventWeight(0.), cpodd_rwgt(0.);
     float mvaOutput_2lss_ttV(0.), mvaOutput_2lss_ttbar(0.);
     
+    std::vector<double>* EVENT_rWeights =0;
     std::vector<double>* Jet25_pt =0;
     std::vector<double>* Jet25_eta =0;
     std::vector<double>* Jet25_phi =0;
     std::vector<double>* Jet25_energy =0;
     std::vector<double>* Jet25_bDiscriminator =0;
+    std::vector<double>* Jet25_isFromH =0;
+    std::vector<double>* Jet25_isFromTop =0;
+    std::vector<double>* Jet25_matchId =0;
    
     
 
@@ -103,11 +107,15 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
     oldtree->SetBranchAddress("EventWeight", &EventWeight);
     oldtree->SetBranchAddress("mvaOutput_2lss_ttV", &mvaOutput_2lss_ttV);
     oldtree->SetBranchAddress("mvaOutput_2lss_ttbar", &mvaOutput_2lss_ttbar);
+    oldtree->SetBranchAddress("EVENT_rWeights", &EVENT_rWeights);
     oldtree->SetBranchAddress("Jet25_pt", &Jet25_pt);
     oldtree->SetBranchAddress("Jet25_eta", &Jet25_eta);
     oldtree->SetBranchAddress("Jet25_phi", &Jet25_phi);
     oldtree->SetBranchAddress("Jet25_energy", &Jet25_energy);
     oldtree->SetBranchAddress("Jet25_bDiscriminator", &Jet25_bDiscriminator);
+    oldtree->SetBranchAddress("Jet25_isFromH", &Jet25_isFromH);
+    oldtree->SetBranchAddress("Jet25_isFromTop", &Jet25_isFromTop);
+    oldtree->SetBranchAddress("Jet25_matchId", &Jet25_matchId);
 
     SetOldTreeBranchStatus(oldtree);
     
@@ -120,8 +128,18 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
     float nBestVtx=0;
     float n_presel_jet=0;
     // angles
+    float angle_bbpp_match2b(-99);
     float angle_bbpp_loose2b(-99);
     float angle_bbpp_highest2b(-99);
+    float cosa_bbpp_match2b(-99);
+    float cosa_bbpp_loose2b(-99);
+    float cosa_bbpp_highest2b(-99);
+    float deta_match2b(-99);
+    float deta_loose2b(-99);
+    float deta_highest2b(-99);
+    float cosa_match2b(-99);
+    float cosa_loose2b(-99);
+    float cosa_highest2b(-99);
     // shape theoretical uncertainties 
     float CMS_ttHl_thu_shape_ttH(0.), CMS_ttHl_thu_shape_ttH_SysUp(0.), CMS_ttHl_thu_shape_ttH_SysDown(0.);
     float CMS_ttHl_thu_shape_ttW(0.), CMS_ttHl_thu_shape_ttW_SysUp(0.), CMS_ttHl_thu_shape_ttW_SysDown(0.);
@@ -138,9 +156,20 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
     newtree->Branch("TrueInteractions", &trueInteractions);
     newtree->Branch("nBestVTX", &nBestVtx);
     newtree->Branch("nEvt", &nEvt);
+    newtree->Branch("angle_bbpp_match2b", &angle_bbpp_match2b);
     newtree->Branch("angle_bbpp_loose2b", &angle_bbpp_loose2b);
     newtree->Branch("angle_bbpp_highest2b", &angle_bbpp_highest2b);
+    newtree->Branch("cosa_bbpp_match2b", &cosa_bbpp_match2b);
+    newtree->Branch("cosa_bbpp_loose2b", &cosa_bbpp_loose2b);
+    newtree->Branch("cosa_bbpp_highest2b", &cosa_bbpp_highest2b);
+    newtree->Branch("deta_match2b", &deta_match2b);
+    newtree->Branch("deta_loose2b", &deta_loose2b);
+    newtree->Branch("deta_highest2b", &deta_highest2b);
+    newtree->Branch("cosa_match2b", &cosa_match2b);
+    newtree->Branch("cosa_loose2b", &cosa_loose2b);
+    newtree->Branch("cosa_highest2b", &cosa_highest2b);
     newtree->Branch("xsec_rwgt", &xsec_rwgt);
+    newtree->Branch("cpodd_rwgt", &cpodd_rwgt);
     newtree->Branch("nLooseJet", &n_presel_jet);
     newtree->Branch("is_tH_like_and_not_ttH_like", &is_tH_like_and_not_ttH_like);
     newtree->Branch("CMS_ttHl_thu_shape_ttH", &CMS_ttHl_thu_shape_ttH);
@@ -175,8 +204,19 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
         nBestVtx = -999;
         nEvt = -999;
         xsec_rwgt = 1.;
-        angle_bbpp_highest2b = -10.;
-        angle_bbpp_loose2b = -10.;
+        cpodd_rwgt = 1.;
+        angle_bbpp_highest2b = -9.;
+        angle_bbpp_loose2b = -9.;
+        angle_bbpp_match2b = -9.;
+        cosa_bbpp_highest2b = -9.;
+        cosa_bbpp_loose2b = -9.;
+        cosa_bbpp_match2b = -9.;
+        deta_highest2b = -9.;
+        deta_loose2b = -9.;
+        deta_match2b = -9.;
+        cosa_highest2b = -9.;
+        cosa_loose2b = -9.;
+        cosa_match2b = -9.;
         oldtree->GetEntry(i);
         Bool_t pass2LMatchRightCharge = kTRUE;
         Bool_t pass2LPromptFS = kTRUE;
@@ -200,6 +240,9 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
             nBestVtx = rnBestVtx;
             nEvt = nEvent;
             xsec_rwgt = get_rewgtlumi(FileName);
+            if(oldtree->GetListOfBranches()->FindObject("EVENT_rWeights") && EVENT_rWeights->size()>68){
+                cpodd_rwgt = EVENT_rWeights->at(59)/EVENT_rWeights->at(11);
+            }
             EventWeight = EventWeight * xsec_rwgt;
             n_presel_jet = nLooseJet;
             is_tH_like_and_not_ttH_like = (passTHSelectionCut && !pass2LRegionCut)? 1:0;
@@ -235,10 +278,15 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
             Lep2_CMS.SetPtEtaPhiE(lep2_conept,lep2_eta,lep2_phi,lep2_E);
             p1_CMS.SetXYZM(0,0,-1,0.938); // proton mass 938MeV
             p2_CMS.SetXYZM(0,0,1,0.938); 
-            TLorentzVector loosebJet1, loosebJet2, bJet1, bJet2;
+            TLorentzVector loosebJet1, loosebJet2, bJet1, bJet2, matchbJet1, matchbJet2;
             double b1_CSV= -99;
             double b2_CSV= -999;
             for(uint jet_en=0; jet_en < Jet25_pt->size(); jet_en++){
+               // deep CSV loose b
+               if(Jet25_isFromTop->at(jet_en)==1 && fabs(Jet25_matchId->at(jet_en)) == 5){
+                    if(fabs(matchbJet1.Pt())<0.0001) matchbJet1.SetPtEtaPhiE(Jet25_pt->at(jet_en),Jet25_eta->at(jet_en),Jet25_phi->at(jet_en),Jet25_energy->at(jet_en));
+                    else if(fabs(matchbJet2.Pt())<0.0001) matchbJet2.SetPtEtaPhiE(Jet25_pt->at(jet_en),Jet25_eta->at(jet_en),Jet25_phi->at(jet_en),Jet25_energy->at(jet_en));
+               }
                // deep CSV loose b
                if(Jet25_bDiscriminator->at(jet_en)>0.1522){
                     if(fabs(loosebJet1.Pt())<0.0001) loosebJet1.SetPtEtaPhiE(Jet25_pt->at(jet_en),Jet25_eta->at(jet_en),Jet25_phi->at(jet_en),Jet25_energy->at(jet_en));
@@ -260,16 +308,33 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
             }
             //std::cout << " nEvent : "<<nEvent<<" loosebJet1.Pt "<< loosebJet1.Pt() << " loosebJet2.Pt "<<loosebJet2.Pt() << " bJet1.Pt "<< bJet1.Pt() << " bJet2.Pt "<< bJet2.Pt() << std::endl;
             // if there exist 2 loose b 
-            if(fabs(loosebJet2.Pt())>0.0001) angle_bbpp_loose2b =get_boostedAngle(Lep1_CMS, Lep2_CMS, p1_CMS, p2_CMS, loosebJet1, loosebJet2); 
-            angle_bbpp_highest2b = get_boostedAngle( Lep1_CMS, Lep2_CMS, p1_CMS, p2_CMS, bJet1, bJet2);
+            if(fabs(loosebJet2.Pt())>0.0001){
+                angle_bbpp_loose2b =get_boostedAngle(Lep1_CMS, Lep2_CMS, p1_CMS, p2_CMS, loosebJet1, loosebJet2, cosa_bbpp_loose2b); 
+                deta_loose2b = loosebJet1.Eta() - loosebJet2.Eta();
+                double temp_angle_2b = getAngleOfVecs(loosebJet1, loosebJet2, cosa_loose2b);
+            }
+            if(fabs(matchbJet2.Pt())>0.0001){
+                angle_bbpp_match2b =get_boostedAngle(Lep1_CMS, Lep2_CMS, p1_CMS, p2_CMS, matchbJet1, matchbJet2, cosa_bbpp_match2b); 
+                deta_match2b = matchbJet1.Eta() - matchbJet2.Eta();
+                double temp_angle_2b = getAngleOfVecs(matchbJet1, matchbJet2, cosa_match2b);
+            }
+            if(fabs(bJet2.Pt())>0.0001){
+                angle_bbpp_highest2b = get_boostedAngle( Lep1_CMS, Lep2_CMS, p1_CMS, p2_CMS, bJet1, bJet2, cosa_bbpp_highest2b);
+                deta_highest2b = bJet1.Eta() - bJet2.Eta();
+                double temp_angle_2b = getAngleOfVecs(bJet1, bJet2, cosa_highest2b);
+            }
             
             newtree->Fill();
         }
+        EVENT_rWeights->clear();
         Jet25_pt->clear();
         Jet25_eta->clear();
         Jet25_phi->clear();
         Jet25_energy->clear();
         Jet25_bDiscriminator->clear();
+        Jet25_isFromTop->clear();
+        Jet25_isFromH->clear();
+        Jet25_matchId->clear();
         HiggsDecay =0;
         lep1_pdgId=0;
         lep2_pdgId=0;

@@ -44,20 +44,22 @@ parser.add_option('-d', '--dir',        dest='DirOfRootplas'  ,      help='input
 parser.add_option('-n', '--norm',        dest='NORM'  ,      help='norm to unit (1) or not(0)',      default='0',        type='int')
 parser.add_option('-l', '--latex',        dest='LATEX'  ,      help='to print latex(1) or not(0)',      default='0',        type='int')
 parser.add_option('-s', '--split',        dest='SPLIT'  ,      help='to produce plot in subgategory',      default='ee_neg',        type='string')
+parser.add_option('-w', '--width',        dest='WIDTH'  ,      help='Y to devide width (1) or not(0)',      default='1',        type='int')
 
 (opt, args) = parser.parse_args()
 POI = opt.POI
 region = opt.region
 OPEN = opt.OPEN
 NORM = opt.NORM
+WIDTH = opt.WIDTH
 DirOfRootplas = opt.DirOfRootplas
 SubCat = opt.SubCat
 LATEX = opt.LATEX
 SPLIT = opt.SPLIT
 
 #header_postfix = "2lss l^{#pm}l^{#pm} "
-header_postfix = " 2lss "
-if region =="ttWctrl": header_postfix = " ttWctrl "
+#header_postfix = " 2lss "
+header_postfix = region 
 
 # currently, latex file works only for Samples.size() < =4
 
@@ -79,11 +81,11 @@ Style={"Nominal":1001,"SystUp":1001,"SystDown":1001}
 #]
 
 Nuisances =[
-"CMS_scale_j"
+"CMS_scale_j",#"CMS_ttHl17_Clos_m_shape"
 ]
 
 header_postfix += "," + SPLIT.replace("_","\_") 
-print (" Plot channel "+SPLIT)
+#print (" Plot channel "+SPLIT)
 
 outputDir = DirOfRootplas+"SystPlots/"
 
@@ -161,7 +163,7 @@ def readHists(SystName):
             if not rootfile.GetListOfKeys().Contains(p+"_"+SystName+"Up"): continue
             h1 = rootfile.Get(p)
             h1_up = rootfile.Get(p+"_"+SystName+"Up")
-            print ( " get "+p+"_"+SystName+"Up " )
+            #print ( " get "+p+"_"+SystName+"Up " )
             h1_down = rootfile.Get(p+"_"+SystName+"Down")
             hist.Add(h1)
             hist_up.Add(h1_up)
@@ -176,6 +178,16 @@ def readHists(SystName):
         hist_down.SetFillColor(0)
         hist_down.SetLineColor(Color["SystDown"])
         hist_down.SetMarkerColor(Color["SystDown"])
+        if WIDTH == 1:
+            hist = YDivideWidth(hist)
+            hist.SetLineColor(Color["Nominal"])
+            hist.SetMarkerColor(Color["Nominal"])
+            hist_up = YDivideWidth(hist_up)
+            hist_up.SetLineColor(Color["SystUp"])
+            hist_up.SetMarkerColor(Color["SystUp"])
+            hist_down = YDivideWidth(hist_down)
+            hist_down.SetLineColor(Color["SystDown"])
+            hist_down.SetMarkerColor(Color["SystDown"])
         h_list=[]
         h_list.append(hist)
         h_list.append(hist_up)
@@ -249,6 +261,35 @@ def createRatio(h1, h2):
 
 
     return h3
+
+def YDivideWidth(h1):
+    h2 = h1.Clone("h2")
+    h2.SetLineColor(kBlack)
+    h2.SetMarkerStyle(20)
+    h2.SetTitle("")
+    #h2.SetMinimum(0.8)
+    #h2.SetMaximum(1.35)
+    # Set up plot for markers and errors
+    h2.Sumw2()
+    h2.SetStats(0)
+    nbins = h2.GetNbinsX()
+    for b in range(nbins+1):
+        BinContent = h2.GetBinContent(b)
+        BinContentErr = h2.GetBinError(b)
+        BinWidth = h2.GetBinWidth(b)
+        #print "Bin "+str(b)+" BinContent "+str(BinContent)+" BinContentErr "+str(BinContentErr)
+        BinValue = 0
+        if not BinWidth == 0: 
+            BinValue = BinContent/BinWidth
+            h2.SetBinContent(b,BinValue)
+            h2.SetBinError(b,BinContentErr/BinWidth)
+        else: 
+            h2.SetBinContent(b,0)
+            h2.SetBinError(b,0)
+    return h2
+
+
+
 
 def createSqrt(h1):
     h2 = h1.Clone("h2")
@@ -329,9 +370,15 @@ def plotSysts():
                 # Adjust y-axis settings
                 y = hist.GetYaxis()
                 if NORM==1:
-                    y.SetTitle("Unit ")
+                    if WIDTH==1:
+                        y.SetTitle("Unit/BinWidth ")
+                    else:
+                        y.SetTitle("Unit ")
                 else:
-                    y.SetTitle("Events ")
+                    if WIDTH==1:
+                        y.SetTitle("Events/BinWidth ")
+                    else:
+                        y.SetTitle("Events ")
                 y.SetTitleSize(25)
                 y.SetTitleFont(43)
                 y.SetTitleOffset(1.55)
@@ -376,6 +423,9 @@ def plotSysts():
     latexfile.write("\\documentclass{beamer}\n\\usetheme{Warsaw}\n\n\\usepackage{graphicx}\n\\useoutertheme{infolines}\n\\setbeamertemplate{headline}{}\n\n\\begin{document}\n\n")
     latexfile.write(latexString)
     latexfile.write("\\end{document}\n")
+
+  else:
+    print latexString
 
   
 

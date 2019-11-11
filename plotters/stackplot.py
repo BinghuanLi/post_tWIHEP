@@ -44,15 +44,19 @@ parser.add_option('-o', '--open',        dest='OPEN'  ,      help='to hold plot 
 parser.add_option('-d', '--dir',        dest='DirOfRootplas'  ,      help='input file full path',      default='/home/binghuan/Work/RootTestFiles/TTHLep_2019/data/2019Rootplas/rootplas_20190227/Output/',        type='string')
 parser.add_option('-l', '--latex',        dest='LATEX'  ,      help='to print latex(1) or not(0)',      default='0',        type='int')
 parser.add_option('-s', '--split',        dest='SPLIT'  ,      help='to produce plot in subgategory',      default='inclusive',        type='string')
+parser.add_option('-w', '--width',        dest='WIDTH'  ,      help='Y to devide width (1) or not(0)',      default='1',        type='int')
+parser.add_option('-m', '--smooth',        dest='SMOOTH'  ,      help='SMOOTH HIST (1) or not(0)',      default='0',        type='int')
 
 (opt, args) = parser.parse_args()
 POI = opt.POI
 region = opt.region
+WIDTH = opt.WIDTH
 OPEN = opt.OPEN
 LATEX = opt.LATEX
 DirOfRootplas = opt.DirOfRootplas
 SubCat = opt.SubCat
 SPLIT = opt.SPLIT
+SMOOTH = opt.SMOOTH
 blind = opt.blind
 
 #header_postfix = "2lss l^{#pm}l^{#pm} "
@@ -68,20 +72,29 @@ Process={
     "H":["THW_hww","THW_hzz","THW_htt","THQ_hww","THQ_hzz","THQ_htt"],
     "TTZ":["TTZ"],"TTW+TTWW":["TTW","TTWW"],"Conv":["Conv"],"EWK":["EWK"],"Rares":["Rares"],"Fakes":["Fakes","FakeSub"],"Flips":["Flips"],"Data":["Data"]
     }
-Color={"TTH":kRed,"H":kPink,"TTZ":kGreen,"TTW+TTWW":kGreen+3,"Conv":kOrange,"EWK":kViolet,"Rares":kCyan,"Fakes":kBlack,"Flips":kBlack}
+Color={"TTH":kRed,"H":kPink-4,"TTZ":kGreen,"TTW+TTWW":kGreen+3,"Conv":kOrange,"EWK":kViolet,"Rares":kCyan,"Fakes":kBlack,"Flips":kBlack}
 Style={"TTH":1001,"H":1001,"TTZ":1001,"TTW+TTWW":1001,"Conv":1001,"EWK":1001,"Rares":1001,"Fakes":3005,"Flips":3006}
 
 subCats={
 "SubCat2l":["inclusive","ee_neg","ee_pos", "em_bl_neg","em_bl_pos","em_bt_neg","em_bt_pos", "mm_bl_neg","mm_bl_pos","mm_bt_neg","mm_bt_pos" ],
-"DNNCat":["ttHnode","ttJnode","ttWnode","ttZnode"],
-"DNNCat_option2":["ttHnode","ttJnode","ttWnode","ttZnode"],
-"DNNCat_option3":["ttHnode","ttJnode","ttWnode","ttZnode"],
-"DNNSubCat1_option1":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
-"DNNSubCat1_option2":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
-"DNNSubCat1_option3":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
-"DNNSubCat2_option1":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
-"DNNSubCat2_option2":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
-"DNNSubCat2_option3":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+#"DNNCat":["ttHnode","ttJnode","ttWnode","ttZnode"],
+#"DNNCat_option2":["ttHnode","ttJnode","ttWnode","ttZnode"],
+#"DNNCat_option3":["ttHnode","ttJnode","ttWnode","ttZnode"],
+#"DNNSubCat1_option1":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+#"DNNSubCat1_option2":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+#"DNNSubCat1_option3":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+#"DNNSubCat2_option1":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+#"DNNSubCat2_option2":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+#"DNNSubCat2_option3":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode"],
+"DNNCat":["ttHnode","ttJnode","ttWnode","ttZnode","tHnode"],
+"DNNCat_option2":["ttHnode","ttJnode","ttWnode","ttZnode","tHnode"],
+"DNNCat_option3":["ttHnode","ttJnode","ttWnode","ttZnode","tHnode"],
+"DNNSubCat1_option1":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","em_tHnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode","mm_tHnode"],
+"DNNSubCat1_option2":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","em_tHnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode","mm_tHnode"],
+"DNNSubCat1_option3":["ee_neg","ee_pos","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","em_tHnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode","mm_tHnode"],
+"DNNSubCat2_option1":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","ee_tHnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","em_tHnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode","mm_tHnode"],
+"DNNSubCat2_option2":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","ee_tHnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","em_tHnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode","mm_tHnode"],
+"DNNSubCat2_option3":["ee_ttHnode","ee_ttJnode","ee_ttWnode","ee_ttZnode","ee_tHnode","em_ttHnode","em_ttJnode","em_ttWnode","em_ttZnode","em_tHnode","mm_ttHnode","mm_ttJnode","mm_ttWnode","mm_ttZnode","mm_tHnode"],
 "DNNAMS2Cat1_option1":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
 "DNNAMS2Cat1_option2":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
 "DNNAMS2Cat1_option3":["loose_ttHnode","tight_ttHnode","ttJnode","ttWnode","ttZnode"],
@@ -97,6 +110,8 @@ elif "ttJnode" in SPLIT:
     signals=["Fakes","Conv","Flips"]
 elif "ttZnode" in SPLIT:
     signals=["TTZ"]
+elif "tHnode" in SPLIT and "ttHnode" not in SPLIT:
+    signals=["H"]
 
 Channels = []
 if not subCats.has_key(SubCat):
@@ -213,6 +228,8 @@ def readHists():
                 if rootfile.IsZombie():continue
                 gROOT.cd()
                 h1 = rootfile.Get(POI+"_"+p)
+                if SMOOTH==1:
+                    h1.Smooth()
                 #h1.SetDirectory(0)
                 h_dataobs.Add(h1)
                 rootfile.Close()
@@ -224,6 +241,8 @@ def readHists():
                 if rootfile.IsZombie():continue
                 gROOT.cd()
                 h1 = rootfile.Get(POI+"_"+p)
+                if SMOOTH==1:
+                    h1.Smooth()
                 #h1.SetDirectory(0)
                 if p == "FakeSub" and sample == "Fakes":
                     h_totalsig.Add(h1, -1)
@@ -244,6 +263,11 @@ def readHists():
             elif hist.Integral()>0:
                 latexString += "  \\textless{}0.05 \\\\ \n"
             else: latexString += " - \\\\ \n "
+            if WIDTH == 1:
+                hist = YDivideWidth(hist)
+                #hist.SetFillColor(Color[sample])
+                #hist.SetLineColor(kBlack)
+                #hist.SetFillStyle(Style[sample])
             hstack.Add(hist)
             legend.AddEntry(hist,sample,"f")
         # loop over bkg
@@ -254,6 +278,8 @@ def readHists():
                 gROOT.cd()
                 #print " try to get histogram : " + POI+"_"+p
                 h1 = rootfile.Get(POI+"_"+p)
+                if SMOOTH==1:
+                    h1.Smooth()
                 h1.SetDirectory(0)
                 if p == "FakeSub" and sample == "Fakes":
                     h_totalbkg.Add(h1, -1)
@@ -274,6 +300,11 @@ def readHists():
             elif hist.Integral()>0:
                 latexString += "  \\textless{}0.05 \\\\ \n"
             else: latexString += " - "
+            if WIDTH == 1:
+                hist = YDivideWidth(hist)
+                #hist.SetFillColor(Color[sample])
+                #hist.SetLineColor(kBlack)
+                #hist.SetFillStyle(Style[sample])
             hstack.Add(hist)
             legend.AddEntry(hist,sample,"f")
                  
@@ -295,13 +326,41 @@ def readHists():
     else : latexString += expString
     latexString += ("\\end{tabular}\n}\n\\end{table}\n\\end{frame}\n \\end{document}\n")
     if LATEX==1 : 
-        latexfile = file(outputDir+"/"+POI+"_"+region+"_"+SPLIT+"_"+Expected+"_yield.tex","w")
+        nameFix = ""
+        if SMOOTH==1:
+            nameFix = "_smooth"
+        latexfile = file(outputDir+"/"+POI+"_"+region+"_"+SPLIT+"_"+Expected+"_yield"+nameFix+".tex","w")
         latexfile.write("\\documentclass{beamer}\n\\usetheme{Warsaw}\n\n\\usepackage{graphicx}\n\\useoutertheme{infolines}\n\\setbeamertemplate{headline}{}\n\n\\begin{document}\n\n")
         latexfile.write(latexString)
 
     inputfile.Close()
      
     return h_totalsig, h_totalbkg, h_totalmc, h_dataobs, hstack, legend
+
+def YDivideWidth(h1):
+    h2 = h1.Clone("h2")
+    #h2.SetTitle("")
+    #h2.SetMinimum(0.8)
+    #h2.SetMaximum(1.35)
+    # Set up plot for markers and errors
+    h2.Sumw2()
+    h2.SetStats(0)
+    nbins = h2.GetNbinsX()
+    for b in range(nbins+1):
+        BinContent = h2.GetBinContent(b)
+        BinContentErr = h2.GetBinError(b)
+        BinWidth = h2.GetBinWidth(b)
+        #print "Bin "+str(b)+" BinContent "+str(BinContent)+" BinContentErr "+str(BinContentErr)
+        BinValue = 0
+        if not BinWidth == 0: 
+            BinValue = BinContent/BinWidth
+            h2.SetBinContent(b,BinValue)
+            h2.SetBinError(b,BinContentErr/BinWidth)
+        else: 
+            h2.SetBinContent(b,0)
+            h2.SetBinError(b,0)
+    return h2
+
 
 def createTotalMCErr(h1, POI):
     h2 = h1.Clone("h2")
@@ -424,6 +483,11 @@ def stackplot():
     
     # create required parts
     h_totalsig, h_totalbkg, h_TotalMC, h_dataobs, hstack, leg = readHists()
+    if WIDTH==1:
+        h_totalsig = YDivideWidth(h_totalsig)
+        h_totalbkg = YDivideWidth(h_totalbkg)
+        h_TotalMC = YDivideWidth(h_TotalMC)
+        h_dataobs = YDivideWidth(h_dataobs)
     if blind ==1 :
         h_sqrtB = createSqrt(h_totalbkg)
         h_MCerr = createTotalMCErr(h_sqrtB, POI)
@@ -439,7 +503,8 @@ def stackplot():
     # draw everything
     
     pad1.cd()
-    maximum = h_dataobs.GetMaximum()
+    maximum = h_TotalMC.GetMaximum()
+    
     upperbound = 2.*maximum
     lowerbound = -maximum/40.
     hstack.SetMinimum(lowerbound)
@@ -447,7 +512,10 @@ def stackplot():
     hstack.Draw("HISTY") 
     # Adjust y-axis settings
     y = hstack.GetYaxis()
-    y.SetTitle("Events ")
+    if WIDTH==1:
+        y.SetTitle("Events/BinWidth ")
+    else:
+        y.SetTitle("Events ")
     y.SetTitleSize(25)
     y.SetTitleFont(43)
     y.SetTitleOffset(1.55)
@@ -481,8 +549,14 @@ def stackplot():
         h_MCerr.SetMaximum(1.8)
         h_MCerr.Draw("e2") 
         h_ratio.Draw("epsame")
-  
-    c.SaveAs(outputDir+"/"+SubCat+"_"+POI+"_"+region+"_"+SPLIT+"_"+Expected+".png") 
+    
+    nameFix = ""
+    if SMOOTH==1:
+        nameFix = "_smooth" 
+    if WIDTH==1:
+        c.SaveAs(outputDir+"/"+SubCat+"_"+POI+"_"+region+"_"+SPLIT+"_"+Expected+"_DivideWidth"+nameFix+".png") 
+    else:
+        c.SaveAs(outputDir+"/"+SubCat+"_"+POI+"_"+region+"_"+SPLIT+"_"+Expected+nameFix+".png") 
     # To hold window open when running from command line
     if OPEN==1: text = raw_input()
 

@@ -1,0 +1,205 @@
+    readtree->SetBranchStatus("Dilep_pdgId",1);
+    readtree->SetBranchStatus("Hj_tagger_resTop",1);
+    readtree->SetBranchStatus("avg_dr_jet",1);
+    readtree->SetBranchStatus("jet1_eta",1);
+    readtree->SetBranchStatus("jet1_phi",1);
+    readtree->SetBranchStatus("jet1_pt",1);
+    readtree->SetBranchStatus("jet2_eta",1);
+    readtree->SetBranchStatus("jet2_phi",1);
+    readtree->SetBranchStatus("jet2_pt",1);
+    readtree->SetBranchStatus("jet3_eta",1);
+    readtree->SetBranchStatus("jet3_phi",1);
+    readtree->SetBranchStatus("jet3_pt",1);
+    readtree->SetBranchStatus("jet4_eta",1);
+    readtree->SetBranchStatus("jet4_phi",1);
+    readtree->SetBranchStatus("jet4_pt",1);
+    readtree->SetBranchStatus("jetFwd1_eta",1);
+    readtree->SetBranchStatus("jetFwd1_pt",1);
+    readtree->SetBranchStatus("lep1_charge",1);
+    readtree->SetBranchStatus("lep1_conePt",1);
+    readtree->SetBranchStatus("lep1_eta",1);
+    readtree->SetBranchStatus("lep1_phi",1);
+    readtree->SetBranchStatus("lep2_conePt",1);
+    readtree->SetBranchStatus("lep2_eta",1);
+    readtree->SetBranchStatus("lep2_phi",1);
+    readtree->SetBranchStatus("mT_lep1",1);
+    readtree->SetBranchStatus("mT_lep2",1);
+    readtree->SetBranchStatus("mass_dilep",1);
+    readtree->SetBranchStatus("maxeta",1);
+    readtree->SetBranchStatus("mbb",1);
+    readtree->SetBranchStatus("metLD",1);
+    readtree->SetBranchStatus("mindr_lep1_jet",1);
+    readtree->SetBranchStatus("mindr_lep2_jet",1);
+    readtree->SetBranchStatus("nBJetLoose",1);
+    readtree->SetBranchStatus("nBJetMedium",1);
+    readtree->SetBranchStatus("n_presel_jet",1);
+    readtree->SetBranchStatus("n_presel_jetFwd",1);
+    readtree->SetBranchStatus("resTop_BDT",1);
+
+
+  SetBranchStatus done 
+
+    oldtree->SetBranchAddress("Dilep_pdgId",&Dilep_pdgId);
+    oldtree->SetBranchAddress("Hj_tagger_resTop",&Hj_tagger_resTop);
+    oldtree->SetBranchAddress("avg_dr_jet",&avg_dr_jet);
+    oldtree->SetBranchAddress("jet1_eta",&jet1_eta);
+    oldtree->SetBranchAddress("jet1_phi",&jet1_phi);
+    oldtree->SetBranchAddress("jet1_pt",&jet1_pt);
+    oldtree->SetBranchAddress("jet2_eta",&jet2_eta);
+    oldtree->SetBranchAddress("jet2_phi",&jet2_phi);
+    oldtree->SetBranchAddress("jet2_pt",&jet2_pt);
+    oldtree->SetBranchAddress("jet3_eta",&jet3_eta);
+    oldtree->SetBranchAddress("jet3_phi",&jet3_phi);
+    oldtree->SetBranchAddress("jet3_pt",&jet3_pt);
+    oldtree->SetBranchAddress("jet4_eta",&jet4_eta);
+    oldtree->SetBranchAddress("jet4_phi",&jet4_phi);
+    oldtree->SetBranchAddress("jet4_pt",&jet4_pt);
+    oldtree->SetBranchAddress("jetFwd1_eta",&jetFwd1_eta);
+    oldtree->SetBranchAddress("jetFwd1_pt",&jetFwd1_pt);
+    oldtree->SetBranchAddress("lep1_charge",&lep1_charge);
+    oldtree->SetBranchAddress("lep1_conePt",&lep1_conePt);
+    oldtree->SetBranchAddress("lep1_eta",&lep1_eta);
+    oldtree->SetBranchAddress("lep1_phi",&lep1_phi);
+    oldtree->SetBranchAddress("lep2_conePt",&lep2_conePt);
+    oldtree->SetBranchAddress("lep2_eta",&lep2_eta);
+    oldtree->SetBranchAddress("lep2_phi",&lep2_phi);
+    oldtree->SetBranchAddress("mT_lep1",&mT_lep1);
+    oldtree->SetBranchAddress("mT_lep2",&mT_lep2);
+    oldtree->SetBranchAddress("mass_dilep",&mass_dilep);
+    oldtree->SetBranchAddress("maxeta",&maxeta);
+    oldtree->SetBranchAddress("mbb",&mbb);
+    oldtree->SetBranchAddress("metLD",&metLD);
+    oldtree->SetBranchAddress("mindr_lep1_jet",&mindr_lep1_jet);
+    oldtree->SetBranchAddress("mindr_lep2_jet",&mindr_lep2_jet);
+    oldtree->SetBranchAddress("nBJetLoose",&nBJetLoose);
+    oldtree->SetBranchAddress("nBJetMedium",&nBJetMedium);
+    oldtree->SetBranchAddress("n_presel_jet",&n_presel_jet);
+    oldtree->SetBranchAddress("n_presel_jetFwd",&n_presel_jetFwd);
+    oldtree->SetBranchAddress("resTop_BDT",&resTop_BDT);
+
+
+  SetBranchAddress done 
+
+    float Dilep_pdgId = 0;
+    float Hj_tagger_resTop = 0;
+    float avg_dr_jet = 0;
+    float jet1_eta = 0;
+    float jet1_phi = 0;
+    float jet1_pt = 0;
+    float jet2_eta = 0;
+    float jet2_phi = 0;
+    float jet2_pt = 0;
+    float jet3_eta = 0;
+    float jet3_phi = 0;
+    float jet3_pt = 0;
+    float jet4_eta = 0;
+    float jet4_phi = 0;
+    float jet4_pt = 0;
+    float jetFwd1_eta = 0;
+    float jetFwd1_pt = 0;
+    float lep1_charge = 0;
+    float lep1_conePt = 0;
+    float lep1_eta = 0;
+    float lep1_phi = 0;
+    float lep2_conePt = 0;
+    float lep2_eta = 0;
+    float lep2_phi = 0;
+    float mT_lep1 = 0;
+    float mT_lep2 = 0;
+    float mass_dilep = 0;
+    float maxeta = 0;
+    float mbb = 0;
+    float metLD = 0;
+    float mindr_lep1_jet = 0;
+    float mindr_lep2_jet = 0;
+    float nBJetLoose = 0;
+    float nBJetMedium = 0;
+    float n_presel_jet = 0;
+    float n_presel_jetFwd = 0;
+    float resTop_BDT = 0;
+
+
+  variable declaration done 
+
+        Dilep_pdgId = -9;
+        Hj_tagger_resTop = -9;
+        avg_dr_jet = -9;
+        jet1_eta = -9;
+        jet1_phi = -9;
+        jet1_pt = -9;
+        jet2_eta = -9;
+        jet2_phi = -9;
+        jet2_pt = -9;
+        jet3_eta = -9;
+        jet3_phi = -9;
+        jet3_pt = -9;
+        jet4_eta = -9;
+        jet4_phi = -9;
+        jet4_pt = -9;
+        jetFwd1_eta = -9;
+        jetFwd1_pt = -9;
+        lep1_charge = -9;
+        lep1_conePt = -9;
+        lep1_eta = -9;
+        lep1_phi = -9;
+        lep2_conePt = -9;
+        lep2_eta = -9;
+        lep2_phi = -9;
+        mT_lep1 = -9;
+        mT_lep2 = -9;
+        mass_dilep = -9;
+        maxeta = -9;
+        mbb = -9;
+        metLD = -9;
+        mindr_lep1_jet = -9;
+        mindr_lep2_jet = -9;
+        nBJetLoose = -9;
+        nBJetMedium = -9;
+        n_presel_jet = -9;
+        n_presel_jetFwd = -9;
+        resTop_BDT = -9;
+
+
+  variable clear done 
+
+
+
+  set newtree branch done 
+
+            inputs["Dilep_pdgId"]=Dilep_pdgId;
+            inputs["Hj_tagger_resTop"]=Hj_tagger_resTop;
+            inputs["avg_dr_jet"]=avg_dr_jet;
+            inputs["jet1_eta"]=jet1_eta;
+            inputs["jet1_phi"]=jet1_phi;
+            inputs["jet1_pt"]=jet1_pt;
+            inputs["jet2_eta"]=jet2_eta;
+            inputs["jet2_phi"]=jet2_phi;
+            inputs["jet2_pt"]=jet2_pt;
+            inputs["jet3_eta"]=jet3_eta;
+            inputs["jet3_phi"]=jet3_phi;
+            inputs["jet3_pt"]=jet3_pt;
+            inputs["jet4_eta"]=jet4_eta;
+            inputs["jet4_phi"]=jet4_phi;
+            inputs["jet4_pt"]=jet4_pt;
+            inputs["jetFwd1_eta"]=jetFwd1_eta;
+            inputs["jetFwd1_pt"]=jetFwd1_pt;
+            inputs["lep1_charge"]=lep1_charge;
+            inputs["lep1_conePt"]=lep1_conePt;
+            inputs["lep1_eta"]=lep1_eta;
+            inputs["lep1_phi"]=lep1_phi;
+            inputs["lep2_conePt"]=lep2_conePt;
+            inputs["lep2_eta"]=lep2_eta;
+            inputs["lep2_phi"]=lep2_phi;
+            inputs["mT_lep1"]=mT_lep1;
+            inputs["mT_lep2"]=mT_lep2;
+            inputs["mass_dilep"]=mass_dilep;
+            inputs["maxeta"]=maxeta;
+            inputs["mbb"]=mbb;
+            inputs["metLD"]=metLD;
+            inputs["mindr_lep1_jet"]=mindr_lep1_jet;
+            inputs["mindr_lep2_jet"]=mindr_lep2_jet;
+            inputs["nBJetLoose"]=nBJetLoose;
+            inputs["nBJetMedium"]=nBJetMedium;
+            inputs["n_presel_jet"]=n_presel_jet;
+            inputs["n_presel_jetFwd"]=n_presel_jetFwd;
+            inputs["resTop_BDT"]=resTop_BDT;

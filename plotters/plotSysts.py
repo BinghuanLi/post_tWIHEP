@@ -180,14 +180,8 @@ def readHists(SystName):
         hist_down.SetMarkerColor(Color["SystDown"])
         if WIDTH == 1:
             hist = YDivideWidth(hist)
-            hist.SetLineColor(Color["Nominal"])
-            hist.SetMarkerColor(Color["Nominal"])
             hist_up = YDivideWidth(hist_up)
-            hist_up.SetLineColor(Color["SystUp"])
-            hist_up.SetMarkerColor(Color["SystUp"])
             hist_down = YDivideWidth(hist_down)
-            hist_down.SetLineColor(Color["SystDown"])
-            hist_down.SetMarkerColor(Color["SystDown"])
         h_list=[]
         h_list.append(hist)
         h_list.append(hist_up)
@@ -264,8 +258,8 @@ def createRatio(h1, h2):
 
 def YDivideWidth(h1):
     h2 = h1.Clone("h2")
-    h2.SetLineColor(kBlack)
-    h2.SetMarkerStyle(20)
+    #h2.SetLineColor(kBlack)
+    #h2.SetMarkerStyle(20)
     h2.SetTitle("")
     #h2.SetMinimum(0.8)
     #h2.SetMaximum(1.35)

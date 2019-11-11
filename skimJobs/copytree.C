@@ -26,8 +26,9 @@ void copytree(TString InputDir, TString OutputDir, TString inputName, TString ou
     for (Long64_t i=0;i<nentries; i++) {
         oldtree->GetEntry(i);
         Bool_t passHiggsDecay = kTRUE;
-        if(HiggsFilter>0 && HiggsFilter<999 && HiggsFilter!=HiggsDecay )passHiggsDecay = kFALSE;//hzz,ww,tt,mm
-        if(HiggsFilter==999 && (HiggsDecay==2 || HiggsDecay==3 || HiggsDecay==6 || HiggsDecay==11))passHiggsDecay = kFALSE; // hot
+        //if(HiggsFilter!=HiggsDecay )passHiggsDecay = kFALSE;//hzz,ww,tt,mm,zg
+        if(HiggsFilter>0 && HiggsFilter<999 && HiggsFilter!=HiggsDecay )passHiggsDecay = kFALSE;//hzz,ww,tt,mm,zg
+        if(HiggsFilter==999 && (HiggsDecay==2 || HiggsDecay==3 || HiggsDecay==6 || HiggsDecay==11 || HiggsDecay==7))passHiggsDecay = kFALSE; // hot
     
         if(passHiggsDecay) newtree->Fill();
         HiggsDecay =0;

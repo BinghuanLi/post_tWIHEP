@@ -1,16 +1,18 @@
 #define mvaTool_cxx
 #include "mvaTool.h"
 
-mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, TString Category, TString TreeName, std::map<Int_t, TString> channelNameMap){
+mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, TString Category, TString TreeName, std::map<Int_t, TString> channelNameMap, std::map<TString, int> IDOfReWeight){
   
   _channel = channel;
   _nPerBin = nPerBin;
+  _IDOfReWeight = IDOfReWeight;
   subCat2l = Category;
   treeName = TreeName;
   ChannelNameMap = channelNameMap;
   BinDir = binDir;
   RegName = regName;
   theBinFile = new TFile((binDir+"/OptBin_"+regName+".root"));
+  the2DBinFile = new TFile((binDir+"/DNNBin_"+regName+".root"));
   //  regionNames = {"3j1t","3j2t","2j1t","4j1t","4j2t"};
   regionNames = {""};
   //Start by initialising the list of variables we will base the MVA on
@@ -83,7 +85,17 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, 
     varList.push_back("DNN_maxval");
     varList.push_back("DNN_maxval_option2");
     //varList.push_back("DNN_maxval_option3");
-
+    
+    /* 
+    varList.push_back("DNNCat_2DBin_GT5");
+    varList.push_back("DNNCat_2DBin_GT10");
+    varList.push_back("DNNCat_2DBin_GT15");
+    varList.push_back("DNNCat_2DBin_GT20");
+    varList.push_back("DNNSubCat2_2DBin_GT5");
+    varList.push_back("DNNSubCat2_2DBin_GT10");
+    varList.push_back("DNNSubCat2_2DBin_GT15");
+    varList.push_back("DNNSubCat2_2DBin_GT20");
+    */
   
   //At some point this should be filled out with the names of the systematics so that we can read those too
   systlist.push_back("");
@@ -149,7 +161,10 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, 
   systlist.push_back("_CMS_ttHl_thu_shape_ttW_down");
   systlist.push_back("_CMS_ttHl_thu_shape_ttZ_up");
   systlist.push_back("_CMS_ttHl_thu_shape_ttZ_down");
-  
+  for (auto& IDs : _IDOfReWeight){
+    //std::cout<< " push_back systlist "<< IDs.first <<std::endl;
+    systlist.push_back("_"+IDs.first);
+  }
 }
 
 void mvaTool::doReading(TString sampleName, TString inDir, TString outDir, bool isData){
@@ -236,6 +251,7 @@ void mvaTool::processMCSample(TString sampleName, TString inDir, TString outDir,
     if (!isData && sampleName =="FakeSub" && !(systlist[j].Contains("_FRm_") || systlist[j].Contains("_FRe_") || systlist[j].Contains("_Clos_m_") || systlist[j].Contains("_Clos_e_") || systlist[j] == "" || systlist[j].Contains("bWeight_jes")))continue;
     if (!isData && sampleName !="FakeSub" && (systlist[j].Contains("_FRm_") || systlist[j].Contains("_FRe_") || systlist[j].Contains("_Clos_m_") || systlist[j].Contains("_Clos_e_")))continue;
     if (isData && sampleName =="Flips" && !(systlist[j].Contains("ChargeMis") || systlist[j] ==""))continue;
+    if (!(sampleName.Contains("TTH") || sampleName.Contains("THQ") || sampleName.Contains("THW")) && ((systlist[j].Contains("_kt_") && systlist[j].Contains("_kv_"))|| systlist[j].Contains("cosa")))continue;
     createHists(sampleName+systlist[j]);
   }
 
@@ -268,6 +284,10 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
   std::cout << "[loopInSample] Finished assigning variables" << std::endl;
   theweight=0.;
   theTree->SetBranchAddress( "EventWeight", &theweight );
+  if(theTree->GetListOfBranches()->FindObject("EVENT_rWeights") ){
+  theTree->SetBranchAddress("EVENT_rWeights", &EVENT_rWeights);
+  EVENT_rWeights->clear();
+  };
 
   //Get the systematic weights here. We will then fill hists separately as a result of this.
   float puWeight=0., puWeightUp = 0., puWeightDown = 0.;
@@ -528,6 +548,7 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
         fillHists(sampleName+"_CMS_ttHl16_FRe_be_down",treevars,mvaValue,mvawJetsValue,theweight * (FakeRateWeight_e_beDown/FakeRateWeight),met,mtw,theChannel);
         fillHists(sampleName+"_bWeight_jes_up",treevars,mvaValue,mvawJetsValue,theweight * (bWeightjerUp/bWeight),met,mtw,theChannel);
         fillHists(sampleName+"_bWeight_jes_down",treevars,mvaValue,mvawJetsValue,theweight * (bWeightjerDown/bWeight),met,mtw,theChannel);
+      
       }else{
         calculateLepTightEffSyst(Dilepton_flav,  eletightSFWeightUp,  eletightSFWeightDown,  mutightSFWeightUp,  mutightSFWeightDown);
         fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_up",treevars,mvaValue,mvawJetsValue,theweight * (CMS_ttHl_thu_shape_ttH_up/CMS_ttHl_thu_shape_ttH),met,mtw,theChannel);
@@ -566,6 +587,15 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
         fillHists(sampleName+"_CMS_ttHl16_btag_LF_down",treevars,mvaValue,mvawJetsValue,theweight * (bWeightlfDown/bWeight),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl16_btag_HF_up",treevars,mvaValue,mvawJetsValue,theweight * (bWeighthfUp/bWeight),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl16_btag_HF_down",treevars,mvaValue,mvawJetsValue,theweight * (bWeighthfDown/bWeight),met,mtw,theChannel);
+        if (theTree->GetListOfBranches()->FindObject("EVENT_rWeights") && (sampleName.Contains("TTH") || sampleName.Contains("THQ") || sampleName.Contains("THW"))){
+            for (auto& IDs : _IDOfReWeight){
+                //std::cout<< " fill syst "<< IDs.first <<std::endl;
+                if(EVENT_rWeights->size()>= IDs.second && EVENT_rWeights->size()>=12){
+                    float rWeight = EVENT_rWeights->at(IDs.second-1)/EVENT_rWeights->at(11);
+                    fillHists(sampleName+"_"+IDs.first,treevars,mvaValue,mvawJetsValue,theweight * rWeight,met,mtw,theChannel);
+                }
+            }
+        }
       }
     }else if(sampleName.Contains("Flips")){
       fillHists(sampleName+"_ChargeMis_up",treevars,mvaValue,mvawJetsValue,theweight * (ChargeMisUp/ChargeMis),met,mtw,theChannel);
@@ -690,9 +720,24 @@ void mvaTool::createHists(TString sampleName){
       if(varList[i]== "DNN_maxval") {nbins= 20; xmin= 0; xmax= 1;};
       if(varList[i]== "DNN_maxval_option2") {nbins= 20; xmin= 0; xmax= 1;};
       if(varList[i]== "DNN_maxval_option3") {nbins= 20; xmin= 0; xmax= 1;};
+      if(varList[i]== "DNNCat_2DBin_GT5") {nbins= 50; xmin= 0.5; xmax= 50.5;};
+      if(varList[i]== "DNNCat_2DBin_GT10") {nbins= 50; xmin= 0.5; xmax= 50.5;};
+      if(varList[i]== "DNNCat_2DBin_GT15") {nbins= 50; xmin= 0.5; xmax= 50.5;};
+      if(varList[i]== "DNNCat_2DBin_GT20") {nbins= 50; xmin= 0.5; xmax= 50.5;};
+      if(varList[i]== "DNNSubCat2_2DBin_GT5") {nbins= 30; xmin= 0.5; xmax= 30.5;};
+      if(varList[i]== "DNNSubCat2_2DBin_GT10") {nbins= 30; xmin= 0.5; xmax= 30.5;};
+      if(varList[i]== "DNNSubCat2_2DBin_GT15") {nbins= 30; xmin= 0.5; xmax= 30.5;};
+      if(varList[i]== "DNNSubCat2_2DBin_GT20") {nbins= 30; xmin= 0.5; xmax= 30.5;};
       
       TString histoName = subCat2l+"_"+varList[i]+"_"+ChannelNameMap[_channel];
       TH1F* h_sig = (TH1F*) theBinFile->Get(histoName+"_Sig");
+      TString map_postfix = "NULL";
+      if(varList[i].Contains("GT5"))map_postfix="GT5";
+      if(varList[i].Contains("GT10"))map_postfix="GT10";
+      if(varList[i].Contains("GT15"))map_postfix="GT15";
+      if(varList[i].Contains("GT20"))map_postfix="GT20";
+      TString MapName = ChannelNameMap[_channel] + "_Map_"+map_postfix;
+      TH2F* h_map = (TH2F*) the2DBinFile->Get(MapName);
       if(BinDir.Contains("Regular")){
         if(h_sig==0){
             TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),nbins,xmin,xmax);
@@ -707,9 +752,18 @@ void mvaTool::createHists(TString sampleName){
             histovect.push_back(histo);
         }
       }else if(h_sig==0){
-        TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),nbins,xmin,xmax);
-        histo->Sumw2();
-        histovect.push_back(histo);
+        if(h_map==0){
+            TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),nbins,xmin,xmax);
+            histo->Sumw2();
+            histovect.push_back(histo);
+        }else{
+            xmax = h_map->GetMaximum() + 0.5;
+            xmin = h_map->GetMinimum() - 0.5;
+            nbins = xmax - xmin;
+            TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),nbins,xmin,xmax);
+            histo->Sumw2();
+            histovect.push_back(histo);
+        }
       }else{
         std::vector<double> bins;
         bins.clear();

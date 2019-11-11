@@ -128,6 +128,7 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
     float nBestVtx=0;
     float n_presel_jet=0;
     // angles
+    float acuteangle_bbpp_highest2b(-99);
     float angle_bbpp_match2b(-99);
     float angle_bbpp_loose2b(-99);
     float angle_bbpp_highest2b(-99);
@@ -159,6 +160,7 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
     newtree->Branch("angle_bbpp_match2b", &angle_bbpp_match2b);
     newtree->Branch("angle_bbpp_loose2b", &angle_bbpp_loose2b);
     newtree->Branch("angle_bbpp_highest2b", &angle_bbpp_highest2b);
+    newtree->Branch("acuteangle_bbpp_highest2b", &acuteangle_bbpp_highest2b);
     newtree->Branch("cosa_bbpp_match2b", &cosa_bbpp_match2b);
     newtree->Branch("cosa_bbpp_loose2b", &cosa_bbpp_loose2b);
     newtree->Branch("cosa_bbpp_highest2b", &cosa_bbpp_highest2b);
@@ -194,10 +196,74 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
     newtree->Branch("CMS_ttHl17_Clos_m_shape_em_SysUp", &CMS_ttHl17_Clos_m_shape_em_SysUp);
     newtree->Branch("CMS_ttHl17_Clos_m_shape_em_SysDown", &CMS_ttHl17_Clos_m_shape_em_SysDown);
     
+    // lwtnn additional vars 
+    float jet1_pt(0.), jet2_pt(0.), jet3_pt(0.), jet4_pt(0.);
+    float jet1_eta(0.), jet2_eta(0.), jet3_eta(0.), jet4_eta(0.);
+    float jet1_phi(0.), jet2_phi(0.), jet3_phi(0.), jet4_phi(0.);
+    float jet1_E(0.), jet2_E(0.), jet3_E(0.), jet4_E(0.);
+    float jetFwd1_pt(0.), jetFwd1_eta(0.), n_presel_jetFwd(0.);
+    float mT_lep1(0.), resTop_BDT(0.), massL(0.), lep1_charge(0.), avg_dr_jet(0.), mT_lep2(0.), maxeta(0.);
+    float mindr_lep2_jet(0.), mindr_lep1_jet(0.), mbb(0.), Hj_tagger_resTop(0.), metLD(0.);
     
+    oldtree->SetBranchAddress("lep1_charge", &lep1_charge);
+    oldtree->SetBranchAddress("jetFwd1_pt", &jetFwd1_pt);
+    oldtree->SetBranchAddress("jetFwd1_eta", &jetFwd1_eta);
+    oldtree->SetBranchAddress("n_presel_jetFwd", &n_presel_jetFwd);
+    oldtree->SetBranchAddress("mT_lep1", &mT_lep1);
+    oldtree->SetBranchAddress("mT_lep2", &mT_lep2);
+    oldtree->SetBranchAddress("avg_dr_jet", &avg_dr_jet);
+    oldtree->SetBranchAddress("maxeta", &maxeta);
+    oldtree->SetBranchAddress("mindr_lep1_jet", &mindr_lep1_jet);
+    oldtree->SetBranchAddress("mindr_lep2_jet", &mindr_lep2_jet);
+    oldtree->SetBranchAddress("mbb", &mbb);
+    oldtree->SetBranchAddress("Hj_tagger_resTop", &Hj_tagger_resTop);
+    oldtree->SetBranchAddress("metLD", &metLD);
+    oldtree->SetBranchAddress("massL", &massL);
+    oldtree->SetBranchAddress("resTop_BDT", &resTop_BDT);
+    oldtree->SetBranchAddress("jet1_pt", &jet1_pt);
+    oldtree->SetBranchAddress("jet1_eta", &jet1_eta);
+    oldtree->SetBranchAddress("jet1_phi", &jet1_phi);
+    oldtree->SetBranchAddress("jet1_E", &jet1_E);
+    oldtree->SetBranchAddress("jet2_pt", &jet2_pt);
+    oldtree->SetBranchAddress("jet2_eta", &jet2_eta);
+    oldtree->SetBranchAddress("jet2_phi", &jet2_phi);
+    oldtree->SetBranchAddress("jet2_E", &jet2_E);
+    oldtree->SetBranchAddress("jet3_pt", &jet3_pt);
+    oldtree->SetBranchAddress("jet3_eta", &jet3_eta);
+    oldtree->SetBranchAddress("jet3_phi", &jet3_phi);
+    oldtree->SetBranchAddress("jet3_E", &jet3_E);
+    oldtree->SetBranchAddress("jet4_pt", &jet4_pt);
+    oldtree->SetBranchAddress("jet4_eta", &jet4_eta);
+    oldtree->SetBranchAddress("jet4_phi", &jet4_phi);
+    oldtree->SetBranchAddress("jet4_E", &jet4_E);
+    
+    float DNN_maxval=0.;
+    float DNNCat=0.;
+    float DNNSubCat1_option1=0.;
+    float DNNSubCat2_option1=0.;
+    float DNN_ttHnode_all=0.;
+    float DNN_ttJnode_all=0.;
+    float DNN_ttWnode_all=0.;
+    float DNN_ttZnode_all=0.;
+    float DNN_tHQnode_all=0.;
+    
+    newtree->Branch("DNN_maxval", &DNN_maxval);
+    newtree->Branch("DNNCat", &DNNCat);
+    newtree->Branch("DNNSubCat1_option1", &DNNSubCat1_option1);
+    newtree->Branch("DNNSubCat2_option1", &DNNSubCat2_option1);
+    newtree->Branch("DNN_ttHnode_all", &DNN_ttHnode_all);
+    newtree->Branch("DNN_ttJnode_all", &DNN_ttJnode_all);
+    newtree->Branch("DNN_ttWnode_all", &DNN_ttWnode_all);
+    newtree->Branch("DNN_ttZnode_all", &DNN_ttZnode_all);
+    newtree->Branch("DNN_tHQnode_all", &DNN_tHQnode_all);
+    
+    std::map<std::string,double> inputs;
+    create_lwtnn(input_json_file, nn_instance);
+
     //newtree = oldtree->CopyTree("jet4_pt>=30");
     
     for (Long64_t i=0;i<nentries; i++) {
+    //for (Long64_t i=0;i<10; i++) {
         trueInteractions = -999;
         n_presel_jet = -999;
         is_tH_like_and_not_ttH_like =0;
@@ -205,6 +271,7 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
         nEvt = -999;
         xsec_rwgt = 1.;
         cpodd_rwgt = 1.;
+        acuteangle_bbpp_highest2b = -9.;
         angle_bbpp_highest2b = -9.;
         angle_bbpp_loose2b = -9.;
         angle_bbpp_match2b = -9.;
@@ -217,6 +284,15 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
         cosa_highest2b = -9.;
         cosa_loose2b = -9.;
         cosa_match2b = -9.;
+        DNN_maxval=0.;
+        DNNCat=0.;
+        DNNSubCat1_option1=0.;
+        DNNSubCat2_option1=0.;
+        DNN_ttHnode_all=0.;
+        DNN_ttJnode_all=0.;
+        DNN_ttWnode_all=0.;
+        DNN_ttZnode_all=0.;
+        DNN_tHQnode_all=0.;
         oldtree->GetEntry(i);
         Bool_t pass2LMatchRightCharge = kTRUE;
         Bool_t pass2LPromptFS = kTRUE;
@@ -323,10 +399,127 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
                 deta_highest2b = bJet1.Eta() - bJet2.Eta();
                 double temp_angle_2b = getAngleOfVecs(bJet1, bJet2, cosa_highest2b);
             }
+            acuteangle_bbpp_highest2b = TMath::Pi()/2.-fabs(angle_bbpp_highest2b-TMath::Pi()/2.);
             
+
+            // lwtnn
+            /*
+            inputs["lep1_conePt"]= 1.2;    
+            inputs["lep1_eta"]= 1.2;    
+            inputs["lep1_phi"]= 1.2;    
+            inputs["lep1_E"]= 1.2;    
+            inputs["lep2_conePt"] = 1.2;
+            inputs["lep2_eta"] = 1.2;    
+            inputs["lep2_phi"]= 1.2;     
+            inputs["lep2_E"]= 1.2;    
+            inputs["jet1_pt"]= 1.2;    
+            inputs["jet1_eta"]= 1.2;    
+            inputs["jet1_phi"]= 1.2;    
+            inputs["jet1_E"]= 1.2;    
+            inputs["jet2_pt"]= 1.2;    
+            inputs["jet2_eta"]= 1.2;    
+            inputs["jet2_phi"]= 1.2;    
+            inputs["jet2_E"]=1.2;    
+            inputs["jet3_pt"]= 1.2;    
+            inputs["jet3_eta"]= 1.2;    
+            inputs["jet3_phi"]= 1.2;    
+            inputs["jet3_E"]= 1.2;    
+            inputs["jet4_pt"]= 1.2;    
+            inputs["jet4_eta"]= 1.2;    
+            inputs["jet4_phi"]= 1.2;    
+            inputs["jet4_E"]= 1.2;    
+            inputs["n_presel_jet"] = 1.2;
+            inputs["nBJetLoose"]= 1.2;
+            inputs["nBJetMedium"]= 1.2;
+            inputs["n_presel_jetFwd"]= 1.2;
+            inputs["jetFwd1_pt"]= 1.2;
+            inputs["jetFwd1_eta"] = 1.2;
+            inputs["lep1_charge"]= 1.2;
+            inputs["mT_lep1"]= 1.2;
+            inputs["mT_lep2"]= 1.2;
+            inputs["mindr_lep1_jet"] = 1.2;
+            inputs["mindr_lep2_jet"] = 1.2;
+            inputs["massL"]= 1.2;
+            inputs["resTop_BDT"]= 1.2;
+            inputs["Hj_tagger_resTop"]= 1.2;
+            inputs["avg_dr_jet"]= 1.2;
+            inputs["maxeta"]=1.2;
+            inputs["mbb"]=1.2;
+            inputs["Dilep_pdgId"]= 1.2;
+            inputs["metLD"]=1.2;
+            */
+            inputs["lep1_conePt"]=lep1_conept;    
+            inputs["lep1_eta"]=lep1_eta;    
+            inputs["lep1_phi"]=lep1_phi;    
+            inputs["lep1_E"]=lep1_E;    
+            inputs["lep2_conePt"]=lep2_conept;    
+            inputs["lep2_eta"]=lep2_eta;    
+            inputs["lep2_phi"]=lep2_phi;    
+            inputs["lep2_E"]=lep2_E;    
+            inputs["jet1_pt"]=jet1_pt;    
+            inputs["jet1_eta"]=jet1_eta;    
+            inputs["jet1_phi"]=jet1_phi;    
+            inputs["jet1_E"]=jet1_E;    
+            inputs["jet2_pt"]=jet2_pt;    
+            inputs["jet2_eta"]=jet2_eta;    
+            inputs["jet2_phi"]=jet2_phi;    
+            inputs["jet2_E"]=jet2_E;    
+            inputs["jet3_pt"]=jet3_pt;    
+            inputs["jet3_eta"]=jet3_eta;    
+            inputs["jet3_phi"]=jet3_phi;    
+            inputs["jet3_E"]=jet3_E;    
+            inputs["jet4_pt"]=jet4_pt;    
+            inputs["jet4_eta"]=jet4_eta;    
+            inputs["jet4_phi"]=jet4_phi;    
+            inputs["jet4_E"]=jet4_E;    
+            inputs["n_presel_jet"]=n_presel_jet;
+            inputs["nBJetLoose"]=nBJetLoose;
+            inputs["nBJetMedium"]=nBJetMedium;
+            inputs["n_presel_jetFwd"]=n_presel_jetFwd;
+            inputs["jetFwd1_pt"]=jetFwd1_pt;
+            inputs["jetFwd1_eta"]=jetFwd1_eta;
+            inputs["lep1_charge"]=lep1_charge;
+            inputs["mT_lep1"]=mT_lep1;
+            inputs["mT_lep2"]=mT_lep2;
+            inputs["mindr_lep1_jet"]=mindr_lep1_jet;
+            inputs["mindr_lep2_jet"]=mindr_lep2_jet;
+            inputs["massL"]=massL;
+            inputs["resTop_BDT"]=resTop_BDT;
+            inputs["Hj_tagger_resTop"]=Hj_tagger_resTop;
+            inputs["avg_dr_jet"]=avg_dr_jet;
+            inputs["maxeta"]=maxeta;
+            inputs["mbb"]=mbb;
+            inputs["Dilep_pdgId"]=Dilep_pdgId;
+            inputs["metLD"]=metLD;
+
+            for (const auto& in_var: inputs) {
+                float input_value = in_var.second;
+                //std::cout<< " input NN " << in_var.first << " = " << input_value << std::endl;
+            }
+            double output_value;
+            auto out_vals = nn_instance->compute(inputs);
+            for (const auto& out: out_vals) {
+                output_value = out.second;
+                if (out.first=="predictions_ttH")DNN_ttHnode_all=out.second;
+                if (out.first=="predictions_ttJ")DNN_ttJnode_all=out.second;
+                if (out.first=="predictions_ttW")DNN_ttWnode_all=out.second;
+                if (out.first=="predictions_ttZ")DNN_ttZnode_all=out.second;
+                if (out.first=="predictions_tHq")DNN_tHQnode_all=out.second;
+            }
+            std::vector<double> DNN_vals;
+            DNN_vals.push_back(DNN_ttHnode_all);
+            DNN_vals.push_back(DNN_ttJnode_all);
+            DNN_vals.push_back(DNN_ttWnode_all);
+            DNN_vals.push_back(DNN_ttZnode_all);
+            DNN_vals.push_back(DNN_tHQnode_all);
+
+            setDNNflag(DNN_vals, DNN_maxval, DNNCat, DNNSubCat1_option1, DNNSubCat2_option1 , Dilep_pdgId, lep1_charge);
+
             newtree->Fill();
         }
-        EVENT_rWeights->clear();
+        if(oldtree->GetListOfBranches()->FindObject("EVENT_rWeights")){
+            EVENT_rWeights->clear();
+        }
         Jet25_pt->clear();
         Jet25_eta->clear();
         Jet25_phi->clear();
@@ -335,6 +528,39 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
         Jet25_isFromTop->clear();
         Jet25_isFromH->clear();
         Jet25_matchId->clear();
+        //lwtnn
+        jet1_pt=0;
+        jet2_pt=0; 
+        jet3_pt=0; 
+        jet4_pt=0;
+        jet1_eta=0; 
+        jet2_eta=0; 
+        jet3_eta=0; 
+        jet4_eta=0;
+        jet1_phi=0; 
+        jet2_phi=0; 
+        jet3_phi=0; 
+        jet4_phi=0;
+        jet1_E=0; 
+        jet2_E=0; 
+        jet3_E=0; 
+        jet4_E=0;
+        jetFwd1_pt=0; 
+        jetFwd1_eta=0; 
+        n_presel_jetFwd=0;
+        mT_lep1=0; 
+        resTop_BDT=0; 
+        massL=0; 
+        lep1_charge=0; 
+        avg_dr_jet=0; 
+        mT_lep2=0; 
+        maxeta=0;
+        mindr_lep2_jet=0; 
+        mindr_lep1_jet=0; 
+        mbb=0; 
+        Hj_tagger_resTop=0; 
+        Dilep_pdgId=0; 
+        metLD=0;
         HiggsDecay =0;
         lep1_pdgId=0;
         lep2_pdgId=0;
@@ -362,7 +588,6 @@ void Rootplas_Prompt_2lss(TString InputDir, TString OutputDir, TString FileName,
         nLooseJet = 0;
         Sum2lCharge =0;
         Dilep_nTight =0;
-        Dilep_pdgId =0;
         massL_SFOS =0;
         Trilep_nTight =0;
         mvaOutput_2lss_ttV=0;

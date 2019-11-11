@@ -11,6 +11,7 @@
 #include "function.C"
 
 // options
+Bool_t _useReWeight = false; // set to true if we recalculate Global Weight.
 Bool_t _useFakeRate = true; // set to true if we recalculate FakeRate Weighting.
 Bool_t _useTrigSF = true; // set to true if we recalculate Trig SFs.
 
@@ -67,8 +68,10 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
     float lep1_conept(0.), lep2_conept(0.);// lep3_conept(0.);
     float lep1_ismvasel(0.), lep2_ismvasel(0.), lep3_ismvasel(0.);
     float lep1_eta(0.), lep2_eta(0.), lep3_eta(0.);
+    float lep1_phi(0.), lep2_phi(0.), lep3_phi(0.);
+    float lep1_E(0.), lep2_E(0.), lep3_E(0.);
     float Sum2lCharge(0.), Dilep_nTight(0.), massL_SFOS(0.), Trilep_nTight(0.), Dilep_pdgId(0.), Sum3LCharge(0.);
-    float xsec_rwgt(0.);
+    float xsec_rwgt(0.),cpodd_rwgt(0.);
     float mvaOutput_2lss_ttV(0.), mvaOutput_2lss_ttbar(0.);
     float EventWeight(0.), FakeRate(0.);
     float TriggerSF(0.), TriggerSF_SysUp(0.), TriggerSF_SysDown(0.);
@@ -76,6 +79,20 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
     float FakeRate_e_central(0.), FakeRate_e_up(0.), FakeRate_e_down(0.), FakeRate_e_pt1(0.), FakeRate_e_pt2(0.), FakeRate_e_be1(0.), FakeRate_e_be2(0.), FakeRate_e_QCD(0.), FakeRate_e_TT(0.); 
     float TTHLep_2L(0.), massL(0.), n_fakeablesel_tau(0.), mass_dilep(0.), metLD(0.), lep1_TightCharge(0.), lep2_TightCharge(0.), nLepTight(0.);
 
+    std::vector<double>* EVENT_rWeights =0;
+    std::vector<double>* Jet25_pt =0;
+    std::vector<double>* Jet25_eta =0;
+    std::vector<double>* Jet25_phi =0;
+    std::vector<double>* Jet25_energy =0;
+    std::vector<double>* Jet25_bDiscriminator =0;
+    
+    
+    oldtree->SetBranchAddress("EVENT_rWeights", &EVENT_rWeights);
+    oldtree->SetBranchAddress("Jet25_pt", &Jet25_pt);
+    oldtree->SetBranchAddress("Jet25_eta", &Jet25_eta);
+    oldtree->SetBranchAddress("Jet25_phi", &Jet25_phi);
+    oldtree->SetBranchAddress("Jet25_energy", &Jet25_energy);
+    oldtree->SetBranchAddress("Jet25_bDiscriminator", &Jet25_bDiscriminator);
     oldtree->SetBranchAddress("trueInteractions", &rtrueInteractions);
     oldtree->SetBranchAddress("nBestVtx", &rnBestVtx);
     oldtree->SetBranchAddress("n_presel_jet", &nLooseJet);
@@ -103,6 +120,12 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
     oldtree->SetBranchAddress("lep1_eta", &lep1_eta);
     oldtree->SetBranchAddress("lep2_eta", &lep2_eta);
     oldtree->SetBranchAddress("lep3_eta", &lep3_eta);
+    oldtree->SetBranchAddress("lep1_phi", &lep1_phi);
+    oldtree->SetBranchAddress("lep2_phi", &lep2_phi);
+    oldtree->SetBranchAddress("lep3_phi", &lep3_phi);
+    oldtree->SetBranchAddress("lep1_E", &lep1_E);
+    oldtree->SetBranchAddress("lep2_E", &lep2_E);
+    oldtree->SetBranchAddress("lep3_E", &lep3_E);
     oldtree->SetBranchAddress("leadLep_mcPromptGamma", &firstLep_mcPromptGamma);
     oldtree->SetBranchAddress("secondLep_mcPromptGamma", &secondLep_mcPromptGamma);
     oldtree->SetBranchAddress("thirdLep_mcPromptGamma", &thirdLep_mcPromptGamma);
@@ -155,6 +178,12 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
     float trueInteractions=0;
     float nBestVtx=0;
     float n_presel_jet=0;
+    // angles
+    float angle_bbpp_highest2b(-99);
+    float cosa_bbpp_highest2b(-99);
+    float acuteangle_bbpp_highest2b(-99);
+    float deta_highest2b(-99);
+    float cosa_highest2b(-99);
     // shape theoretical uncertainties 
     float CMS_ttHl_thu_shape_ttH(0.), CMS_ttHl_thu_shape_ttH_SysUp(0.), CMS_ttHl_thu_shape_ttH_SysDown(0.);
     float CMS_ttHl_thu_shape_ttW(0.), CMS_ttHl_thu_shape_ttW_SysUp(0.), CMS_ttHl_thu_shape_ttW_SysDown(0.);
@@ -174,7 +203,13 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
     newtree->Branch("nBestVTX", &nBestVtx);
     newtree->Branch("is_tH_like_and_not_ttH_like", &is_tH_like_and_not_ttH_like);
     newtree->Branch("nEvt", &nEvt);
+    newtree->Branch("angle_bbpp_highest2b", &angle_bbpp_highest2b);
+    newtree->Branch("cosa_bbpp_highest2b", &cosa_bbpp_highest2b);
+    newtree->Branch("acuteangle_bbpp_highest2b", &acuteangle_bbpp_highest2b);
+    newtree->Branch("deta_highest2b", &deta_highest2b);
+    newtree->Branch("cosa_highest2b", &cosa_highest2b);
     newtree->Branch("xsec_rwgt", &xsec_rwgt);
+    newtree->Branch("cpodd_rwgt", &cpodd_rwgt);
     newtree->Branch("nLooseJet", &n_presel_jet);
     newtree->Branch("passTrigCut", &passTrigCut);
     newtree->Branch("passMassllCut", &passMassllCut);
@@ -225,7 +260,13 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
         nLightJet = -999;
         nBestVtx = -999;
         nEvt = -999;
+        acuteangle_bbpp_highest2b = -9.;
+        angle_bbpp_highest2b = -9.;
+        cosa_bbpp_highest2b = -9.;
+        deta_highest2b = -9.;
+        cosa_highest2b = -9.;
         xsec_rwgt = 1.;
+        cpodd_rwgt = 1.;
         oldtree->GetEntry(i);
         Bool_t pass2LRegionCut = kTRUE;
         Bool_t passTHSelectionCut = kFALSE;
@@ -241,8 +282,16 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
             nBestVtx = rnBestVtx;
             nEvt = nEvent;
             //xsec_rwgt = get_rewgtlumi(FileName);
+            // Global Weight
+            if(_useReWeight){
+             double rwgt = get_rwgtGlobal(FileName);
+             EventWeight *= rwgt;
+            }
             n_presel_jet = nLooseJet;
             is_tH_like_and_not_ttH_like = (passTHSelectionCut && !pass2LRegionCut)? 1:0;
+            if(oldtree->GetListOfBranches()->FindObject("EVENT_rWeights") && EVENT_rWeights->size()>68){
+                cpodd_rwgt = EVENT_rWeights->at(59)/EVENT_rWeights->at(11);
+            }
             if (nEvent <0) nEvt = nEvent + 4294967296; // 4294967296 = 2^32, this is to fix the problem saving EVENT_event as a wrong type
             else nEvt = nEvent;
             // fill lnN1D_p1()
@@ -268,7 +317,38 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
             CMS_ttHl17_Clos_m_shape_em = 1.;
             CMS_ttHl17_Clos_m_shape_em_SysUp = lnN1D_p1(1.8, mvaOutput_2lss_ttV, -1, 1)/1.35;
             CMS_ttHl17_Clos_m_shape_em_SysDown = 1./CMS_ttHl17_Clos_m_shape_em_SysUp;
-           
+            
+            // calculate lorentz angle
+            TLorentzVector Lep1_CMS, Lep2_CMS, p1_CMS, p2_CMS;
+            Lep1_CMS.SetPtEtaPhiE(lep1_conept,lep1_eta,lep1_phi,lep1_E);
+            Lep2_CMS.SetPtEtaPhiE(lep2_conept,lep2_eta,lep2_phi,lep2_E);
+            p1_CMS.SetXYZM(0,0,-1,0.938); // proton mass 938MeV
+            p2_CMS.SetXYZM(0,0,1,0.938); 
+            TLorentzVector  bJet1, bJet2;
+            double b1_CSV= -99;
+            double b2_CSV= -999;
+            for(uint jet_en=0; jet_en < Jet25_pt->size(); jet_en++){
+               // deep CSV value ordered
+               if(Jet25_bDiscriminator->at(jet_en)>b1_CSV){
+                   // set b2 to old b1
+                   b2_CSV = b1_CSV;
+                   bJet2 = bJet1;
+                   // set b1 to current jet
+                   b1_CSV = Jet25_bDiscriminator->at(jet_en);
+                   bJet1.SetPtEtaPhiE(Jet25_pt->at(jet_en),Jet25_eta->at(jet_en),Jet25_phi->at(jet_en),Jet25_energy->at(jet_en));
+               } else if(Jet25_bDiscriminator->at(jet_en)>b2_CSV){
+                   // set b1 to current jet
+                   b2_CSV = Jet25_bDiscriminator->at(jet_en);
+                   bJet2.SetPtEtaPhiE(Jet25_pt->at(jet_en),Jet25_eta->at(jet_en),Jet25_phi->at(jet_en),Jet25_energy->at(jet_en));
+               }
+            }
+            if(fabs(bJet2.Pt())>0.0001){
+                angle_bbpp_highest2b = get_boostedAngle( Lep1_CMS, Lep2_CMS, p1_CMS, p2_CMS, bJet1, bJet2, cosa_bbpp_highest2b);
+                deta_highest2b = bJet1.Eta() - bJet2.Eta();
+                double temp_angle_2b = getAngleOfVecs(bJet1, bJet2, cosa_highest2b);
+            }
+            acuteangle_bbpp_highest2b = TMath::Pi()/2.-fabs(angle_bbpp_highest2b-TMath::Pi()/2.);
+
             // FakeRate
             if(_useFakeRate){
                 std::map<std::string,float> mFakeRate;
@@ -344,6 +424,12 @@ void Rootplas_TrainMVA_2lss(TString InputDir, TString OutputDir, TString FileNam
         lep1_eta=0;
         lep2_eta=0;
         lep3_eta=0;
+        lep1_phi=0;
+        lep2_phi=0;
+        lep3_phi=0;
+        lep1_E=0;
+        lep2_E=0;
+        lep3_E=0;
         firstLep_isMatchRightCharge=0;
         secondLep_isMatchRightCharge=0;
         thirdLep_isMatchRightCharge=0;

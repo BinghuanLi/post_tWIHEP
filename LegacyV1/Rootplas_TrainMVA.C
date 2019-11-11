@@ -9,7 +9,7 @@
 #include "TFile.h"
 
 // options
-Bool_t _useReWeight = false; // set to true if we recalculate Global Weight.
+Bool_t _useReWeight = true; // set to true if we recalculate Global Weight.
 Bool_t _useFakeRate = false; // set to true if we recalculate FakeRate Weighting.
 Bool_t _useTrigSF = false; // set to true if we recalculate Trig SFs.
 Bool_t _useHjVar = false; // set to true if we use Hjvar.
@@ -100,10 +100,13 @@ void Rootplas_TrainMVA(TString InputDir, TString OutputDir, TString FileName, TS
     float thirdLep_mcPromptFS = 0;
     float thirdLep_mcPromptGamma = 0;
     float xsec_rwgt = 0;
+    float global_rwgt = 0;
     float EventWeight = 0;
+    float DataEra = 0;
     
     oldtree->SetBranchAddress("EVENT_rWeights",&EVENT_rWeights);
     oldtree->SetBranchAddress("EventWeight",&EventWeight);
+    oldtree->SetBranchAddress("DataEra",&DataEra);
     oldtree->SetBranchAddress("HiggsDecay",&HiggsDecay);
     oldtree->SetBranchAddress("fourthLep_isFromB",&fourthLep_isFromB);
     oldtree->SetBranchAddress("fourthLep_isFromC",&fourthLep_isFromC);
@@ -178,6 +181,7 @@ void Rootplas_TrainMVA(TString InputDir, TString OutputDir, TString FileName, TS
     newtree->Branch("cpodd_rwgt",&cpodd_rwgt);
     newtree->Branch("is_tH_like_and_not_ttH_like",&is_tH_like_and_not_ttH_like);
     newtree->Branch("xsec_rwgt",&xsec_rwgt);
+    newtree->Branch("global_rwgt",&global_rwgt);
     
     
     std::map<std::string,double> inputs;
@@ -250,12 +254,16 @@ void Rootplas_TrainMVA(TString InputDir, TString OutputDir, TString FileName, TS
         thirdLep_mcPromptFS = -9;
         thirdLep_mcPromptGamma = -9;
         xsec_rwgt = 1;
+        global_rwgt = 1;
         EventWeight = 1;
+        DataEra = -9;
         oldtree->GetEntry(i);
         Bool_t passCut = kFALSE;
+        Bool_t passTH = kTRUE;
         is_tH_like_and_not_ttH_like = (istHlikeDiLepSR==1 && isDiLepSR!=1 && isttWctrlSR!=1) ? 1:0;
         passCut = ((istHlikeDiLepSR==1 || isDiLepSR==1 || isttWctrlSR==1 )); 
-        if(passCut){
+        if(DataEra == 2018 && nEvent % 3 == 0 && (FileName.Contains("THW") || FileName.Contains("THQ"))) passTH = kFALSE; // 1/3 for signal extraction
+        if(passCut && passTH){
             if(_reWeight){
                 if(oldtree->GetListOfBranches()->FindObject("EVENT_rWeights") && EVENT_rWeights->size()>=12 && FileName.Contains("ctcvcp")){
                     xsec_rwgt = get_rewgtlumi(FileName, EVENT_rWeights->at(11));
@@ -264,6 +272,10 @@ void Rootplas_TrainMVA(TString InputDir, TString OutputDir, TString FileName, TS
                     xsec_rwgt = get_rewgtlumi(FileName, 1);
                 }
                 EventWeight = EventWeight * xsec_rwgt;
+            }
+            if(_useReWeight){
+                global_rwgt = get_rwgtGlobal(FileName, DataEra, true);
+                EventWeight = EventWeight * global_rwgt;
             }
             
             newtree->Fill();

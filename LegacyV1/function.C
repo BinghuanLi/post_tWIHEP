@@ -22,7 +22,7 @@ void setDNNflag(std::vector<double> DNN_vals, float& DNN_maxval, float& DNNCat, 
 double getMTlepmet(double phi1, double phi2, double pt1, double pt2);
 double deltaPhi(double phi1, double phi2);
 double get_rewgtlumi(TString FileName, double rwgt);
-double get_rwgtGlobal(TString FileName);
+double get_rwgtGlobal(TString FileName, int dataEra, bool isTrainMVA=false);
 float lnN1D_p1(float kappa, float x, float xmin, float xmax); 
 double getAngleOfPlanes(TVector3 plane1_vectA, TVector3 plane1_vectB, TVector3 plane2_vectA, TVector3 plane2_vectB, float &cosa);
 double getAngleOfVecs(TLorentzVector vectA, TLorentzVector vectB, float& cosa);
@@ -46,12 +46,23 @@ double get_boostedAngle(TLorentzVector Particle1_CMS, TLorentzVector Particle2_C
 // read trees
 void SetOldTreeBranchStatus(TTree* readtree, bool isHjtagger);
 //utils
-double get_rwgtGlobal(TString FileName){
+double get_rwgtGlobal(TString FileName, int dataEra, bool isTrainMVA){
     double wgt=1.;
-    // only applyied for MVA samples before 20190709
-    if(FileName.Contains("THQ_ctcvcp")) wgt= 1.764383144e-05/166.7915143;
-    if(FileName.Contains("THW_ctcvcp")) wgt= 4.094315962e-05/191.5797176;
-    if(FileName.Contains("TTH_ctcvcp")) wgt= 0.0001705719503/1421.20549; 
+    // in 2018, THQ/THW are split into 1/3 for signal extraction and 2/3 for trainMVA
+    if(FileName.Contains("THQ")){
+        if(dataEra == 2018 && isTrainMVA){
+            wgt= 3./2.;
+        }else if(dataEra ==2018 && !isTrainMVA){
+            wgt = 3.;
+        }
+    }
+    if(FileName.Contains("THW")){
+        if(dataEra == 2018 && isTrainMVA){
+            wgt= 3./2.;
+        }else if(dataEra ==2018 && !isTrainMVA){
+            wgt = 3.;
+        }
+    }
     return wgt;
 }
 double get_rewgtlumi(TString FileName, double rwgt){

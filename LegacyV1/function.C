@@ -14,7 +14,7 @@ R__ADD_INCLUDE_PATH(/cvmfs/sft.cern.ch/lcg/views/LCG_96python3/x86_64-slc6-gcc8-
 // lwtnn evaluations
 // the actual NN instance
 lwt::LightweightNeuralNetwork *nn_instance;
-TString input_json_file = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplizers/LegacyV1/nn_weights/2019-10-21_tH_tunedweights/neural_net_weights.json";
+TString input_json_file = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplizers/LegacyV1/nn_weights/2017samples_tH_tunedweights/NN_2lss_0tau.json";
 void create_lwtnn(TString input_json_file, lwt::LightweightNeuralNetwork*& NN_instance );
 void setDNNflag(std::vector<double> DNN_vals, float& DNN_maxval, float& DNNCat, float& DNNSubCat1, float& DNNSubCat2, float Dilep_pdgId, float lep1_charge);
 
@@ -33,6 +33,14 @@ double getAngleOfVecs(TLorentzVector vectA, TLorentzVector vectB, float& cosa);
 // this happens so rare, only one event in all interested control region and date taking period, so I simply drop it here, it should be fine
 // 2017 ZZ_WZctrl.root trueInteractions = 99
 bool checkPU(float nPU, int dataEra);
+// event selection
+bool IsDiLepTR(double massL_SFOS, int n_presel_jet, int nBJetLoose, int nBJetMedium, int n_presel_ele, int n_presel_mu, double lep1_charge, double lep2_charge, double mass_diele, double metLD, double lep1_pdgId, double lep2_pdgId);
+bool IsttWctrlTR(double massL_SFOS, int n_presel_jet, int nBJetLoose, int nBJetMedium, int n_presel_ele, int n_presel_mu, double lep1_charge, double lep2_charge, double mass_diele, double metLD, double lep1_pdgId, double lep2_pdgId);
+bool IstHlikeDiLepTR(double massL_SFOS, int nLightJet, int nBJetMedium, int n_presel_ele, int n_presel_mu, double lep1_charge, double lep2_charge, double mass_diele, double metLD, double lep1_pdgId, double lep2_pdgId);
+// DNNBin
+TString input_DNNBin_path = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplizers/LegacyV1/data/rootplas_LegacyAll_20191110/";
+void setDNNBinHistograms(TString MapFileName,TString MapHistName, std::map<TString, TH1F*> &_HistMaps, int nBin);
+float getDNNBin(float DNNValue, TString MapFileName, TString MapHistName, std::map<TString,TH1F*> _HistMaps, int nBin);
 // fake rate
 void setFakeRateHistograms(TString FakeRateFileName,TString FakeRateMuonHistName, TString FakeRateElectronHistName, std::map<std::string, TH2F*> &_MuonFakeRate, std::map<std::string, TH2F*> &_ElectronFakeRate, std::string muSystName="central", std::string eleSystName="central");
 Double_t getFakeRateWeight(float lep1_ismvasel, float lep1_pdgId, float lep1_conept, float lep1_eta, float lep2_ismvasel, float lep2_pdgId, float lep2_conept, float lep2_eta , std::map<std::string,TH2F*> _MuonFakeRate, std::map<std::string,TH2F*> _ElectronFakeRate, std::string muSystName="central", std::string eleSystName="central");
@@ -143,6 +151,64 @@ bool checkPU(float nPU, int dataEra){
     }
     return nPU_isFinite;
 };
+
+// event selection
+bool IsDiLepTR(double massL_SFOS, int n_presel_jet, int nBJetLoose, int nBJetMedium, int n_presel_ele, int n_presel_mu, double lep1_charge, double lep2_charge, double mass_diele, double metLD, double lep1_pdgId, double lep2_pdgId){
+    if(!(massL_SFOS > 101.2 || massL_SFOS < 81.2)) return false; // cut Z veto
+    if(!(n_presel_jet>=4)) return false; //nJet cut
+    if(!(nBJetLoose>=2 || nBJetMedium >=1)) return false; //BJet cut
+    if((n_presel_ele + n_presel_mu) <2) return false;
+    if(!( lep1_charge * lep2_charge >0))return false; // same sign leptons
+    if(!(mass_diele > 101.2 || mass_diele < 81.2)) return false; // cut Z veto
+    if(metLD <= 30 && fabs(lep1_pdgId)==11 && fabs(lep2_pdgId)==11 ) return false; // metLD if isEE, then metLD > 30GeV
+    return true;
+};
+bool IsttWctrlTR(double massL_SFOS, int n_presel_jet, int nBJetLoose, int nBJetMedium, int n_presel_ele, int n_presel_mu, double lep1_charge, double lep2_charge, double mass_diele, double metLD, double lep1_pdgId, double lep2_pdgId){
+    if(!(massL_SFOS > 101.2 || massL_SFOS < 81.2)) return false; // cut Z veto
+    if(!(n_presel_jet==3)) return false; //nJet cut
+    if(!(nBJetLoose>=2 || nBJetMedium >=1)) return false; //BJet cut
+    if((n_presel_ele + n_presel_mu) <2) return false;
+    if(!( lep1_charge * lep2_charge >0))return false; // same sign leptons
+    if(!(mass_diele > 101.2 || mass_diele < 81.2)) return false; // cut Z veto
+    if(metLD <= 30 && fabs(lep1_pdgId)==11 && fabs(lep2_pdgId)==11 ) return false; // metLD if isEE, then metLD > 30GeV
+    return true;
+};
+bool IstHlikeDiLepTR(double massL_SFOS, int nLightJet, int nBJetMedium, int n_presel_ele, int n_presel_mu, double lep1_charge, double lep2_charge, double mass_diele, double metLD, double lep1_pdgId, double lep2_pdgId){
+    if(!(nLightJet >=1)) return false; //nLightJet cut
+    if(!(nBJetMedium>=1)) return false; //BJet cut
+    if(!(massL_SFOS > 101.2 || massL_SFOS < 81.2)) return false; // cut Z veto
+    if((n_presel_ele + n_presel_mu) <2) return false;
+    if(!( lep1_charge * lep2_charge >0))return false; // same sign leptons
+    if(!(mass_diele > 101.2 || mass_diele < 81.2)) return false; // cut Z veto
+    if(metLD <= 30 && fabs(lep1_pdgId)==11 && fabs(lep2_pdgId)==11 ) return false; // metLD if isEE, then metLD > 30GeV
+    return true;
+};
+
+// DNN Bin Maps
+void setDNNBinHistograms(TString inputpath, TString MapFileName,TString MapHistName, std::map<TString, TH1F*> &_HistMaps, int nBin){
+  TFile* MapFile = TFile::Open((inputpath+MapFileName+".root"),"READ");
+  if (!MapFile) std::cout << "MapFile file not found!" << std::endl;
+  TString str_nBin = std::to_string(nBin);
+  //std::cout<< " try to get " << MapHistName <<"_nBin"<<str_nBin<< " from " << inputpath<<MapFileName<<".root"<< std::endl;
+  _HistMaps[(MapFileName+"_"+MapHistName+"_nBin"+str_nBin)] = (TH1F*) MapFile->Get(MapHistName+"_Map_nBin"+str_nBin)->Clone();
+  _HistMaps[(MapFileName+"_"+MapHistName+"_nBin"+str_nBin)]->SetDirectory(0);
+  MapFile->Close();
+  delete MapFile;
+}
+
+float getDNNBin(float DNNValue, TString MapFileName, TString MapHistName, std::map<TString,TH1F*> _HistMaps, int nBin){
+    float DNNBin = 1.0;
+    TString maphistName = MapFileName+"_"+MapHistName+"_nBin"+std::to_string(nBin);
+    int xAxisBin  = std::max(1, std::min(_HistMaps[maphistName]->GetNbinsX(), _HistMaps[maphistName]->GetXaxis()->FindBin(DNNValue)));
+    DNNBin = _HistMaps[maphistName]->GetBinContent(xAxisBin);
+    /*
+    if(MapHistName.Contains("em_ttWnode")){
+        std::cout <<" DNNValue " << DNNValue <<  " em_ttHnode_nBin " << nBin << " DNNBin " << DNNBin << std::endl; 
+    }
+    */
+    return DNNBin;
+}
+
 // Fake Rate
 void setFakeRateHistograms(TString FakeRateFileName,TString FakeRateMuonHistName, TString FakeRateElectronHistName, std::map<std::string, TH2F*> &_MuonFakeRate, std::map<std::string, TH2F*> &_ElectronFakeRate, std::string muSystName, std::string eleSystName){
   TFile* FakeRateFile = TFile::Open(FakeRateFileName,"READ");

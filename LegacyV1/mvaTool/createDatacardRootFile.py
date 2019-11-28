@@ -64,11 +64,12 @@ samples = [
 "Rares","WZ","ZZ","Convs","TTW","TTZ","TTWW",
 "TTH_htt","TTH_hww","TTH_hzz","TTH_hzg","TTH_hmm", # sm
 #"ttH_htt","ttH_hww","ttH_hzz","ttH_hzg","ttH_hmm", # kt
-"mcFakes","mcFlips",
+#"mcFakes","mcFlips",
+"Fakes","Flips",
 #"THQ_htt","THQ_hzz",
 #"THW_htt","THW_hzz",
 "THQ_htt","THQ_hww","THQ_hzz",
-"THW_htt","THW_hww","THW_hzz"
+"THW_htt","THW_hww","THW_hzz",
 "ggH_htt","ggH_hww","ggH_hzz",
 "qqH_htt","qqH_hww","qqH_hzz",
 "VH_htt","VH_hww","VH_hzz",
@@ -151,6 +152,7 @@ doSystDir = False
 systDir = inDir+"Systs/"
 isEle = False
 channeltr = "mu"
+isTHQ = False
 
 if "Bin2l" not in outDir:
     mvaNameDef = variableName + "_"
@@ -178,7 +180,7 @@ systs_2016 = [
 "bWeight_jes","CMS_ttHl_btag_cErr1","CMS_ttHl_btag_cErr2","CMS_ttHl_btag_LF","CMS_ttHl_btag_HF",
 "CMS_ttHl_lepEff_elloose","CMS_ttHl_lepEff_eltight","CMS_ttHl_lepEff_muloose","CMS_ttHl_lepEff_mutight",
 "CMS_ttHl_thu_shape_ttH_x1","CMS_ttHl_thu_shape_ttH_y1",
-"CMS_ttHl_FRm_norm","CMS_ttHl_FRm_pt","CMS_ttHl_FRm_be","CMS_ttHl_FRe_norm","CMS_ttHl_FRe_pt","CMS_ttHl_FRe_be","CMS_ttHl_Clos_e_shape","CMS_ttHl_Clos_m_shape","CMS_ttHl_Clos_e_norm","CMS_ttHl17_Clos_m_norm",
+"CMS_ttHl_FRm_norm","CMS_ttHl_FRm_pt","CMS_ttHl_FRm_be","CMS_ttHl_FRe_norm","CMS_ttHl_FRe_pt","CMS_ttHl_FRe_be","CMS_ttHl_Clos_e_shape","CMS_ttHl_Clos_m_shape","CMS_ttHl_Clos_e_norm","CMS_ttHl_Clos_m_norm",
 "CMS_ttHl_QF",
 ]
 
@@ -188,7 +190,7 @@ systs_2017 = [
 "bWeight_jes","CMS_ttHl_btag_cErr1","CMS_ttHl_btag_cErr2","CMS_ttHl_btag_LF","CMS_ttHl_btag_HF",
 "CMS_ttHl_lepEff_elloose","CMS_ttHl_lepEff_eltight","CMS_ttHl_lepEff_muloose","CMS_ttHl_lepEff_mutight",
 "CMS_ttHl_thu_shape_ttH_x1","CMS_ttHl_thu_shape_ttH_y1",
-"CMS_ttHl_FRm_norm","CMS_ttHl_FRm_pt","CMS_ttHl_FRm_be","CMS_ttHl_FRe_norm","CMS_ttHl_FRe_pt","CMS_ttHl_FRe_be","CMS_ttHl_Clos_e_shape","CMS_ttHl_Clos_m_shape","CMS_ttHl_Clos_e_norm","CMS_ttHl17_Clos_m_norm",
+"CMS_ttHl_FRm_norm","CMS_ttHl_FRm_pt","CMS_ttHl_FRm_be","CMS_ttHl_FRe_norm","CMS_ttHl_FRe_pt","CMS_ttHl_FRe_be","CMS_ttHl_Clos_e_shape","CMS_ttHl_Clos_m_shape","CMS_ttHl_Clos_e_norm","CMS_ttHl_Clos_m_norm",
 "CMS_ttHl_QF",
 ]
 
@@ -198,7 +200,7 @@ systs_2018 = [
 "bWeight_jes","CMS_ttHl_btag_cErr1","CMS_ttHl_btag_cErr2","CMS_ttHl_btag_LF","CMS_ttHl_btag_HF",
 "CMS_ttHl_lepEff_elloose","CMS_ttHl_lepEff_eltight","CMS_ttHl_lepEff_muloose","CMS_ttHl_lepEff_mutight",
 "CMS_ttHl_thu_shape_ttH_x1","CMS_ttHl_thu_shape_ttH_y1",
-"CMS_ttHl_FRm_norm","CMS_ttHl_FRm_pt","CMS_ttHl_FRm_be","CMS_ttHl_FRe_norm","CMS_ttHl_FRe_pt","CMS_ttHl_FRe_be","CMS_ttHl_Clos_e_shape","CMS_ttHl_Clos_m_shape","CMS_ttHl_Clos_e_norm","CMS_ttHl17_Clos_m_norm",
+"CMS_ttHl_FRm_norm","CMS_ttHl_FRm_pt","CMS_ttHl_FRm_be","CMS_ttHl_FRe_norm","CMS_ttHl_FRe_pt","CMS_ttHl_FRe_be","CMS_ttHl_Clos_e_shape","CMS_ttHl_Clos_m_shape","CMS_ttHl_Clos_e_norm","CMS_ttHl_Clos_m_norm",
 "CMS_ttHl_QF",
 ]
 
@@ -218,12 +220,13 @@ else:
 
 
 systs_ctcvcp = [
-"kt_m3_kv_1","kt_m2_kv_1","kt_m1p5_kv_1","kt_m1p25_kv_1","kt_m0p75_kv_1","kt_m0p5_kv_1","kt_m0p25_kv_1","kt_0_kv_1","kt_0p25_kv_1","kt_0p5_kv_1","kt_0p75_kv_1","kt_1_kv_1","kt_1p25_kv_1","kt_1p5_kv_1","kt_2_kv_1","kt_3_kv_1","kt_m2_kv_1p5","kt_m1p5_kv_1p5","kt_m1p25_kv_1p5","kt_m1_kv_1p5","kt_m0p5_kv_1p5","kt_m0p25_kv_1p5","kt_0p25_kv_1p5","kt_0p5_kv_1p5","kt_1_kv_1p5","kt_1p25_kv_1p5","kt_2_kv_1p5","kt_m3_kv_0p5","kt_m2_kv_0p5","kt_m1p25_kv_0p5","kt_1p25_kv_0p5","kt_2_kv_0p5","kt_3_kv_0p5",
+"",
+#"kt_m3_kv_1","kt_m2_kv_1","kt_m1p5_kv_1","kt_m1p25_kv_1","kt_m0p75_kv_1","kt_m0p5_kv_1","kt_m0p25_kv_1","kt_0_kv_1","kt_0p25_kv_1","kt_0p5_kv_1","kt_0p75_kv_1","kt_1_kv_1","kt_1p25_kv_1","kt_1p5_kv_1","kt_2_kv_1","kt_3_kv_1","kt_m2_kv_1p5","kt_m1p5_kv_1p5","kt_m1p25_kv_1p5","kt_m1_kv_1p5","kt_m0p5_kv_1p5","kt_m0p25_kv_1p5","kt_0p25_kv_1p5","kt_0p5_kv_1p5","kt_1_kv_1p5","kt_1p25_kv_1p5","kt_2_kv_1p5","kt_m3_kv_0p5","kt_m2_kv_0p5","kt_m1p25_kv_0p5","kt_1p25_kv_0p5","kt_2_kv_0p5","kt_3_kv_0p5",
 #"cosa_m0p9","cosa_m0p8","cosa_m0p7","cosa_m0p6","cosa_m0p5","cosa_m0p4","cosa_m0p3","cosa_m0p2","cosa_m0p1","cosa_mp0","cosa_0p1","cosa_0p2","cosa_0p3","cosa_0p4","cosa_0p5","cosa_0p6","cosa_0p7","cosa_0p8","cosa_0p9"
 ]
 
 systsFakes =[
-"CMS_ttHl_FRm_norm","CMS_ttHl_FRm_pt","CMS_ttHl_FRm_be","CMS_ttHl_FRe_norm","CMS_ttHl_FRe_pt","CMS_ttHl_FRe_be","CMS_ttHl_Clos_e_shape","CMS_ttHl_Clos_m_shape",
+"CMS_ttHl_FRm_norm","CMS_ttHl_FRm_pt","CMS_ttHl_FRm_be","CMS_ttHl_FRe_norm","CMS_ttHl_FRe_pt","CMS_ttHl_FRe_be","CMS_ttHl_Clos_e_shape","CMS_ttHl_Clos_m_shape","CMS_ttHl_Clos_e_norm","CMS_ttHl_Clos_m_norm"
 ]
 
 systFlips=[
@@ -490,8 +493,9 @@ def makeDatacard(mvaName,regions,channeltr,savePostfix=""):
     for region in regions:
         saveName = "2lss"
         # Rename SigRegion to 2lss
-        if not region == "SigRegion": saveName = region
-        outFile = TFile(outDir+"{0}_{1}_{2}{3}.root".format(namefix,saveName,channeltr,savePostfix),"RECREATE")
+        if region == "DiLepRegion": saveName ="2lss_0tau"
+        elif not region == "SigRegion": saveName = region
+        outFile = TFile(outDir+"{0}_{1}_{2}_{3}{4}.root".format(namefix,saveName,channeltr,year,savePostfix),"RECREATE")
 
         totalYieldsCount[region] = {}
         nominal = {}
@@ -549,7 +553,7 @@ def makeDatacard(mvaName,regions,channeltr,savePostfix=""):
                     if sample == "Fakes" and  "Clos" not in sys and "_FR" not in sys : continue
                     if sample == "Flips" and  "CMS_ttHl_QF" not in sys : continue
                     if sample != "Fakes" and sample != "Flips" and (("Clos" in sys or "_FR" in sys) or ("CMS_ttHl_QF" in sys)): continue
-                    #print sys, mvaName+sample+"_"+sys+"_up"
+                    print sys, mvaName+sample+"_"+sys+"_up"
                     systNameForClone = histoGramPerSample[sample]+"_"+sys
                     if "statbin" in sys: systNameForClone = histoGramPerSample[sample]+"_"+histoGramPerSample[sample]+"_"+plotLeptonSampleName+"_"+sys
                     if sample!="Fakes": 
@@ -770,42 +774,39 @@ if __name__ == "__main__":
     channels=subCats[cat_str]
     #channels = [ "ee_neg"]
     
-    if "tHq"  in namefix :
-
-        histoGramPerSample = {
-        "WZ":"WZ","ZZ":"ZZ","Convs":"Convs","TTW":"TTW","TTZ":"TTZ","Rares":"Rares","TTWW":"TTWW",
-        "Fakes":"data_fakes", "Flips":"data_flips",
-        "mcFakes":"mcFakes","mcFlips":"mcFlips",
-        "VH_htt":"VH_htt","VH_hww":"VH_hww","VH_hzz":"VH_hzz",
-        "ggH_htt":"ggH_htt","ggH_hww":"ggH_hww","ggH_hzz":"ggH_hzz",
-        "qqH_htt":"qqH_htt","qqH_hww":"qqH_hww","qqH_hzz":"qqH_hzz",
-        "THQ_htt":"tHq_htt","THQ_hww":"tHq_hww","THQ_hzz":"tHq_hzz",
-        "THW_htt":"tHW_htt","THW_hww":"tHW_hww","THW_hzz":"tHW_hzz",
-        "ttH_htt":"ttH_htt","ttH_hww":"ttH_hww","ttH_hzz":"ttH_hzz","ttH_hmm":"ttH_hmm","ttH_hzg":"ttH_hzg" # kt 
-        }
+    for postName in systs_ctcvcp:
+        if len(postName) > 0: isTHQ = True
+        if isTHQ:
+            histoGramPerSample = {
+            "WZ":"WZ","ZZ":"ZZ","Convs":"Convs","TTW":"TTW","TTZ":"TTZ","Rares":"Rares","TTWW":"TTWW",
+            "Fakes":"data_fakes", "Flips":"data_flips",
+            "mcFakes":"mcFakes","mcFlips":"mcFlips",
+            "VH_htt":"VH_htt","VH_hww":"VH_hww","VH_hzz":"VH_hzz",
+            "ggH_htt":"ggH_htt","ggH_hww":"ggH_hww","ggH_hzz":"ggH_hzz",
+            "qqH_htt":"qqH_htt","qqH_hww":"qqH_hww","qqH_hzz":"qqH_hzz",
+            "THQ_htt":"tHq_htt","THQ_hww":"tHq_hww","THQ_hzz":"tHq_hzz",
+            "THW_htt":"tHW_htt","THW_hww":"tHW_hww","THW_hzz":"tHW_hzz",
+            "ttH_htt":"ttH_htt","ttH_hww":"ttH_hww","ttH_hzz":"ttH_hzz","ttH_hmm":"ttH_hmm","ttH_hzg":"ttH_hzg" # kt 
+            }
         
         
-        samples = [
-        "Rares","WZ","ZZ","Convs","TTW","TTZ","TTWW",
-        "ttH_htt","ttH_hww","ttH_hzz","ttH_hzg","ttH_hmm", # kt
-        "mcFakes","mcFlips",
-        "THQ_htt","THQ_hww","THQ_hzz",
-        "THW_htt","THW_hww","THW_hzz"
-        "ggH_htt","ggH_hww","ggH_hzz",
-        "qqH_htt","qqH_hww","qqH_hzz",
-        "VH_htt","VH_hww","VH_hzz",
-        ]
+            samples = [
+            "Rares","WZ","ZZ","Convs","TTW","TTZ","TTWW",
+            "ttH_htt","ttH_hww","ttH_hzz","ttH_hzg","ttH_hmm", # kt
+            #"mcFakes","mcFlips",
+            "Fakes","Flips",
+            "THQ_htt","THQ_hww","THQ_hzz",
+            "THW_htt","THW_hww","THW_hzz",
+            "ggH_htt","ggH_hww","ggH_hzz",
+            "qqH_htt","qqH_hww","qqH_hzz",
+            "VH_htt","VH_hww","VH_hzz",
+            ]
         
-        for postName in systs_ctcvcp:
-        #for postName in [""]:
             print mvaNameDef, "_"+postName
             for channel in channels:
-                if postName=="":
-                    makeDatacard(mvaNameDef,regions,channel,postName)
-                else:
-                    makeDatacard(mvaNameDef,regions,channel,"_"+postName)
+                makeDatacard(mvaNameDef,regions,channel,"_"+postName)
                 #makeDatacard(mvaNameDef+postName,regions,channel,postName[:-1])
-    else:
-        for channel in channels:
-            makeDatacard(mvaNameDef,regions,channel,"")
+        else:
+            for channel in channels:
+                makeDatacard(mvaNameDef,regions,channel,"")
 

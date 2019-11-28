@@ -11,10 +11,11 @@ from threading import Thread
 cwd = os.getcwd()
 
 frameworkDir = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplizers/LegacyV1/mvaTool/"
-inputBaseDir = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplas_LegacyAll_20191025/Rootplas/"
+inputBaseDir = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplas_LegacyAll_20191110_v3/Rootplas/"
 outputBaseDir = cwd 
 
 years=["2016","2017","2018"]
+#years=["2016"]
 
 dirsIgnored =  ["ttZctrl"]
 
@@ -69,7 +70,7 @@ dirsToCheck = {
 #"DNNAMS3Cat1_option3":["SigRegion","JESUpSigRegion","JESDownSigRegion","ttWctrl","JESUpttWctrl","JESDownttWctrl"]
 }
 
-ignorefiles = ["TTH","H"]
+ignorefiles = ["TTH","H","TT","EWK","ST"]
 
 
 treeNames={

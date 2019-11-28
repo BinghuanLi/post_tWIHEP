@@ -1,11 +1,12 @@
 #define mvaTool_cxx
 #include "mvaTool.h"
 
-mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, TString Category, TString TreeName, std::map<Int_t, TString> channelNameMap, std::map<TString, int> IDOfReWeight, TString inputbaseDir, int dataEra){
+mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, TString Category, TString TreeName, std::map<Int_t, TString> channelNameMap, std::map<TString, int> IDOfReWeight, TString inputbaseDir, int dataEra, std::map<TString, Int_t> DNNBinMap){
   
   _channel = channel;
   _nPerBin = nPerBin;
   _IDOfReWeight = IDOfReWeight;
+  _DNNBinMap = DNNBinMap;
   subCat2l = Category;
   treeName = TreeName;
   ChannelNameMap = channelNameMap;
@@ -16,7 +17,6 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, 
   the2DBinFile = new TFile((binDir+"/DNNBin_"+regName+".root"));
   //  regionNames = {"3j1t","3j2t","2j1t","4j1t","4j2t"};
   regionNames = {""};
-  
   _DataEra = dataEra;
   //Start by initialising the list of variables we will base the MVA on
 
@@ -80,6 +80,10 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, 
     varList.push_back("massL");
     varList.push_back("nBJetLoose");
     */
+   
+    TString catname = ChannelNameMap[_channel];
+    TString flag = subCat2l;
+    flag.ReplaceAll("option1","");
     
     varList.push_back("DNN_maxval");
     
@@ -90,9 +94,29 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, 
     varList.push_back("Hj_tagger_hadTop");
     varList.push_back("Hj_tagger");
     varList.push_back("hadTop_BDT");
-    
+    if(flag.Contains("DNN")){
+        varList.push_back((flag+catname+"_nBin1"));
+        varList.push_back((flag+catname+"_nBin2"));
+        varList.push_back((flag+catname+"_nBin3"));
+        varList.push_back((flag+catname+"_nBin4"));
+        varList.push_back((flag+catname+"_nBin5"));
+        varList.push_back((flag+catname+"_nBin6"));
+        varList.push_back((flag+catname+"_nBin7"));
+        varList.push_back((flag+catname+"_nBin8"));
+        varList.push_back((flag+catname+"_nBin9"));
+        varList.push_back((flag+catname+"_nBin10"));
+        varList.push_back((flag+catname+"_nBin11"));
+        varList.push_back((flag+catname+"_nBin12"));
+        varList.push_back((flag+catname+"_nBin13"));
+        varList.push_back((flag+catname+"_nBin14"));
+        varList.push_back((flag+catname+"_nBin15"));
+        varList.push_back((flag+catname+"_nBin16"));
+        varList.push_back((flag+catname+"_nBin17"));
+        varList.push_back((flag+catname+"_nBin18"));
+        varList.push_back((flag+catname+"_nBin19"));
+        varList.push_back((flag+"BIN"));
+    }
     /* 
-    varList.push_back("DNNCat_2DBin_GT5");
     varList.push_back("DNNCat_2DBin_GT10");
     varList.push_back("DNNCat_2DBin_GT15");
     varList.push_back("DNNCat_2DBin_GT20");
@@ -726,7 +750,9 @@ void mvaTool::createHists(TString sampleName){
       double xmax = 1000;
     
       if(varList[i]== "Hj_tagger_resTop") {nbins= 20; xmin= -1.01; xmax= 1.01;};
-      if(varList[i]== "Hj_tagger_hadTop") {nbins= 20; xmin= -1.01; xmax= 1.01;};
+      if(varList[i]== "Hj_tagger_hadTop") {nbins= 10; xmin= 0.; xmax= 1.01;};
+      if(varList[i]== "Hj_tagger") {nbins= 10; xmin= 0.; xmax= 1.0;};
+      if(varList[i]== "hadTop_BDT") {nbins= 10; xmin= 0.; xmax= 1.0;};
       if(varList[i]== "Dilep_mtWmin") {nbins= 10; xmin= 0; xmax= 200;};
       if(varList[i]== "mT_lep1") {nbins= 10; xmin= 0; xmax= 200;};
       if(varList[i]== "mT_lep2") {nbins= 10; xmin= 0; xmax= 200;};
@@ -804,7 +830,24 @@ void mvaTool::createHists(TString sampleName){
       if(varList[i]== "DNNSubCat2_2DBin_GT10") {nbins= 30; xmin= 0.5; xmax= 30.5;};
       if(varList[i]== "DNNSubCat2_2DBin_GT15") {nbins= 30; xmin= 0.5; xmax= 30.5;};
       if(varList[i]== "DNNSubCat2_2DBin_GT20") {nbins= 30; xmin= 0.5; xmax= 30.5;};
-      
+      TString str_bin = "";
+      if(varList[i].Contains("_nBin")){
+        string varname = varList[i].Data();
+        regex pattern("(.*_nBin)([0-9]+)");
+        smatch result;
+        regex_match(varname, result, pattern);
+        str_bin = result.str(2);
+        int n  = stoi(result.str(2));
+        nbins = n;
+        xmin = 0.5;
+        xmax = xmin + nbins;
+      }
+      if(varList[i].Contains("_BIN") && varList[i].Contains("DNN")){
+          int n = _DNNBinMap[ChannelNameMap[_channel]];
+          nbins = n;
+          xmin = 0.5;
+          xmax = xmin + nbins;
+      }
       TString histoName = subCat2l+"_"+varList[i]+"_"+ChannelNameMap[_channel];
       TH1F* h_sig = (TH1F*) theBinFile->Get(histoName+"_Sig");
       TString map_postfix = "NULL";
@@ -829,9 +872,17 @@ void mvaTool::createHists(TString sampleName){
         }
       }else if(h_sig==0){
         if(h_map==0){
-            TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),nbins,xmin,xmax);
-            histo->Sumw2();
-            histovect.push_back(histo);
+            TString flag = subCat2l;
+            flag.ReplaceAll("option1","");
+            if(flag.Contains("DNN") && varList[i].Contains("nBin")){
+                TH1F* histo = new TH1F((flag+"nBin"+str_bin + "_" + sampleName).Data(), (flag+"nBin"+str_bin+ "_" + sampleName).Data(),nbins,xmin,xmax);
+                histo->Sumw2();
+                histovect.push_back(histo);
+            }else{
+                TH1F* histo = new TH1F((varList[i] + "_" + sampleName).Data(), (varList[i] + "_" + sampleName).Data(),nbins,xmin,xmax);
+                histo->Sumw2();
+                histovect.push_back(histo);
+            }
         }else{
             xmax = h_map->GetMaximum() + 0.5;
             xmin = h_map->GetMinimum() - 0.5;
@@ -865,6 +916,7 @@ void mvaTool::createHists(TString sampleName){
             delete [] binning;
         }
       }
+      std::cout<<" var "<<varList[i] << " nbin " << nbins <<  " xmin " << xmin << " xmax " << xmax << std::endl;
     }
     //Add in some plots for met and mtw for control/fitting
     

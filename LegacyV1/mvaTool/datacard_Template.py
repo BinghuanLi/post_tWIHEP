@@ -68,8 +68,12 @@ ShapeUnc = opt.ShapeUnc
 Postfix = opt.Postfix
 year = opt.year
 namefix = opt.namefix
+isTHQ = False
 
-if Postfix == "_" : Postfix =""
+if Postfix == "_" : 
+    Postfix =""
+
+if len(Postfix) > 0: isTHQ = True
 
 #useData = False
 AutoMC = True
@@ -79,6 +83,7 @@ channels = subCats[cat_str]
 Regions = regPerCat[cat_str]
 POI = variableName 
 DirOfRootplas = inDir +  cat_str + "/"
+
 
 #Regions = ["2lss"]
 
@@ -98,9 +103,8 @@ samples = [
 "ggH_hww","ggH_hzz","ggH_htt",
 "qqH_hww","qqH_hzz","qqH_htt",
 "VH_hww","VH_hzz","VH_htt",
-"TTWW","TTW","TTZ","WZ","ZZ","Rares","Convs","mcFakes","mcFlips"
-]
-#"TTWW","TTW","TTZ","WZ","ZZ","Rares","Convs","data_fakes","data_flips"]
+"TTWW","TTW","TTZ","WZ","ZZ","Rares","Convs","data_fakes","data_flips"]
+#"TTWW","TTW","TTZ","WZ","ZZ","Rares","Convs","mcFakes","mcFlips"
 
 samplesMM = [
 "ttH_hww","ttH_hzz","ttH_htt","ttH_hmm","ttH_hzg",
@@ -109,8 +113,8 @@ samplesMM = [
 "ggH_hww","ggH_hzz","ggH_htt",
 "qqH_hww","qqH_hzz","qqH_htt",
 "VH_hww","VH_hzz","VH_htt",
-"TTWW","TTW","TTZ","WZ","ZZ","Rares","Convs","mcFakes",
-#"TTWW","TTW","TTZ","WZ","ZZ","Rares","Convs","data_fakes",
+#"TTWW","TTW","TTZ","WZ","ZZ","Rares","Convs","mcFakes",
+"TTWW","TTW","TTZ","WZ","ZZ","Rares","Convs","data_fakes",
 ]
 
 samplesEE = [
@@ -120,13 +124,13 @@ samplesEE = [
 "ggH_hww","ggH_hzz","ggH_htt",
 "qqH_hww","qqH_hzz","qqH_htt",
 "VH_hww","VH_hzz","VH_htt",
-"TTWW","TTW","TTZ","WZ","ZZ","Rares","Convs","mcFakes","mcFlips",
-# "TTWW","TTW","TTZ","WZ","ZZ","Rares","Convs","data_fakes","data_flips"
+#"TTWW","TTW","TTZ","WZ","ZZ","Rares","Convs","mcFakes","mcFlips",
+ "TTWW","TTW","TTZ","WZ","ZZ","Rares","Convs","data_fakes","data_flips"
 ]
 
 Rates = {
-#"Rares":0, "WZ":0, "ZZ":0, "Convs":0, "TTW":0, "TTWW":0, "TTZ":0, "data_fakes":0, "data_flips":0, 
-"Rares":0, "WZ":0, "ZZ":0, "Convs":0, "TTW":0, "TTWW":0, "TTZ":0, "mcFakes":0, "mcFlips":0, 
+"Rares":0, "WZ":0, "ZZ":0, "Convs":0, "TTW":0, "TTWW":0, "TTZ":0, "data_fakes":0, "data_flips":0, 
+#"Rares":0, "WZ":0, "ZZ":0, "Convs":0, "TTW":0, "TTWW":0, "TTZ":0, "mcFakes":0, "mcFlips":0, 
 "ttH_htt":0,"ttH_hww":0,"ttH_hzz":0,"ttH_hzg":0,"ttH_hmm":0,
 "tHq_htt":0,"tHq_hww":0,"tHq_hzz":0,
 "ggH_htt":0,"ggH_hww":0,"ggH_hzz":0,
@@ -140,6 +144,10 @@ Labels = {
 "ttH_htt":-7,"ttH_hww":-9,"ttH_hzz":-8,"ttH_hzg":-5,"ttH_hmm":-6,
 #"tHq_htt":3,"tHq_hww":1,"tHq_hzz":2,
 #"tHW_htt":6,"tHW_hww":4,"tHW_hzz":5
+# marked as bkg atm
+#"VH_htt":19,"VH_hww":17,"VH_hzz":18,
+#"ggH_htt":22,"ggH_hww":20,"ggH_hzz":21,
+#"qqH_htt":25,"qqH_hww":23,"qqH_hzz":24,
 "VH_htt":-19,"VH_hww":-17,"VH_hzz":-18,
 "ggH_htt":-22,"ggH_hww":-20,"ggH_hzz":-21,
 "qqH_htt":-25,"qqH_hww":-23,"qqH_hzz":-24,
@@ -147,7 +155,9 @@ Labels = {
 "tHW_htt":-16,"tHW_hww":-14,"tHW_hzz":-15
  }
 
-if "tHq" in namefix:
+print (isTHQ)
+
+if isTHQ:
     Labels["VH_htt"]=19
     Labels["VH_hww"]=17
     Labels["VH_hzz"]=18
@@ -168,10 +178,11 @@ CommonNuisances=[
 "CMS_ttHl_QF","CMS_ttHl_EWK_4j","CMS_ttHl_Convs","CMS_ttHl_Rares","CMS_ttHl_EWK",
 # lnU
 # experimental
-"CMS_ttHl_WZ_lnU","CMS_ttHl_ZZ_lnU",
+#"CMS_ttHl_WZ_lnU","CMS_ttHl_ZZ_lnU",
 # shape
 #"CMS_ttHl_lepEff_muloose","CMS_ttHl_lepEff_mutight","CMS_ttHl_lepEff_elloose","CMS_ttHl_lepEff_eltight",
-#"CMS_ttHl_Clos_e_norm","CMS_ttHl_Clos_m_norm","CMS_ttHl_Clos_e_shape","CMS_ttHl_Clos_m_shape","CMS_ttHl_FRm_norm","CMS_ttHl_FRm_pt","CMS_ttHl_FRm_be","CMS_ttHl_FRe_norm","CMS_ttHl_FRe_pt","CMS_ttHl_FRe_be",
+#"CMS_ttHl_Clos_e_norm","CMS_ttHl_Clos_m_norm","CMS_ttHl_Clos_e_shape","CMS_ttHl_Clos_m_shape",
+"CMS_ttHl_FRm_norm","CMS_ttHl_FRm_pt","CMS_ttHl_FRm_be","CMS_ttHl_FRe_norm","CMS_ttHl_FRe_pt","CMS_ttHl_FRe_be",
 "CMS_ttHl_thu_shape_ttH_x1","CMS_ttHl_thu_shape_ttH_y1",
 "CMS_ttHl_btag_cErr1","CMS_ttHl_btag_cErr2","CMS_ttHl_btag_LF","CMS_ttHl_btag_HF",
 #"CMS_scale_j",
@@ -222,6 +233,7 @@ systTypes={
 "lnN":[
 "pdf_Higgs_ttH","QCDscale_ttH", "pdf_qg","QCDscale_tHq", "QCDscale_tHW", "pdf_qqbar","QCDscale_ttW", "pdf_ttWW","QCDscale_ttWW", "pdf_gg", "QCDscale_ttZ","CMS_ttHl_WZ_theo","BR_htt","BR_hww","BR_hzz","BR_hzg","BR_hmm",
 "CMS_ttHl_QF","CMS_ttHl_EWK_4j","CMS_ttHl_Convs","CMS_ttHl_Rares","CMS_ttHl_EWK",
+"lumi_16","lumi_17","lumi_18"
 ],
 "lnU":[
 "CMS_ttHl_WZ_lnU","CMS_ttHl_ZZ_lnU",
@@ -235,21 +247,21 @@ if not ShapeUnc:
         Nuisances = [
 "pdf_Higgs_ttH","QCDscale_ttH", "pdf_qg","QCDscale_tHq", "QCDscale_tHW", "pdf_qqbar","QCDscale_ttW", "pdf_ttWW","QCDscale_ttWW", "pdf_gg", "QCDscale_ttZ","CMS_ttHl_WZ_theo","BR_htt","BR_hww","BR_hzz","BR_hzg","BR_hmm",
 "CMS_ttHl_QF","CMS_ttHl_EWK_4j","CMS_ttHl_Convs","CMS_ttHl_Rares","CMS_ttHl_EWK",
-"CMS_ttHl_WZ_lnU","CMS_ttHl_ZZ_lnU",
+#"CMS_ttHl_WZ_lnU","CMS_ttHl_ZZ_lnU",
 "lumi_16"
         ]
     elif year == 2017:
         Nuisances = [
 "pdf_Higgs_ttH","QCDscale_ttH", "pdf_qg","QCDscale_tHq", "QCDscale_tHW", "pdf_qqbar","QCDscale_ttW", "pdf_ttWW","QCDscale_ttWW", "pdf_gg", "QCDscale_ttZ","CMS_ttHl_WZ_theo","BR_htt","BR_hww","BR_hzz","BR_hzg","BR_hmm",
 "CMS_ttHl_QF","CMS_ttHl_EWK_4j","CMS_ttHl_Convs","CMS_ttHl_Rares","CMS_ttHl_EWK",
-"CMS_ttHl_WZ_lnU","CMS_ttHl_ZZ_lnU",
+#"CMS_ttHl_WZ_lnU","CMS_ttHl_ZZ_lnU",
 "lumi_17"
     ]
     elif year == 2018:
         Nuisances = [
 "pdf_Higgs_ttH","QCDscale_ttH", "pdf_qg","QCDscale_tHq", "QCDscale_tHW", "pdf_qqbar","QCDscale_ttW", "pdf_ttWW","QCDscale_ttWW", "pdf_gg", "QCDscale_ttZ","CMS_ttHl_WZ_theo","BR_htt","BR_hww","BR_hzz","BR_hzg","BR_hmm",
 "CMS_ttHl_QF","CMS_ttHl_EWK_4j","CMS_ttHl_Convs","CMS_ttHl_Rares","CMS_ttHl_EWK",
-"CMS_ttHl_WZ_lnU","CMS_ttHl_ZZ_lnU",
+#"CMS_ttHl_WZ_lnU","CMS_ttHl_ZZ_lnU",
 "lumi_18"
     ]
 
@@ -383,10 +395,15 @@ def writecard(CardFile, Process , syst, channel, rootfile, errorLog):
 
     if YieldSysts.has_key(syst) and not likeShape:
         # find type of systmatic extrapolation
+        typeSyst = ""
         for systType in systTypes.keys(): 
             if syst in systTypes[systType]: typeSyst = systType
         
-        stringToWrite = syst + " " + systType + "    " 
+        if len(typeSyst)==0: 
+            print (" unkown typeSyst for syst %s"%syst)
+            sys.exit()
+
+        stringToWrite = syst + " " + typeSyst + "    " 
         if not syst in channelSyst.keys(): 
             for p in Process:
                 # use range because I'm not sure the loop order of using for p in Process 
@@ -474,6 +491,7 @@ def createStatsList(Region, Process, channel, numberOfBin, rootfile):
 def main():
     ''' please make sure the script is running on ROOT>=6 , otherwise you need to add SumW2 when you declare a histograms '''
     for region in Regions:
+        if region == "DiLepRegion" : region = "2lss_0tau"
         if 1 > 0: # dummy used for loop
             dirOfRootplas = DirOfRootplas + POI + "/"
             ErrorLog = file(dirOfRootplas+"errorLog.sh","w")
@@ -493,11 +511,11 @@ def main():
 
                     
                 # create a txt file to save the template
-                TemplateCardsName = dirOfRootplas+Prefix+region+"_"+channel + Postfix + ".txt"
+                TemplateCardsName = dirOfRootplas+Prefix+region+"_"+channel + "_"+ str(year) + Postfix + ".txt"
                 TemplateFile = file(TemplateCardsName,"w")
         
                 # open and read root file
-                filename = Prefix + region + "_" +channel + Postfix + ".root"
+                filename = Prefix + region + "_" +channel + "_"+str(year) + Postfix + ".root"
                 inputfile  = read_rootfile(filename, dirOfRootplas)
                 gROOT.cd()
                 
@@ -538,7 +556,7 @@ def main():
                 print samplesToLoop 
                 print samplesToUse 
                 
-                print >> TemplateFile, "## Datacard for cut file ttH-multilepton/ttH_"+region+".txt\nshapes *        * "+Prefix+region+"_"+channel+ Postfix +".root $PROCESS $PROCESS_$SYSTEMATIC \n##-------------------------------\nbin       "+Prefix+region+"_"+channel+ Postfix +"\nobservation "+str(yield_data)+"\n##-------------------------------\n##-------------------------------"
+                print >> TemplateFile, "## Datacard for cut file ttH-multilepton/ttH_"+region+".txt\nshapes *        * "+Prefix+region+"_"+channel+ "_" + str(year) +Postfix +".root $PROCESS $PROCESS_$SYSTEMATIC \n##-------------------------------\nbin       "+Prefix+region+"_"+channel+ "_" + str(year) + Postfix +"\nobservation "+str(yield_data)+"\n##-------------------------------\n##-------------------------------"
         
                 binToWrite    ="bin       "
                 processToWrite="process   "
@@ -546,7 +564,7 @@ def main():
                 rateToWrite   ="rate      "
                 
                 for sample in samplesToUse:
-                    binToWrite += "   "+Prefix+region+"_"+channel + Postfix
+                    binToWrite += "   "+Prefix+region+"_"+channel + "_" + str(year) +Postfix
                     processToWrite += "             "+sample
                     labelToWrite += "               "+str(Labels[sample])
                     rateToWrite += "                "+str(Rates[sample])

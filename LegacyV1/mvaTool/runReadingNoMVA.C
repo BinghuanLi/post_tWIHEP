@@ -7,7 +7,13 @@ void runReadingNoMVA(TString regName, TString binDir, TString sampleName, TStrin
   //  gROOT->LoadMacro("/publicfs/cms/user/duncanleg/tW13TeV/tmva/mvaTool.C");
   
   std::cout << sampleName;
-  mvaTool t = mvaTool(regName, binDir, nPerBin, channel, keyName, treeName, MapOfChannelMap[keyName], IDOfReWeight, baseDir, dataEra );
+  
+  mvaTool t;
+  if(keyName.Contains("DNN")){
+      t = mvaTool(regName, binDir, nPerBin, channel, keyName, treeName, MapOfChannelMap[keyName], IDOfReWeight, baseDir, dataEra, BinMap[keyName] );
+  }else{
+      t = mvaTool(regName, binDir, nPerBin, channel, keyName, treeName, MapOfChannelMap[keyName], IDOfReWeight, baseDir, dataEra);
+  }
   
   t.doReadingNoMVA(sampleName,inDir,outDir, isdata);
   //t.doReading("tW_top_nfh","tW/","output/");

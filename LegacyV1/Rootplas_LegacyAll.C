@@ -7,6 +7,7 @@
 #include "function.C"
 #include "TTree.h"
 #include "TFile.h"
+#include "mvaTool/Maps.C"
 
 // options
 Bool_t _checkPU = true; // set to true if we call checkPU() cut 
@@ -15,6 +16,16 @@ Bool_t _useFakeRate = false; // set to true if we recalculate FakeRate Weighting
 Bool_t _useTrigSF = false; // set to true if we recalculate Trig SFs.
 Bool_t _useHjVar = false; // set to true if we use Hjvar.
 Bool_t _reWeight = false; // set to true if we want to reWeight some samples.
+Bool_t _saveWeight = true; // set to true if we want to reWeight some samples.
+Bool_t _useNNBins = true; // set to true if we want to BIN NN distribution.
+
+std::vector<int> _bins = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19};
+// NN bins
+std::map<TString,TH1F*> _DNNSubCat2NNMapHists;
+TString DNNSubCat2_FileName = "DNNSubCat2_BIN";
+std::vector<TString> _DNNSubCat2Maps = {"ee_ttHnode","ee_Restnode","ee_ttWnode","ee_tHQnode","em_ttHnode","em_Restnode","em_ttWnode","em_tHQnode","mm_ttHnode","mm_Restnode","mm_ttWnode","mm_tHQnode"};
+std::map<TString, float> _DNNSubCat2BinNames;
+
 
 void Rootplas_LegacyAll(TString InputDir, TString OutputDir, TString FileName, TString Region, TString PostFix){
     
@@ -32,6 +43,17 @@ void Rootplas_LegacyAll(TString InputDir, TString OutputDir, TString FileName, T
         exit(0);
     }
 
+    // NN bins
+    if(_useNNBins){
+        // DNNSubCat2
+        TString CatFlag = "DNNSubCat2";
+        for(auto const category: _DNNSubCat2Maps){
+            for(auto const bin: _bins){
+                setDNNBinHistograms(input_DNNBin_path, DNNSubCat2_FileName, category+"_2018", _DNNSubCat2NNMapHists, bin);
+                _DNNSubCat2BinNames[CatFlag+"_"+category+"_nBin"+std::to_string(bin)] = 0.;
+            }
+        }
+    }
     
     if(InputDir.Contains("TrainHj"))_useHjVar = true;
     TString Input = InputDir +"/"+ FileName + "Skim.root";
@@ -117,7 +139,7 @@ void Rootplas_LegacyAll(TString InputDir, TString OutputDir, TString FileName, T
     double trueInteractions = 0;
     // nn vars
     float Dilep_pdgId = 0;
-    float Hj_tagger_resTop = 0;
+    float Hj_tagger_hadTop = 0;
     float avg_dr_jet = 0;
     float jet1_eta = 0;
     float jet1_phi = 0;
@@ -152,7 +174,7 @@ void Rootplas_LegacyAll(TString InputDir, TString OutputDir, TString FileName, T
     float nBJetMedium = 0;
     float n_presel_jet = 0;
     float n_presel_jetFwd = 0;
-    float resTop_BDT = 0;
+    float hadTop_BDT = 0;
     float DNNCat = 0;
     float DNNSubCat1_option1 = 0;
     float DNNSubCat2_option1 = 0;
@@ -234,7 +256,7 @@ void Rootplas_LegacyAll(TString InputDir, TString OutputDir, TString FileName, T
 
     // nn vars
     oldtree->SetBranchAddress("Dilep_pdgId",&Dilep_pdgId);
-    oldtree->SetBranchAddress("Hj_tagger_resTop",&Hj_tagger_resTop);
+    oldtree->SetBranchAddress("Hj_tagger_hadTop",&Hj_tagger_hadTop);
     oldtree->SetBranchAddress("avg_dr_jet",&avg_dr_jet);
     oldtree->SetBranchAddress("jet1_eta",&jet1_eta);
     oldtree->SetBranchAddress("jet1_phi",&jet1_phi);
@@ -269,7 +291,7 @@ void Rootplas_LegacyAll(TString InputDir, TString OutputDir, TString FileName, T
     oldtree->SetBranchAddress("nBJetMedium",&nBJetMedium);
     oldtree->SetBranchAddress("n_presel_jet",&n_presel_jet);
     oldtree->SetBranchAddress("n_presel_jetFwd",&n_presel_jetFwd);
-    oldtree->SetBranchAddress("resTop_BDT",&resTop_BDT);
+    oldtree->SetBranchAddress("hadTop_BDT",&hadTop_BDT);
     
     SetOldTreeBranchStatus(oldtree, _useHjVar);
    
@@ -294,11 +316,32 @@ void Rootplas_LegacyAll(TString InputDir, TString OutputDir, TString FileName, T
     newtree->Branch("DNN_ttHnode_all",&DNN_ttHnode_all);
     newtree->Branch("DNN_ttWnode_all",&DNN_ttWnode_all);
     
+    float DNNSubCat2_BIN = 0;
+    // NN bins
+    if(_useNNBins){
+        // _DNNSubCat2BinNames
+        newtree -> Branch("DNNSubCat2_BIN", &DNNSubCat2_BIN);
+        for (auto& x : _DNNSubCat2BinNames){
+            newtree->Branch( x.first.Data(), &(x.second));
+        }
+    }
+    
+    
     // nn setup
     std::map<std::string,double> inputs;
     create_lwtnn(input_json_file, nn_instance);
-    
+    std::cout<<" nentires: " << nentries << std::endl; 
     for (Long64_t i=0;i<nentries; i++) {
+    //for (Long64_t i=0;i<10; i++) {
+        if ( int(i) % 5000==0){
+            std::cout << " finish events : " << i << std::endl;
+        }
+        if(_useNNBins){
+            DNNSubCat2_BIN = 0.;
+            for (auto& x : _DNNSubCat2BinNames){
+                x.second = -1;
+            }
+        }
         EVENT_rWeights->clear();
         HiggsDecay = -9;
         cpodd_rwgt = 1;
@@ -372,7 +415,7 @@ void Rootplas_LegacyAll(TString InputDir, TString OutputDir, TString FileName, T
         trueInteractions = -9;
         // nn vars
         Dilep_pdgId = -9;
-        Hj_tagger_resTop = -9;
+        Hj_tagger_hadTop = -9;
         avg_dr_jet = -9;
         jet1_eta = -9;
         jet1_phi = -9;
@@ -407,7 +450,7 @@ void Rootplas_LegacyAll(TString InputDir, TString OutputDir, TString FileName, T
         nBJetMedium = -9;
         n_presel_jet = -9;
         n_presel_jetFwd = -9;
-        resTop_BDT = -9;
+        hadTop_BDT = -9;
         DNNCat = -9;
         DNNSubCat1_option1 = -9;
         DNNSubCat2_option1 = -9;
@@ -674,14 +717,16 @@ void Rootplas_LegacyAll(TString InputDir, TString OutputDir, TString FileName, T
             ); 
         }
         if(passCut && passPU){
-            if(_reWeight){
+            if(_saveWeight || _reWeight){
                 if(oldtree->GetListOfBranches()->FindObject("EVENT_rWeights") && EVENT_rWeights->size()>=12 && FileName.Contains("ctcvcp")){
                     xsec_rwgt = get_rewgtlumi(FileName, EVENT_rWeights->at(11));
                 }
                 else{
                     xsec_rwgt = get_rewgtlumi(FileName, 1);
                 }
-                EventWeight = EventWeight * xsec_rwgt;
+                if(_reWeight){
+                    EventWeight = EventWeight * xsec_rwgt;
+                }
             }
             if(_useReWeight){
                 global_rwgt = get_rwgtGlobal(FileName, DataEra, true);
@@ -689,21 +734,21 @@ void Rootplas_LegacyAll(TString InputDir, TString OutputDir, TString FileName, T
             }
             // calculate nn
             inputs["Dilep_pdgId"]=Dilep_pdgId;
-            inputs["Hj_tagger_resTop"]=Hj_tagger_resTop;
+            inputs["Hj_tagger_hadTop"]=Hj_tagger_hadTop;
             inputs["avg_dr_jet"]=avg_dr_jet;
-            inputs["jet1_eta"]=jet1_eta;
+            inputs["jet1_eta"]=abs(jet1_eta);
             inputs["jet1_phi"]=jet1_phi;
             inputs["jet1_pt"]=jet1_pt;
-            inputs["jet2_eta"]=jet2_eta;
+            inputs["jet2_eta"]=abs(jet2_eta);
             inputs["jet2_phi"]=jet2_phi;
             inputs["jet2_pt"]=jet2_pt;
-            inputs["jet3_eta"]=jet3_eta;
+            inputs["jet3_eta"]=abs(jet3_eta);
             inputs["jet3_phi"]=jet3_phi;
             inputs["jet3_pt"]=jet3_pt;
-            inputs["jet4_eta"]=jet4_eta;
+            inputs["jet4_eta"]=abs(jet4_eta);
             inputs["jet4_phi"]=jet4_phi;
             inputs["jet4_pt"]=jet4_pt;
-            inputs["jetFwd1_eta"]=jetFwd1_eta;
+            inputs["jetFwd1_eta"]=abs(jetFwd1_eta);
             inputs["jetFwd1_pt"]=jetFwd1_pt;
             inputs["lep1_charge"]=lep1_charge;
             inputs["lep1_conePt"]=lep1_conePt;
@@ -714,7 +759,7 @@ void Rootplas_LegacyAll(TString InputDir, TString OutputDir, TString FileName, T
             inputs["lep2_phi"]=lep2_phi;
             inputs["mT_lep1"]=mT_lep1;
             inputs["mT_lep2"]=mT_lep2;
-            inputs["mass_dilep"]=mass_dilep;
+            //inputs["mass_dilep"]=mass_dilep;
             inputs["maxeta"]=maxeta;
             inputs["mbb"]=mbb;
             inputs["metLD"]=metLD;
@@ -724,10 +769,11 @@ void Rootplas_LegacyAll(TString InputDir, TString OutputDir, TString FileName, T
             inputs["nBJetMedium"]=nBJetMedium;
             inputs["n_presel_jet"]=n_presel_jet;
             inputs["n_presel_jetFwd"]=n_presel_jetFwd;
-            inputs["resTop_BDT"]=resTop_BDT;
+            inputs["hadTop_BDT"]=hadTop_BDT;
             
             // debug
             /*
+            std::cout << " nEvent " << nEvent << std::endl;
             for (const auto& in_var: inputs) {
                 float input_value = in_var.second;
                 std::cout<< " input NN " << in_var.first << " = " << input_value << std::endl;
@@ -741,6 +787,8 @@ void Rootplas_LegacyAll(TString InputDir, TString OutputDir, TString FileName, T
                 if (out.first=="predictions_Rest")DNN_Restnode_all=out.second;
                 if (out.first=="predictions_ttW")DNN_ttWnode_all=out.second;
                 if (out.first=="predictions_tHq")DNN_tHQnode_all=out.second;
+                
+                //std::cout<< " output NN " << out.first << " = " << output_value << std::endl;
             }
             std::vector<double> DNN_vals;
             DNN_vals.push_back(DNN_ttHnode_all);
@@ -749,6 +797,26 @@ void Rootplas_LegacyAll(TString InputDir, TString OutputDir, TString FileName, T
             DNN_vals.push_back(DNN_tHQnode_all);
             
             setDNNflag(DNN_vals, DNN_maxval, DNNCat, DNNSubCat1_option1, DNNSubCat2_option1 , Dilep_pdgId, lep1_charge);
+           
+            // NN bins
+            if(_useNNBins){
+                TString CatFlag = "DNNSubCat2";
+                // DNNSubCat2
+                for(auto const category: _DNNSubCat2Maps){
+                    //std::cout << MapOfChannelMap[CatFlag+"_option1"][DNNSubCat2_option1] << "  " << category << std::endl;
+                    if (MapOfChannelMap[CatFlag+"_option1"][DNNSubCat2_option1] != category) continue;
+                    int n = BinMap[CatFlag+"_option1"][category];
+                    for(auto const bin: _bins){
+                        float dnn_bin = getDNNBin(DNN_maxval, DNNSubCat2_FileName, category+"_2018", _DNNSubCat2NNMapHists, bin);
+                        //_DNNSubCat2BinNames[CatFlag+"_"+category+"_nBin"+std::to_string(bin)] = getDNNBin(DNN_maxval, DNNSubCat2_FileName, category+"_2018", _DNNSubCat2NNMapHists, bin);
+                        _DNNSubCat2BinNames[CatFlag+"_"+category+"_nBin"+std::to_string(bin)] = dnn_bin; 
+                        if (n == bin){
+                            DNNSubCat2_BIN = dnn_bin;
+                        }
+                    }
+                }
+            }
+    
             
             newtree->Fill();
         }

@@ -14,6 +14,7 @@ Bool_t _useFakeRate = false; // set to true if we recalculate FakeRate Weighting
 Bool_t _useTrigSF = false; // set to true if we recalculate Trig SFs.
 Bool_t _useHjVar = false; // set to true if we use Hjvar.
 Bool_t _reWeight = false; // set to true if we want to reWeight some samples.
+Bool_t _saveWeight = true; // set to true if we want to reWeight some samples.
 
 void Rootplas_TrainMVA(TString InputDir, TString OutputDir, TString FileName, TString Postfix){
 
@@ -103,6 +104,19 @@ void Rootplas_TrainMVA(TString InputDir, TString OutputDir, TString FileName, TS
     float global_rwgt = 0;
     float EventWeight = 0;
     float DataEra = 0;
+    float lep1_charge = 0;
+    float lep1_pdgId = 0;
+    float lep2_charge = 0;
+    float lep2_pdgId = 0;
+    float massL_SFOS = 0;
+    float mass_diele = 0;
+    float metLD = 0;
+    float nBJetLoose = 0;
+    float nBJetMedium = 0;
+    float nLightJet = 0;
+    float n_presel_ele = 0;
+    float n_presel_jet = 0;
+    float n_presel_mu = 0;
     
     oldtree->SetBranchAddress("EVENT_rWeights",&EVENT_rWeights);
     oldtree->SetBranchAddress("EventWeight",&EventWeight);
@@ -170,6 +184,20 @@ void Rootplas_TrainMVA(TString InputDir, TString OutputDir, TString FileName, TS
     oldtree->SetBranchAddress("thirdLep_mcMatchId",&thirdLep_mcMatchId);
     oldtree->SetBranchAddress("thirdLep_mcPromptFS",&thirdLep_mcPromptFS);
     oldtree->SetBranchAddress("thirdLep_mcPromptGamma",&thirdLep_mcPromptGamma);
+    oldtree->SetBranchAddress("lep1_charge",&lep1_charge);
+    oldtree->SetBranchAddress("lep1_pdgId",&lep1_pdgId);
+    oldtree->SetBranchAddress("lep2_charge",&lep2_charge);
+    oldtree->SetBranchAddress("lep2_pdgId",&lep2_pdgId);
+    oldtree->SetBranchAddress("massL_SFOS",&massL_SFOS);
+    oldtree->SetBranchAddress("mass_diele",&mass_diele);
+    oldtree->SetBranchAddress("metLD",&metLD);
+    oldtree->SetBranchAddress("nBJetLoose",&nBJetLoose);
+    oldtree->SetBranchAddress("nBJetMedium",&nBJetMedium);
+    oldtree->SetBranchAddress("nLightJet",&nLightJet);
+    oldtree->SetBranchAddress("n_presel_ele",&n_presel_ele);
+    oldtree->SetBranchAddress("n_presel_jet",&n_presel_jet);
+    oldtree->SetBranchAddress("n_presel_mu",&n_presel_mu);
+
 
     SetOldTreeBranchStatus(oldtree, _useHjVar);
    
@@ -253,6 +281,20 @@ void Rootplas_TrainMVA(TString InputDir, TString OutputDir, TString FileName, TS
         thirdLep_mcMatchId = -9;
         thirdLep_mcPromptFS = -9;
         thirdLep_mcPromptGamma = -9;
+        lep1_charge = -9;
+        lep1_pdgId = -9;
+        lep2_charge = -9;
+        lep2_pdgId = -9;
+        massL_SFOS = -9;
+        mass_diele = -9;
+        metLD = -9;
+        nBJetLoose = -9;
+        nBJetMedium = -9;
+        nLightJet = -9;
+        n_presel_ele = -9;
+        n_presel_jet = -9;
+        n_presel_mu = -9;
+
         xsec_rwgt = 1;
         global_rwgt = 1;
         EventWeight = 1;
@@ -260,18 +302,30 @@ void Rootplas_TrainMVA(TString InputDir, TString OutputDir, TString FileName, TS
         oldtree->GetEntry(i);
         Bool_t passCut = kFALSE;
         Bool_t passTH = kTRUE;
-        is_tH_like_and_not_ttH_like = (istHlikeDiLepSR==1 && isDiLepSR!=1 && isttWctrlSR!=1) ? 1:0;
-        passCut = ((istHlikeDiLepSR==1 || isDiLepSR==1 || isttWctrlSR==1 )); 
+        if(_useHjVar){
+            is_tH_like_and_not_ttH_like = (istHlikeDiLepSR==1 && isDiLepSR!=1 && isttWctrlSR!=1) ? 1:0;
+            passCut = ((istHlikeDiLepSR==1 || isDiLepSR==1 || isttWctrlSR==1 )); 
+        }else{
+            bool isDiLepTR = IsDiLepTR(massL_SFOS, n_presel_jet, nBJetLoose, nBJetMedium, n_presel_ele, n_presel_mu, lep1_charge, lep2_charge, mass_diele, metLD, lep1_pdgId, lep2_pdgId);
+            bool isttWctrlTR = IsttWctrlTR(massL_SFOS, n_presel_jet, nBJetLoose, nBJetMedium, n_presel_ele, n_presel_mu, lep1_charge, lep2_charge, mass_diele, metLD, lep1_pdgId, lep2_pdgId);
+            bool istHlikeDiLepTR = IstHlikeDiLepTR(massL_SFOS, nLightJet, nBJetMedium, n_presel_ele, n_presel_mu, lep1_charge, lep2_charge, mass_diele, metLD, lep1_pdgId, lep2_pdgId);
+            is_tH_like_and_not_ttH_like = (istHlikeDiLepSR==1 && isDiLepSR!=1 && isttWctrlSR!=1) ? 1:0;
+            passCut = ((istHlikeDiLepSR==1 || isDiLepSR==1 || isttWctrlSR==1 )); 
+            //is_tH_like_and_not_ttH_like = (istHlikeDiLepTR && !isDiLepTR && isttWctrlTR) ? 1:0;
+            //passCut = ((istHlikeDiLepTR || isDiLepTR || isttWctrlTR )); 
+        }
         if(DataEra == 2018 && nEvent % 3 == 0 && (FileName.Contains("THW") || FileName.Contains("THQ"))) passTH = kFALSE; // 1/3 for signal extraction
         if(passCut && passTH){
-            if(_reWeight){
+            if(_saveWeight || _reWeight){
                 if(oldtree->GetListOfBranches()->FindObject("EVENT_rWeights") && EVENT_rWeights->size()>=12 && FileName.Contains("ctcvcp")){
                     xsec_rwgt = get_rewgtlumi(FileName, EVENT_rWeights->at(11));
                 }
                 else{
                     xsec_rwgt = get_rewgtlumi(FileName, 1);
                 }
-                EventWeight = EventWeight * xsec_rwgt;
+                if(_reWeight){
+                    EventWeight = EventWeight * xsec_rwgt;
+                }
             }
             if(_useReWeight){
                 global_rwgt = get_rwgtGlobal(FileName, DataEra, true);

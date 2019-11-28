@@ -18,6 +18,12 @@ std::map<TString,std::map<Int_t, TString>> MapOfChannelMap={
     {"DNNAMS3Cat1_option2",{{0,"inclusive"},{1,"loose_ttHnode"},{2,"tight_ttHnode"},{3,"Restnode"},{4,"ttWnode"},{5,"tHQnode"}}},
     {"DNNAMS3Cat1_option3",{{0,"inclusive"},{1,"loose_ttHnode"},{2,"tight_ttHnode"},{3,"Restnode"},{4,"ttWnode"},{5,"tHQnode"}}},
     };
+
+// Bin Maps  
+std::map<TString, std::map<TString, Int_t>> BinMap = {
+    {"DNNSubCat2_option1",{{"ee_ttHnode",8},{"ee_Restnode",13},{"ee_ttWnode",11},{"ee_tHQnode",8},{"em_ttHnode",5},{"em_Restnode",11},{"em_ttWnode",11},{"em_tHQnode",7},{"mm_ttHnode",10},{"mm_Restnode",10},{"mm_ttWnode",13},{"mm_tHQnode",4}}},
+};
+  
     // Cuts on DNN_maxval according to AMS
 std::map<TString,std::map<TString, Double_t>> AMS_MapOfCuts={
     {"DNNAMS2Cat1_option1",{{"ttHnode_SigRegion",0.41},{"ttHnode_ttWctrl",0.32}}},

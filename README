@@ -39,7 +39,7 @@ datacard stuff:
 
     Step 1:
         Create Template Variations
-        Current Working Direcotry is BaseDir, please copy LegacyV1/mvaTool/*.py to BaseDir
+        Current Working Direcotry is BaseDir, please copy LegacyV2/mvaTool/*.py to BaseDir
         change frameworkDir, inputBaseDir, outputBaseDir
         <python makeVarHEPJob.py>
         this command will create a script all.sh, directory Output
@@ -56,13 +56,17 @@ datacard stuff:
     now you have everything needed for combine fitting
 
 combJobs:
-    
+  
+    You need to login to lxslc7.ihep.ac.cn for the combination 
+    please set up combineTool and Harvester following instruction from:
+        http://cms-analysis.github.io/HiggsAnalysis-CombinedLimit/#introduction 
+        
     Here are the scripts used for submit combine fitting jobs
-    goes into CMSSW/src/HiggsAnalysis/
+    goes into CMSSW/src/
     cmsenv
     create a directory "test"(for example)
     cd test/
-    copy combJobs/LegacyV1/*.py .
+    copy combJobs/LegacyV2/*.py .
     manipulate_datacards.py is used to combine all the datacards you produced before, you need to change the input path of this manipuldate_datacards.py
     python <make_newComJobs.py>
     this will create jobs for the fits

@@ -30,8 +30,8 @@ CombineTool and Harvester are used to perform statistics analysis. Please follow
 rootplJobs
 -------------------------
 
-Scripts in directory "rootplJobs" are used to create rootplas. It takes the output of tWIHEPFramework as input.
-1. Current Working Directory is BaseDir, please copy rootplJobs/Datacard/*.py to BaseDir
+Scripts in directory "rootplJobs" are used to create rootplas. It takes the output of tWIHEPFramework as input. The script actually reconstruct variables and selections is "LegacyV2/Rootplas_LegacyAll.C".
+1. Current Working Directory is BaseDir1, please copy rootplJobs/Datacard/\*.py to BaseDir1
 2. makeHEPSubmit.py is the script to create HEP jobs at IHEP, change frameworkDir, inputBaseDir, outputBaseDir, executable of this script so the job will run frameworkDir/executable
 3. ` python makeHEPSubmit.py` will create a script all.sh,
      `bash all.sh` to submit all jobs, after all jobs finishes, `python resubmitJobs.py` to check failed job, if any job failed, run `bash allMissingFiles.sh`,
@@ -40,21 +40,18 @@ Scripts in directory "rootplJobs" are used to create rootplas. It takes the outp
 
 datacard stuff
 -----------------------
+Scripts in directory "rootplJobs/LegacyV2/mvaTool" are used to create datacards. It takes the output of previous step as input. The script actually create variation template is "LegacyV2/mvaTool/mvaTool.C".
 
-    scripts used to prepare datacards
+1. Create Template Variations
+    * create working direcotry BaseDir2, please copy LegacyV2/mvaTool/\*.py to BaseDir2
+    * change frameworkDir, inputBaseDir, outputBaseDir, inputBaseDir should be set to BaseDir1
+    * `python makeVarHEPJob.py` will create a script all.sh, `bash all.sh` to submit all jobs.
+       This will submit all the jobs to IHEP farm to create all the template needed for all the sub categories
+       Each job runs mvaTool.C 
 
-    Step 1:
-        Create Template Variations
-        Current Working Direcotry is BaseDir, please copy LegacyV2/mvaTool/*.py to BaseDir
-        change frameworkDir, inputBaseDir, outputBaseDir
-        <python makeVarHEPJob.py>
-        this command will create a script all.sh, directory Output
-        <bash all.sh>
-        this will submit all the jobs to IHEP farm to create all the template needed for all the sub categories
-        each job runs mvaTool.C 
-
-    Step 2 :
-        create datacard
+2. Use runCreateTemplate.py to create datacard, this script will call createDatacardRootFile.py and datacard_Template.py, key variables requires hardcode are:
+    * "systs_ctcvcp" in runCreateTemplate.py and createDatacardRootFile.py is a list containing the kt kv variations, to run only SM, one should set it to [""]
+     
         In datacard_Template.py createDatacardRootFile.py, you can tune the processes and nuisances
         <python runCreateTemplate.py> to create the template
 

@@ -66,6 +66,7 @@ class mvaTool {
   std::map<TString, int> _IDOfReWeight;
   std::map<TString, Int_t> _DNNBinMap;
   std::map<TString, TString> _systMap;
+  std::map<TString, std::vector<double>> _rwgtRatios;
   TString _varName;
   TString BinDir;
   TString RegName;
@@ -114,6 +115,9 @@ class mvaTool {
 
   std::vector<double>* EVENT_rWeights=0 ;
   std::vector<double>* EVENT_genWeights=0 ;
+  
+  double get_rwgt_ratio(TString sample, int index);
+  // effective event ratio: sum[i]/sum[11] (sum[11] : SM)
   float theweight;
   float mvaValue;
   float mvawJetsValue;

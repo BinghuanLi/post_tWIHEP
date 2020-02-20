@@ -14,9 +14,10 @@ void copytree(TString InputDir, TString OutputDir, TString inputName, TString ou
     Long64_t nentries = oldtree->GetEntries(); 
     
     int HiggsDecay=0;
-   
+    float isWHfromVH=0.; 
     
     oldtree->SetBranchAddress("HiggsDecay", &HiggsDecay);
+    oldtree->SetBranchAddress("isWHfromVH", &isWHfromVH);
     oldtree->SetBranchStatus("*", 1);
 
     TFile *newfile = new TFile(Output,"recreate");
@@ -27,11 +28,13 @@ void copytree(TString InputDir, TString OutputDir, TString inputName, TString ou
     for (Long64_t i=0;i<nentries; i++) {
         oldtree->GetEntry(i);
         Bool_t passHiggsDecay = kTRUE;
+        Bool_t passVHSplit = kTRUE;
         //if(HiggsFilter!=HiggsDecay )passHiggsDecay = kFALSE;//hzz,ww,tt,mm,zg
         if(HiggsFilter>0 && HiggsFilter<999 && HiggsFilter!=HiggsDecay )passHiggsDecay = kFALSE;//hzz,ww,tt,mm,zg
         if(HiggsFilter==999 && (HiggsDecay==2 || HiggsDecay==3 || HiggsDecay==6 || HiggsDecay==11 || HiggsDecay==7))passHiggsDecay = kFALSE; // hot
+        if((inputName.Contains("WH_DiLepRegion") && isWHfromVH !=1) || (inputName.Contains("ZH_DiLepRegion") && isWHfromVH ==1)) passVHSplit = kFALSE;
     
-        if(passHiggsDecay) newtree->Fill();
+        if(passHiggsDecay && passVHSplit) newtree->Fill();
         HiggsDecay =0;
     }
 

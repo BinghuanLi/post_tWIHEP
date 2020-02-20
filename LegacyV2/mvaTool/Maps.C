@@ -1,5 +1,7 @@
 std::map<TString,std::map<Int_t, TString>> MapOfChannelMap={
     {"SubCat2l",{{0,"inclusive"},{1,"ee_neg"},{2,"ee_pos"},{3,"em_bl_neg"},{4,"em_bl_pos"},{5,"em_bt_neg"},{6,"em_bt_pos"},{7,"mm_bl_neg"},{8,"mm_bl_pos"},{9,"mm_bt_neg"},{10,"mm_bt_pos"}}},
+    {"SVACat2l",{{0,"inclusive"},{1,"ee_lj"},{2,"ee_hj"},{3,"em_lj_neg"},{4,"em_hj_neg"},{5,"em_lj_pos"},{6,"em_hj_pos"},{7,"mm_lj_neg"},{8,"mm_hj_neg"},{9,"mm_lj_pos"},{10,"mm_hj_pos"}}},
+    {"SVACat3j",{{0,"inclusive"},{1,"ee"},{2,"em_neg"},{3,"em_pos"},{4,"mm_neg"},{5,"mm_pos"}}},
     {"DNNCat",{{0,"inclusive"},{1,"ttHnode"},{2,"Restnode"},{3,"ttWnode"},{4,"tHQnode"}}},
     {"DNNCat_option2",{{0,"inclusive"},{1,"ttHnode"},{2,"Restnode"},{3,"ttWnode"},{4,"tHQnode"}}},
     {"DNNCat_option3",{{0,"inclusive"},{1,"ttHnode"},{2,"Restnode"},{3,"ttWnode"},{4,"tHQnode"}}},
@@ -40,12 +42,21 @@ std::map<TString,std::map<TString, Double_t>> AMS_MapOfCuts={
     {"DNNAMS3Cat1_option3",{{"ttHnode_SigRegion",0.45},{"ttHnode_ttWctrl",-1}}},
 };
 std::map<int,std::vector<TString>> Variation_Map={
-    //{2016,{"JERUp","JERDown","MetShiftUp","MetShiftDown","JESUp_FlavorQCD","JESDown_FlavorQCD","JESUp_RelativeSample_2016","JESDown_RelativeSample_2016"}},
-    //{2017,{"JERUp","JERDown","MetShiftUp","MetShiftDown","JESUp_FlavorQCD","JESDown_FlavorQCD","JESUp_RelativeSample_2017","JESDown_RelativeSample_2017"}},
-    //{2018,{"JERUp","JERDown","MetShiftUp","MetShiftDown","JESUp_FlavorQCD","JESDown_FlavorQCD","JESUp_RelativeSample_2018","JESDown_RelativeSample_2018"}},
-    {2016,{}},
-    {2017,{}},
-    {2018,{}},
+    {2016,{"JERUp","JERDown","MetShiftUp","MetShiftDown",
+    "JESUp_FlavorQCD","JESDown_FlavorQCD", "JESUp_RelativeBal","JESDown_RelativeBal", "JESUp_HF","JESDown_HF", "JESUp_BBEC1","JESDown_BBEC1", "JESUp_EC2","JESDown_EC2", "JESUp_Absolute","JESDown_Absolute",
+    "JESUp_RelativeSample_2016","JESDown_RelativeSample_2016", "JESUp_BBEC1_2016","JESDown_BBEC1_2016", "JESUp_EC2_2016","JESDown_EC2_2016", "JESUp_Absolute_2016","JESDown_Absolute_2016", "JESUp_HF_2016","JESDown_HF_2016", 
+    }},
+    {2017,{"JERUp","JERDown","MetShiftUp","MetShiftDown",
+    "JESUp_FlavorQCD","JESDown_FlavorQCD", "JESUp_RelativeBal","JESDown_RelativeBal", "JESUp_HF","JESDown_HF", "JESUp_BBEC1","JESDown_BBEC1", "JESUp_EC2","JESDown_EC2", "JESUp_Absolute","JESDown_Absolute",
+    "JESUp_RelativeSample_2017","JESDown_RelativeSample_2017", "JESUp_BBEC1_2017","JESDown_BBEC1_2017", "JESUp_EC2_2017","JESDown_EC2_2017", "JESUp_Absolute_2017","JESDown_Absolute_2017", "JESUp_HF_2017","JESDown_HF_2017", 
+    }},
+    {2018,{"JERUp","JERDown","MetShiftUp","MetShiftDown",
+    "JESUp_FlavorQCD","JESDown_FlavorQCD", "JESUp_RelativeBal","JESDown_RelativeBal", "JESUp_HF","JESDown_HF", "JESUp_BBEC1","JESDown_BBEC1", "JESUp_EC2","JESDown_EC2", "JESUp_Absolute","JESDown_Absolute",
+    "JESUp_RelativeSample_2018","JESDown_RelativeSample_2018", "JESUp_BBEC1_2018","JESDown_BBEC1_2018", "JESUp_EC2_2018","JESDown_EC2_2018", "JESUp_Absolute_2018","JESDown_Absolute_2018", "JESUp_HF_2018","JESDown_HF_2018", 
+    }},
+    //{2016,{}},
+    //{2017,{}},
+    //{2018,{}},
 };
 std::map<TString,int> IDOfReWeight={
     {"kt_m3_kv_1",1},
@@ -100,4 +111,16 @@ std::map<TString,int> IDOfReWeight={
     {"cosa_0p7",67},
     {"cosa_0p8",68},
     {"cosa_0p9",69}
+};
+
+std::map<int, TString> chargeMisFileNames = {
+{2016, "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/tWIHEPFramework/config/weights/ttH2016/ElectronChargeMisIdRates_era2016_2020Jan15.root"},
+{2017, "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/tWIHEPFramework/config/weights/ttH2017/ElectronChargeMisIdRates_era2017_2020Jan15.root"},
+{2018, "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/tWIHEPFramework/config/weights/ttH2018/ElectronChargeMisIdRates_era2018_2020Jan15.root"},
+};
+
+std::map<int, TString> chargeMisHistNames = {
+{2016, "eChargeMisIdRates"},
+{2017, "eChargeMisIdRates"},
+{2018, "eChargeMisIdRates"},
 };

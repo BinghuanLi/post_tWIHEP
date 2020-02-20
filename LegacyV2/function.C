@@ -14,13 +14,11 @@ R__ADD_INCLUDE_PATH(/cvmfs/sft.cern.ch/lcg/views/LCG_96python3/x86_64-slc6-gcc8-
 // lwtnn evaluations
 // the actual NN instance
 lwt::LightweightNeuralNetwork *nn_instance;
-// frozen before xmas
-//TString input_json_file = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplizers/LegacyV2/nn_weights/2017samples_tau2p1_tH_xsecwgtonly/NN_2lss_0tau.json";
-// xmas updates
+// frozen post xmas
 TString input_json_file = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplizers/LegacyV2/nn_weights/2017samples_xmasupdates_tH_selection/NN_2lss_0tau.json";
-// xmas updates
+// frozen pre xmas
 lwt::LightweightNeuralNetwork *nn_instance_newvars;
-TString input_json_file_newvars = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplizers/LegacyV2/nn_weights/2017samples_xmasupdates_tH_selection/NN_2lss_0tau.json";
+TString input_json_file_newvars = "/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplizers/LegacyV2/nn_weights/2017samples_tau2p1_tH_xsecwgtonly/NN_2lss_0tau.json";
 void create_lwtnn(TString input_json_file, lwt::LightweightNeuralNetwork*& NN_instance );
 void setDNNflag(std::vector<double> DNN_vals, float& DNN_maxval, float& DNNCat, float& DNNSubCat1, float& DNNSubCat2, float Dilep_pdgId, float lep1_charge);
 
@@ -51,7 +49,7 @@ float getDNNBin(float DNNValue, TString MapFileName, TString MapHistName, std::m
 void setFakeRateHistograms(TString FakeRateFileName,TString FakeRateMuonHistName, TString FakeRateElectronHistName, std::map<std::string, TH2F*> &_MuonFakeRate, std::map<std::string, TH2F*> &_ElectronFakeRate, std::string muSystName="central", std::string eleSystName="central");
 Double_t getFakeRateWeight(float lep1_ismvasel, float lep1_pdgId, float lep1_conept, float lep1_eta, float lep2_ismvasel, float lep2_pdgId, float lep2_conept, float lep2_eta , std::map<std::string,TH2F*> _MuonFakeRate, std::map<std::string,TH2F*> _ElectronFakeRate, std::string muSystName="central", std::string eleSystName="central");
 //SFs
-std::tuple<Double_t,Double_t,Double_t> getTriggerWeight(float lep1_pdgId, float lep1_conept, float lep2_pdgId, float lep2_conept );
+float triggerSF_ttH(int pdgid1, float pt1, int pdgid2, float pt2, int nlep, int year, int var=0);
 // charge Mis
 void setChargeMisHistograms(TString ChargeMisFileName,TString ChargeMisHistName, TH2F** _chargeMis);
 std::tuple<Double_t,Double_t,Double_t> getChargeMisWeight(float lep1_pdgId, float lep1_charge, float lep1_conept, float lep1_eta, float lep2_pdgId, float lep2_charge, float lep2_conept, float lep2_eta, TH2F* _chargeMis);
@@ -59,6 +57,11 @@ std::tuple<Double_t,Double_t,Double_t> getChargeMisWeight(float lep1_pdgId, floa
 double get_boostedAngle(TLorentzVector Particle1_CMS, TLorentzVector Particle2_CMS, TLorentzVector plane1_vectA, TLorentzVector plane1_vectB, TLorentzVector plane2_vectA, TLorentzVector plane2_vectB, float& cosa);
 // read trees
 void SetOldTreeBranchStatus(TTree* readtree, bool isHjtagger);
+// SVA bins
+int ttH_catIndex_2lss_SVA(int LepGood1_pdgId, int LepGood2_pdgId, int LepGood1_charge, int nJet25, int is_tH_enlarged);
+int ttH_catIndex_2lss_3j_SVA(int LepGood1_pdgId, int LepGood2_pdgId, int LepGood1_charge, int nJet25, int is_tH_enlarged);
+int SVAbin(double mass2l);
+
 //utils
 double get_rwgtGlobal(TString FileName, int dataEra, bool isTrainMVA){
     double wgt=1.;
@@ -70,9 +73,20 @@ double get_rwgtGlobal(TString FileName, int dataEra, bool isTrainMVA){
             wgt = 3.;
         }
     }
-    // 2016 xsec is wrong additional correction for samples produced before 10 Jan 2020
-    if(FileName.Contains("Legacy16V2_THQ_TuneCP5_ctcvcp")) wgt= 0.07096 / 0.02313; // fixes THQ xsec
-    if(FileName.Contains("Legacy16V2_THW_TuneCP5_ctcvcp")) wgt= 0.01561 / 0.005087 ; // fixes THW xsec
+    // TTZ xsec reweighting 
+    if(FileName.Contains("TTZ_M10")) wgt *= (0.2814 / 0.2072); // fixes TTZ_M10 xsec
+    if(FileName.Contains("TTZ_M1to10")) wgt *= (0.0822 / 0.04537); // fixes TTZ_M1to10 xsec
+    // CTCVCP reweighting considering EVENT_originalXWGTUP
+    // fix the effective events
+    if(FileName.Contains("Legacy18V2_TTH_ctcvcp")) wgt *= 3300.343823/28925000 ;
+    if(FileName.Contains("Legacy18V2_THQ_ctcvcp")) wgt *= 519.5817131/2100776.494 ;
+    if(FileName.Contains("Legacy18V2_THW_ctcvcp")) wgt *= 235.4400443/1556985.016 ;
+    if(FileName.Contains("Legacy16V2_TTH_ctcvcp")) wgt *= 6530.053024/9566400 ; 
+    if(FileName.Contains("Legacy16V2_THQ_TuneCP5_ctcvcp")) wgt *= 851.5929841/701252.7066; 
+    if(FileName.Contains("Legacy16V2_THW_TuneCP5_ctcvcp")) wgt *= 162.224309/551719.9575 ; 
+    if(FileName.Contains("Legacy17V2_TTH_ctcvcp")) wgt *= 1640.57915/9618000 ; 
+    if(FileName.Contains("Legacy17V2_THQ_ctcvcp")) wgt *= 174.0414875/715953.8736; 
+    if(FileName.Contains("Legacy17V2_THW_ctcvcp")) wgt *= 192.9545578/524938.1638 ; 
     return wgt;
 }
 double get_rewgtlumi(TString FileName, double rwgt){
@@ -281,51 +295,66 @@ Double_t getFakeRateWeight(float lep1_ismvasel, float lep1_pdgId, float lep1_con
   return FakeRateWeight;
 }
 // Trigger SFs
-std::tuple<Double_t,Double_t,Double_t> getTriggerWeight(float lep1_pdgId, float lep1_conept, float lep2_pdgId, float lep2_conept ){
-  Double_t TriggerWeight = 1.0, TriggerWeightUp = 1.0, TriggerWeightDown = 1.0;
-  Int_t category = 0;
-  if((fabs(lep1_pdgId)+fabs(lep2_pdgId))==22)category =1;
-  else if((fabs(lep1_pdgId)+fabs(lep2_pdgId))==24)category =2;
-  else if((fabs(lep1_pdgId)+fabs(lep2_pdgId))==26)category =3;
-  // updated trigger SF for 2017 , see link :
-  // https://gitlab.cern.ch/ttH_leptons/doc/blob/master/2017/appendix_1.md#for-lepton-id-scale-factors
-  if(category ==3){//mm
-      if(lep1_conept <35){
-          TriggerWeight = 0.972; 
-          TriggerWeightUp = 0.972 + 0.006;
-          TriggerWeightDown = 0.972 - 0.006;
-      }else{
-          TriggerWeight = 0.994; 
-          TriggerWeightUp = 0.994 + 0.001;
-          TriggerWeightDown = 0.994 - 0.001;
+float triggerSF_ttH(int pdgid1, float pt1, int pdgid2, float pt2, int nlep, int year, int var=0){
+  if (nlep == 2){
+    if (abs(pdgid1*pdgid2) == 121){
+      if (year == 2016){
+	if (pt2 < 25){
+	  return 0.98*(1 + var*0.02);
+	}
+      else return 1.*(1 + var*0.02);
       }
-  }else if(category==1){//ee
-      if(lep1_conept < 30){
-          TriggerWeight = 0.937; 
-          TriggerWeightUp = 0.937 + 0.027;
-          TriggerWeightDown = 0.937 - 0.027;
-      }else{
-          TriggerWeight = 0.991; 
-          TriggerWeightUp = 0.991 + 0.002;
-          TriggerWeightDown = 0.991 - 0.002;
+      else if (year == 2017){
+	if (pt2<40) return 0.98*(1 + var*0.01);
+	else return 1*(1 + var*0.01);
       }
-  }else if(category==2){//em
-      if(lep1_conept < 35){
-          TriggerWeight = 0.952; 
-          TriggerWeightUp = 0.952 + 0.008;
-          TriggerWeightDown = 0.952 - 0.008;
-      }else if(lep1_conept <50){
-          TriggerWeight = 0.983; 
-          TriggerWeightUp = 0.983 + 0.003;
-          TriggerWeightDown = 0.983 - 0.003;
-      }else{
-          TriggerWeight = 1.0; 
-          TriggerWeightUp = 1.0 + 0.001;
-          TriggerWeightDown = 1.0 - 0.001;
+      else if (year == 2018){
+	if (pt2<25){
+	return 0.98*(1 + var*0.01);
+	}
+	else return 1.*(1 + var*0.01);
       }
+      else{
+       return 1.; 
+      }
+    }
+    
+    else if ( abs(pdgid1*pdgid2) == 143){
+      if (year == 2016) return 1.*(1 + var*0.01);
+      else if (year == 2017){
+	if (pt2<40) return 0.98*(1 + var*0.01);
+	else return 0.99*(1 + var*0.01);
+      }
+      else if (year == 2018){
+	if (pt2<25) return 0.98*(1 + var*0.01);
+	else        return 1*(1 + var*0.01);
+      }else{
+       return 1.; 
+      }
+    }
+    else{
+      if (year == 2016) return 0.99*(1 + var*0.01);
+      else if (year == 2017){
+	if (pt2 < 40) return 0.97*(1 + var*0.02);
+	else if (pt2 < 55 && pt2>40) return 0.995*(1 + var*0.02);
+	else if (pt2 < 70 && pt2>55) return 0.96*(1 + var*0.02);
+	else                         return 0.94*(1 + var*0.02);
+      }
+      else if (year == 2018){
+	if (pt1 < 40) return 1.01*(1 + var*0.01);
+	if (pt1 < 70) return 0.995*(1 + var*0.01);
+	else return 0.98*(1 + var*0.01);
+      }else{
+       return 1.; 
+      }
+    }
+    
   }
-  return std::make_tuple(TriggerWeight,TriggerWeightUp,TriggerWeightDown);
+  else return 1.;
 }
+
+
+
 //chargeMis
 void setChargeMisHistograms(TString ChargeMisFileName,TString ChargeMisHistName, TH2F** _chargeMis){
   std::cout << " set charegMis TH2 to " << ChargeMisFileName <<"/"<< ChargeMisHistName << std::endl;
@@ -410,6 +439,7 @@ void SetOldTreeBranchStatus(TTree* readtree, bool isHjtagger){
     readtree->SetBranchStatus("EVENT_psWeights",1);
     readtree->SetBranchStatus("EVENT_genWeight",1);
     readtree->SetBranchStatus("EventWeight",1);
+    readtree->SetBranchStatus("EVENT_originalXWGTUP",1);
     readtree->SetBranchStatus("EVENT_event",1);
     readtree->SetBranchStatus("EVENT_rWeights",1);
     readtree->SetBranchStatus("FR_weight",1);
@@ -432,6 +462,7 @@ void SetOldTreeBranchStatus(TTree* readtree, bool isHjtagger){
     readtree->SetBranchStatus("FakeRate_m_pt1",1);
     readtree->SetBranchStatus("FakeRate_m_pt2",1);
     readtree->SetBranchStatus("FakeRate_m_up",1);
+    readtree->SetBranchStatus("isWHfromVH",1);
     readtree->SetBranchStatus("HTT",1);
     readtree->SetBranchStatus("HiggsDecay",1);
     readtree->SetBranchStatus("HighestJetCSV",1);
@@ -628,6 +659,7 @@ void SetOldTreeBranchStatus(TTree* readtree, bool isHjtagger){
     readtree->SetBranchStatus("lep1_TightCharge",1);
     readtree->SetBranchStatus("lep1_charge",1);
     readtree->SetBranchStatus("lep1_conePt",1);
+    readtree->SetBranchStatus("lep1_pt",1);
     readtree->SetBranchStatus("lep1_dxy",1);
     readtree->SetBranchStatus("lep1_dz",1);
     readtree->SetBranchStatus("lep1_eta",1);
@@ -651,6 +683,7 @@ void SetOldTreeBranchStatus(TTree* readtree, bool isHjtagger){
     readtree->SetBranchStatus("lep2_TightCharge",1);
     readtree->SetBranchStatus("lep2_charge",1);
     readtree->SetBranchStatus("lep2_conePt",1);
+    readtree->SetBranchStatus("lep2_pt",1);
     readtree->SetBranchStatus("lep2_dxy",1);
     readtree->SetBranchStatus("lep2_dz",1);
     readtree->SetBranchStatus("lep2_eta",1);
@@ -797,6 +830,54 @@ void create_lwtnn(TString input_json_file, lwt::LightweightNeuralNetwork*& NN_in
    // Create a new lwtn netowrk instance
    NN_instance = new lwt::LightweightNeuralNetwork(network_file.inputs, 
       network_file.layers, network_file.outputs);
+}
+
+int ttH_catIndex_2lss_SVA(int LepGood1_pdgId, int LepGood2_pdgId, int LepGood1_charge, int nJet25, int is_tH_enlarged){
+
+    int res = -1;
+    if(is_tH_enlarged==1) return res;
+    if(nJet25 <4){
+        res = 0;
+        return res;
+    }
+
+    if (abs(LepGood1_pdgId)==11 && abs(LepGood2_pdgId)==11) res = 1; //ee
+    if ((abs(LepGood1_pdgId) != abs(LepGood2_pdgId)) && LepGood1_charge<0) res = 3; // em_neg
+    if ((abs(LepGood1_pdgId) != abs(LepGood2_pdgId)) && LepGood1_charge>0) res = 5; // em_pos
+    if (abs(LepGood1_pdgId)==13 && abs(LepGood2_pdgId)==13 && LepGood1_charge<0) res = 7; // mm_neg
+    if (abs(LepGood1_pdgId)==13 && abs(LepGood2_pdgId)==13 && LepGood1_charge>0) res = 9; // mm_pos
+    if (nJet25>=6) res+=1;
+
+    return res; // 1-10
+}
+
+int ttH_catIndex_2lss_3j_SVA(int LepGood1_pdgId, int LepGood2_pdgId, int LepGood1_charge, int nJet25, int is_tH_enlarged){
+
+    int res = -1;
+    if(is_tH_enlarged==1) return res;
+    if(nJet25 !=3){
+        res = 0;
+        return res;
+    }
+
+    if (abs(LepGood1_pdgId)==11 && abs(LepGood2_pdgId)==11) res = 1; //ee
+    if ((abs(LepGood1_pdgId) != abs(LepGood2_pdgId)) && LepGood1_charge<0) res = 2; // em_neg
+    if ((abs(LepGood1_pdgId) != abs(LepGood2_pdgId)) && LepGood1_charge>0) res = 3; // em_pos
+    if (abs(LepGood1_pdgId)==13 && abs(LepGood2_pdgId)==13 && LepGood1_charge<0) res = 4; // mm_neg
+    if (abs(LepGood1_pdgId)==13 && abs(LepGood2_pdgId)==13 && LepGood1_charge>0) res = 5; // mm_pos
+    if (nJet25>=6) res+=1; // this should never happen
+
+    return res; // 1-10
+}
+
+int SVAbin(double mass2l){
+    std::vector<double> massEdges = {10.,40.0,55.0,70.0,80.0,95.0,110.0,140.0,180.,800.0};
+    std::vector<double>::iterator lower; 
+    lower = std::lower_bound(massEdges.begin(), massEdges.end(), mass2l);
+    int pos = std::distance(massEdges.begin(), lower);
+    int nbin = massEdges.size()-1;
+    int res = min(nbin, max(1,pos));
+    return res;
 }
 
 void setDNNflag(std::vector<double> DNN_vals, float& DNN_maxval, float& DNNCat, float& DNNSubCat1, float& DNNSubCat2, float Dilep_pdgId, float lep1_charge){

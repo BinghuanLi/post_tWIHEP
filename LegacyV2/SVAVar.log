@@ -1,0 +1,41 @@
+    readtree->SetBranchStatus("massll",1);
+
+
+  SetBranchStatus done 
+
+    oldtree->SetBranchAddress("massll",&massll);
+
+
+  SetBranchAddress done 
+
+    float SVABin2l = 0;
+    float SVABin3j = 0;
+    float SVACat2l = 0;
+    float SVACat3j = 0;
+    float massll = 0;
+
+
+  variable declaration done 
+
+        SVABin2l = -9;
+        SVABin3j = -9;
+        SVACat2l = -9;
+        SVACat3j = -9;
+        massll = -9;
+
+
+  variable clear done 
+
+    newtree->Branch("SVABin2l",&SVABin2l);
+    newtree->Branch("SVABin3j",&SVABin3j);
+    newtree->Branch("SVACat2l",&SVACat2l);
+    newtree->Branch("SVACat3j",&SVACat3j);
+
+
+  set newtree branch done 
+
+            inputs["SVABin2l"]=SVABin2l;
+            inputs["SVABin3j"]=SVABin3j;
+            inputs["SVACat2l"]=SVACat2l;
+            inputs["SVACat3j"]=SVACat3j;
+            inputs["massll"]=massll;

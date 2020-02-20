@@ -9,7 +9,9 @@ allMissedFile = open("allMissingFiles.sh","w")
 allMissedFile.write("#!/bin/bash\n")
 
 
-CheckMerged = True # true to check "merged*.root"
+CheckMerged = False # true to check "merged*.root"
+
+variations = ["JESUp","JESDown","JERUp","JERDown","MetShiftUp","MetShiftDown"]
 
 samplesConv = [
 "TTGToJets_ext1","WGToLNuG_ext2","TGJets_v1","WGToLNuG_ext1","ZGTo2LG","TGJets_ext1"
@@ -27,8 +29,8 @@ dirsToCheck = [f for f in os.listdir(".") if os.path.isdir(f)]
 print dirsToCheck
 
 # skip null files for skim merge
-threshold = 20000
-Thresh_Entry = 25000 # for files with size (threshold, Tresh_Entry), check the number of entries of the root file
+threshold = 30000
+Thresh_Entry = 40000 # for files with size (threshold, Tresh_Entry), check the number of entries of the root file
 
 ignoredDirs = [
 #"ttH","ttHMuEleJERUp","ttHMuEleJERDown","ttHMuEleJESUp","ttHMuEleJESDown",
@@ -44,6 +46,14 @@ nErrorFiles = {}
 totalResubmits = 0
 
 def runDirCheck(dirToCheck):
+    isVars = False
+    varName = ""
+    for var in variations:
+        if var in dirToCheck:
+            isVars = True
+            varName = dirToCheck.split("SR2L")[1]
+            break
+    treeName = "syncTree"+varName
     if dirToCheck in ignoredDirs:
         print "!!!!!!!!!!!!!!!!!!!! Ignore {0} directory manually !!!!!!!!!!!!!!!!!!!!!!!!!!!!".format(dirToCheck)
         return
@@ -85,7 +95,7 @@ def runDirCheck(dirToCheck):
 #                missedFile.write("condor_submit "+prefix + "/scripts/"+errorFile.split(".error")[0]+".submit -group cms -name job@schedd01.ac.cn\n")
             elif os.path.getsize(prefix+'/skims/'+skimFile) < Thresh_Entry:
                 inputfile = TFile.Open(prefix+'/skims/'+skimFile,"read")
-                tree = inputfile.Get("syncTree")
+                tree = inputfile.Get(treeName)
                 entry = tree.GetEntries()
                 inputfile.Close()
                 if(entry == 0):

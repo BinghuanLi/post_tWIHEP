@@ -17,7 +17,7 @@ IHEP use htcondor job management system. IHEP implemented a toolkit HepJob, whic
 
 Setting up the HEP environment
 ```
-   export PATH=$PATH:/afs/ihep.ac.cn/soft/common/sysgroup/hep_job/bin/
+export PATH=$PATH:/afs/ihep.ac.cn/soft/common/sysgroup/hep_job/bin/
 ```
 [user_guide]:http://afsapply.ihep.ac.cn/cchelp/en/local-cluster/jobs/HTCondor/
 
@@ -30,14 +30,13 @@ CombineTool and Harvester are used to perform statistics analysis. Please follow
 rootplJobs
 -------------------------
 
-    Scripts in directory "rootplJobs" are used to create rootplas. It takes the output of tWIHEPFramework as input.
-    1. Current Working Directory is BaseDir, please copy rootplJobs/Datacard/*.py to BaseDir
-    2. makeHEPSubmit.py is the script to create HEP jobs at IHEP, change frameworkDir, inputBaseDir, outputBaseDir, executable of this script so the job will run frameworkDir/executable
-    3. ``` python makeHEPSubmit.py``` will create a script all.sh,
-       ```bash all.sh``` to submit all jobs, after all jobs finishes, ```python resubmitJobs.py``` to check failed job, if any job failed, run ```bash allMissingFiles.sh```
-        after this, run ```python mergeCheck.py``` to remove unnecessary files
-        you need to change baseDir and frameworkDir in skimLegacyAll.py 
-        finally, submit job script allSkim.sh, this will run script skimLegacyAll.py and varMerge.py, the output will be in directory "Rootplas/"
+Scripts in directory "rootplJobs" are used to create rootplas. It takes the output of tWIHEPFramework as input.
+1. Current Working Directory is BaseDir, please copy rootplJobs/Datacard/*.py to BaseDir
+2. makeHEPSubmit.py is the script to create HEP jobs at IHEP, change frameworkDir, inputBaseDir, outputBaseDir, executable of this script so the job will run frameworkDir/executable
+3. ` python makeHEPSubmit.py` will create a script all.sh,
+     `bash all.sh` to submit all jobs, after all jobs finishes, `python resubmitJobs.py` to check failed job, if any job failed, run `bash allMissingFiles.sh`,
+     after this, run `python mergeCheck.py` to remove unnecessary files,
+     finally, submit job script allSkim.sh, this will run script skimLegacyAll.py and varMerge.py, you need to change baseDir and frameworkDir in skimLegacyAll.py, the output will be in directory "Rootplas/"
 
 datacard stuff
 -----------------------

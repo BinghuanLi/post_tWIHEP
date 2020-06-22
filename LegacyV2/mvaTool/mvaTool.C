@@ -15,6 +15,14 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, 
   RegName = regName;
   _inputbaseDir = inputbaseDir;
   _systMap = {
+    //{"JERUp_HEM","_CMS_ttHl_HEM_up"}, {"JERDown_HEM","_CMS_ttHl_HEM_down"},
+    // all JER should be uncorrelated across years, will change later
+    //{"JERUp_eta1p9","_CMS_res_j_barrel_2016_up"}, {"JERDown_eta1p9","_CMS_res_j_barrel_2016_down"},
+    //{"JERUp_eta2p5","_CMS_res_j_endcap1_2016_up"}, {"JERDown_eta2p5","_CMS_res_j_endcap1_2016_down"},
+    //{"JERUp_eta3lowpt","_CMS_res_j_endcap2lowpt_2016_up"}, {"JERDown_eta3lowpt","_CMS_res_j_endcap2lowpt_2016_down"},
+    //{"JERUp_eta3highpt","_CMS_res_j_endcap2highpt_2016_up"}, {"JERDown_eta3highpt","_CMS_res_j_endcap2highpt_2016_down"},
+    //{"JERUp_eta5lowpt","_CMS_res_j_forwardlowpt_2016_up"}, {"JERDown_eta5lowpt","_CMS_res_j_forwardlowpt_2016_down"},
+    //{"JERUp_eta5highpt","_CMS_res_j_forwardhighpt_2016_up"}, {"JERDown_eta5highpt","_CMS_res_j_forwardhighpt_2016_down"},
     {"JESUp_FlavorQCD","_CMS_scale_j_jesFlavorQCD_up"}, {"JESUp_RelativeBal","_CMS_scale_j_jesRelativeBal_up"}, {"JESUp_HF","_CMS_scale_j_jesHF_up"}, {"JESUp_BBEC1","_CMS_scale_j_jesBBEC1_up"}, {"JESUp_EC2","_CMS_scale_j_jesEC2_up"},
     {"JESUp_Absolute","_CMS_scale_j_jesAbsolute_up"}, {"JESUp_BBEC1_2016","_CMS_scale_j_jesBBEC1_2016_up"}, {"JESUp_EC2_2016","_CMS_scale_j_jesEC2_2016_up"}, {"JESUp_Absolute_2016","_CMS_scale_j_jesAbsolute_2016_up"}, {"JESUp_HF_2016","_CMS_scale_j_jesHF_2016_up"},
     {"JESUp_RelativeSample_2016","_CMS_scale_j_jesRelativeSample_2016_up"}, {"JESUp_BBEC1_2017","_CMS_scale_j_jesBBEC1_2017_up"}, {"JESUp_EC2_2017","_CMS_scale_j_jesEC2_2017_up"}, {"JESUp_Absolute_2017","_CMS_scale_j_jesAbsolute_2017_up"}, {"JESUp_HF_2017","_CMS_scale_j_jesHF_2017_up"},
@@ -68,26 +76,20 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, 
     varList.push_back("TrueInteractions");
     varList.push_back("nBestVTX");
     
-    varList.push_back("mT_lep1");
-    varList.push_back("mT_lep2");
     varList.push_back("Hj_tagger_resTop");
     varList.push_back("Dilep_mtWmin");
 
     varList.push_back("massll");
     varList.push_back("Sum2lCharge");
-    varList.push_back("n_presel_jet");
     varList.push_back("n_presel_ele");
     varList.push_back("n_presel_mu");
     varList.push_back("MHT");
-    varList.push_back("metLD");
     varList.push_back("Dilep_bestMVA");
     varList.push_back("Dilep_worseMVA");
-    varList.push_back("Dilep_pdgId");
     varList.push_back("Dilep_htllv");
     varList.push_back("Dilep_nTight");
     varList.push_back("HighestJetCSV");
     varList.push_back("HtJet");
-    varList.push_back("maxeta");
     varList.push_back("leadLep_jetdr");
     varList.push_back("secondLep_jetdr");
     varList.push_back("minMllAFOS");
@@ -103,24 +105,9 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, 
     varList.push_back("secondLep_BDT");
     varList.push_back("leadLep_corrpt");
     varList.push_back("secondLep_corrpt");
-    varList.push_back("mbb");
     varList.push_back("mbb_loose");
-    varList.push_back("avg_dr_jet");
     varList.push_back("dr_leps");
-    varList.push_back("jet1_pt");
-    varList.push_back("jet2_pt");
-    varList.push_back("jet3_pt");
-    varList.push_back("jet4_pt");
-    varList.push_back("jet1_eta");
-    varList.push_back("jet2_eta");
-    varList.push_back("jet3_eta");
-    varList.push_back("jet4_eta");
-    varList.push_back("lep1_conePt");
-    varList.push_back("lep2_conePt");
-    varList.push_back("lep1_eta");
-    varList.push_back("lep2_eta");
     varList.push_back("massL");
-    varList.push_back("nBJetLoose");
     */
    
     TString catname = ChannelNameMap[_channel];
@@ -130,8 +117,15 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, 
     }
     
     varList.push_back("DNN_maxval");
+    varList.push_back("DNN_ttHnode_all");
+    varList.push_back("DNN_ttWnode_all");
+    varList.push_back("DNN_Restnode_all");
+    varList.push_back("DNN_tHQnode_all");
     
     varList.push_back("nBJetMedium"); // please always load nBJetMedium
+    varList.push_back("nBJetLoose");
+    varList.push_back("n_presel_jet");
+    varList.push_back("n_presel_jetFwd");
     varList.push_back("Bin2l");
     varList.push_back("SVABin2l");
     varList.push_back("mvaOutput_2lss_ttV");
@@ -139,6 +133,36 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, 
     varList.push_back("Hj_tagger_hadTop");
     varList.push_back("Hj_tagger");
     varList.push_back("hadTop_BDT");
+    varList.push_back("Dilep_pdgId");
+    varList.push_back("avg_dr_jet");
+    varList.push_back("lep1_charge");
+    varList.push_back("lep1_conePt");
+    varList.push_back("lep2_conePt");
+    varList.push_back("lep1_eta");
+    varList.push_back("lep2_eta");
+    varList.push_back("lep1_phi");
+    varList.push_back("lep2_phi");
+    varList.push_back("jet1_pt");
+    varList.push_back("jet2_pt");
+    varList.push_back("jet3_pt");
+    varList.push_back("jet4_pt");
+    varList.push_back("jet1_eta");
+    varList.push_back("jet2_eta");
+    varList.push_back("jet3_eta");
+    varList.push_back("jet4_eta");
+    varList.push_back("jet1_phi");
+    varList.push_back("jet2_phi");
+    varList.push_back("jet3_phi");
+    varList.push_back("jet4_phi");
+    varList.push_back("jetFwd1_pt");
+    varList.push_back("jetFwd1_eta");
+    varList.push_back("mT_lep1");
+    varList.push_back("mT_lep2");
+    varList.push_back("maxeta");
+    varList.push_back("mbb");
+    varList.push_back("metLD");
+    varList.push_back("mindr_lep1_jet");
+    varList.push_back("mindr_lep2_jet");
     if(flag.Contains("DNN")){
         if(subCat2l.Contains("option1")){
         varList.push_back((flag+catname+"_nBin1"));
@@ -211,6 +235,11 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, 
   if(_varName.Contains("JESUp") || _varName.Contains("JESDown")){
     systlist.push_back(_systMap[_varName]); 
   }
+  /*
+  if(_varName.Contains("JERUp") || _varName.Contains("JERDown")){
+    systlist.push_back(_systMap[_varName].ReplaceAll("2016",std::to_string(_DataEra))); 
+  }
+  */
   if (_varName ==""){
     systlist.push_back("");
     systlist.push_back("_PU_16_up");
@@ -632,6 +661,7 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
     theTree->GetEntry(i);
     
     if (fabs(_channel)>0.01 && fabs(theChannel - _channel)>0.01) continue;
+    if (fabs(_channel)<0.01 && theChannel < 0.5) continue;
     //std::cout << " now fill the channel: "<< ChannelNameMap[_channel]<<std::endl; 
     //cut optimization
     /*
@@ -690,7 +720,11 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
     if(_varName.Contains("JESUp") || _varName.Contains("JESDown")){
         fillHists(sampleName+_systMap[_varName],treevars,mvaValue,mvawJetsValue,theweight,met,mtw,theChannel);
     }
-    
+    /*
+    if(_varName.Contains("JERUp") || _varName.Contains("JERDown")){
+        fillHists(sampleName+_systMap[_varName].ReplaceAll("2016",std::to_string(_DataEra)),treevars,mvaValue,mvawJetsValue,theweight,met,mtw,theChannel);
+    } 
+    */
     //std::cout << " now fill the weight-based systematic histograms "<<std::endl; 
     //Now fill the weight-based systematic histograms
  if(_varName==""){
@@ -727,10 +761,6 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
       
       }else{
         //calculateLepTightEffSyst(Dilepton_flav,  eletightSFWeightUp,  eletightSFWeightDown,  mutightSFWeightUp,  mutightSFWeightDown);
-        fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_x1_up",treevars,mvaValue,mvawJetsValue,theweight * (genWeight_muF2/genWeight) * factor_muF2,met,mtw,theChannel);
-        fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_x1_down",treevars,mvaValue,mvawJetsValue,theweight * (genWeight_muF0p5/genWeight) * factor_muF0p5,met,mtw,theChannel);
-        fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_y1_up",treevars,mvaValue,mvawJetsValue,theweight * (genWeight_muR2/genWeight) * factor_muR2,met,mtw,theChannel);
-        fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_y1_down",treevars,mvaValue,mvawJetsValue,theweight * (genWeight_muR0p5/genWeight) * factor_muR0p5,met,mtw,theChannel);
         /*
         fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_up",treevars,mvaValue,mvawJetsValue,theweight * (CMS_ttHl_thu_shape_ttH_up/CMS_ttHl_thu_shape_ttH),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_down",treevars,mvaValue,mvawJetsValue,theweight * (CMS_ttHl_thu_shape_ttH_down/CMS_ttHl_thu_shape_ttH),met,mtw,theChannel);
@@ -739,6 +769,10 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
         fillHists(sampleName+"_CMS_ttHl_thu_shape_ttZ_up",treevars,mvaValue,mvawJetsValue,theweight * (CMS_ttHl_thu_shape_ttZ_up/CMS_ttHl_thu_shape_ttZ),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_thu_shape_ttZ_down",treevars,mvaValue,mvawJetsValue,theweight * (CMS_ttHl_thu_shape_ttZ_down/CMS_ttHl_thu_shape_ttZ),met,mtw,theChannel);
         */
+        fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_x1_up",treevars,mvaValue,mvawJetsValue,theweight * (genWeight_muF2/genWeight) * factor_muF2,met,mtw,theChannel);
+        fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_x1_down",treevars,mvaValue,mvawJetsValue,theweight * (genWeight_muF0p5/genWeight) * factor_muF0p5,met,mtw,theChannel);
+        fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_y1_up",treevars,mvaValue,mvawJetsValue,theweight * (genWeight_muR2/genWeight) * factor_muR2,met,mtw,theChannel);
+        fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_y1_down",treevars,mvaValue,mvawJetsValue,theweight * (genWeight_muR0p5/genWeight) * factor_muR0p5,met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl16_L1PreFiring_up",treevars,mvaValue,mvawJetsValue,theweight * (Prefire_SysUp/Prefire),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl16_L1PreFiring_down",treevars,mvaValue,mvawJetsValue,theweight * (Prefire_SysDown/Prefire),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl17_L1PreFiring_up",treevars,mvaValue,mvawJetsValue,theweight * (Prefire_SysUp/Prefire),met,mtw,theChannel);
@@ -791,12 +825,12 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
         fillHists(sampleName+"_CMS_ttHl_btag_cErr1_down",treevars,mvaValue,mvawJetsValue,theweight * (bWeightcferr1Down/bWeight),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_btag_cErr2_up",treevars,mvaValue,mvawJetsValue,theweight * (bWeightcferr2Up/bWeight),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_btag_cErr2_down",treevars,mvaValue,mvawJetsValue,theweight * (bWeightcferr2Down/bWeight),met,mtw,theChannel);
-        //fillHists(sampleName+"_bWeight_jes_up",treevars,mvaValue,mvawJetsValue,theweight * (bWeightjerUp/bWeight),met,mtw,theChannel);
-        //fillHists(sampleName+"_bWeight_jes_down",treevars,mvaValue,mvawJetsValue,theweight * (bWeightjerDown/bWeight),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_btag_LF_up",treevars,mvaValue,mvawJetsValue,theweight * (bWeightlfUp/bWeight),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_btag_LF_down",treevars,mvaValue,mvawJetsValue,theweight * (bWeightlfDown/bWeight),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_btag_HF_up",treevars,mvaValue,mvawJetsValue,theweight * (bWeighthfUp/bWeight),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_btag_HF_down",treevars,mvaValue,mvawJetsValue,theweight * (bWeighthfDown/bWeight),met,mtw,theChannel);
+        //fillHists(sampleName+"_bWeight_jes_up",treevars,mvaValue,mvawJetsValue,theweight * (bWeightjerUp/bWeight),met,mtw,theChannel);
+        //fillHists(sampleName+"_bWeight_jes_down",treevars,mvaValue,mvawJetsValue,theweight * (bWeightjerDown/bWeight),met,mtw,theChannel);
         if (theTree->GetListOfBranches()->FindObject("EVENT_rWeights") && (sampleName.Contains("ttH") || sampleName.Contains("THQ") || sampleName.Contains("THW"))){
             for (auto& IDs : _IDOfReWeight){
                 //std::cout<< " fill syst "<< IDs.first <<std::endl;
@@ -860,7 +894,7 @@ void mvaTool::createHists(TString sampleName){
       double xmax = 1000;
     
       if(varList[i]== "Hj_tagger_resTop") {nbins= 20; xmin= -1.01; xmax= 1.01;};
-      if(varList[i]== "Hj_tagger_hadTop") {nbins= 10; xmin= 0.; xmax= 1.01;};
+      if(varList[i]== "Hj_tagger_hadTop") {nbins= 10; xmin= 0.; xmax= 1.00;};
       if(varList[i]== "Hj_tagger") {nbins= 10; xmin= 0.; xmax= 1.0;};
       if(varList[i]== "hadTop_BDT") {nbins= 10; xmin= 0.; xmax= 1.0;};
       if(varList[i]== "Dilep_mtWmin") {nbins= 10; xmin= 0; xmax= 200;};
@@ -872,15 +906,18 @@ void mvaTool::createHists(TString sampleName){
       if(varList[i]== "secondLep_corrpt") {nbins= 10; xmin= 0; xmax= 100;};
       if(varList[i]== "massll") {nbins= 10; xmin= 0; xmax= 400;};
       if(varList[i]== "Sum2lCharge") {nbins= 5; xmin= -2.5; xmax= 2.5;};
-      if(varList[i]== "n_presel_jet") {nbins= 4; xmin= 3.5; xmax= 7.5;};
-      if(varList[i]== "nBJetLoose") {nbins= 6; xmin= -0.5; xmax= 5.5;};
-      if(varList[i]== "nBJetMedium") {nbins= 6; xmin= -0.5; xmax= 5.5;};
+      if(varList[i]== "n_presel_jet") {nbins= 7; xmin= 0.5; xmax= 7.5;};
+      if(varList[i]== "n_presel_jetFwd") {nbins= 4; xmin= -0.5; xmax= 3.5;};
+      if(varList[i]== "nBJetLoose") {nbins= 4; xmin= 0.5; xmax= 4.5;};
+      if(varList[i]== "nBJetMedium") {nbins= 4; xmin= -0.5; xmax= 3.5;};
       if(varList[i]== "MHT") {nbins= 10; xmin= 0; xmax= 400;};
       if(varList[i]== "PFMET") {nbins= 50; xmin= 0; xmax= 500;};
-      if(varList[i]== "metLD") {nbins= 20; xmin= 0; xmax= 200;};
+      if(varList[i]== "metLD") {nbins= 10; xmin= 0; xmax= 200;};
+      if(varList[i]== "mindr_lep1_jet") {nbins= 10; xmin= 0; xmax= 4.;};
+      if(varList[i]== "mindr_lep2_jet") {nbins= 10; xmin= 0; xmax= 4.;};
       if(varList[i]== "Dilep_bestMVA") {nbins= 8; xmin= 0.6; xmax= 1;};
       if(varList[i]== "Dilep_worseMVA") {nbins= 8; xmin= 0.6; xmax= 1;};
-      if(varList[i]== "Dilep_pdgId") {nbins= 5; xmin= -0.5; xmax= 4.5;};
+      if(varList[i]== "Dilep_pdgId") {nbins= 3; xmin= 0.5; xmax= 3.5;};
       if(varList[i]== "Dilep_htllv") {nbins= 10; xmin= 0; xmax= 600;};
       if(varList[i]== "Dilep_nTight") {nbins= 3; xmin= -0.5; xmax= 2.5;};
       if(varList[i]== "HighestJetCSV") {nbins= 15; xmin= 0; xmax= 1;};
@@ -908,31 +945,44 @@ void mvaTool::createHists(TString sampleName){
       if(varList[i]== "lepSF") {nbins= 30; xmin= 0.6; xmax= 1.4;};
       if(varList[i]== "leadLep_BDT") {nbins= 10; xmin= -1; xmax= 1;};
       if(varList[i]== "secondLep_BDT") {nbins= 10; xmin= -1; xmax= 1;};
-      if(varList[i]== "mbb") {nbins= 50; xmin= 0; xmax= 500;};
+      if(varList[i]== "mbb") {nbins= 10; xmin= 0; xmax= 200;};
       if(varList[i]== "mbb_loose") {nbins= 50; xmin= 0; xmax= 500;};
-      if(varList[i]== "avg_dr_jet") {nbins= 50; xmin= 0.; xmax= 10.;};
+      if(varList[i]== "avg_dr_jet") {nbins= 10; xmin= 0.; xmax= 5.;};
       if(varList[i]== "dr_leps") {nbins= 10; xmin= 0.; xmax= 5;};
-      if(varList[i]== "mvaOutput_2lss_ttV") {nbins= 20; xmin= -1; xmax= 1;};
-      if(varList[i]== "mvaOutput_2lss_ttbar") {nbins= 20; xmin= -1; xmax= 1;};
+      if(varList[i]== "mvaOutput_2lss_ttV") {nbins= 10; xmin= -1; xmax= 1;};
+      if(varList[i]== "mvaOutput_2lss_ttbar") {nbins= 10; xmin= -1; xmax= 1;};
       if(varList[i]== "resTop_BDT") {nbins= 20; xmin= -1; xmax= 1;};
       if(varList[i]== "massL") {nbins= 20; xmin= 0; xmax= 400;};
-      if(varList[i]== "jet1_pt") {nbins= 20; xmin= 0; xmax= 800;};
-      if(varList[i]== "jet2_pt") {nbins= 20; xmin= 0; xmax= 600;};
-      if(varList[i]== "jet3_pt") {nbins= 20; xmin= 0; xmax= 400;};
-      if(varList[i]== "jet4_pt") {nbins= 20; xmin= 0; xmax= 200;};
-      if(varList[i]== "jet1_eta") {nbins= 20; xmin= -4; xmax= 4;};
-      if(varList[i]== "jet2_eta") {nbins= 20; xmin= -4; xmax= 4;};
-      if(varList[i]== "jet3_eta") {nbins= 20; xmin= -4; xmax= 4;};
-      if(varList[i]== "jet4_eta") {nbins= 20; xmin= -4; xmax= 4;};
-      if(varList[i]== "lep1_conePt") {nbins= 20; xmin= 0; xmax= 200;};
-      if(varList[i]== "lep2_conePt") {nbins= 20; xmin= 0; xmax= 100;};
-      if(varList[i]== "lep1_eta") {nbins= 20; xmin= -4; xmax= 4;};
-      if(varList[i]== "lep2_eta") {nbins= 20; xmin= -4; xmax= 4;};
+      if(varList[i]== "jetFwd1_pt") {nbins= 10; xmin= 20; xmax= 200;};
+      if(varList[i]== "jetFwd1_eta") {nbins= 10; xmin= -5; xmax= 5;};
+      if(varList[i]== "jet1_pt") {nbins= 10; xmin= 20; xmax= 200;};
+      if(varList[i]== "jet2_pt") {nbins= 10; xmin= 20; xmax= 200;};
+      if(varList[i]== "jet3_pt") {nbins= 10; xmin= 20; xmax= 100;};
+      if(varList[i]== "jet4_pt") {nbins= 10; xmin= 20; xmax= 100;};
+      if(varList[i]== "jet1_eta") {nbins= 10; xmin= -2.5; xmax= 2.5;};
+      if(varList[i]== "jet2_eta") {nbins= 10; xmin= -2.5; xmax= 2.5;};
+      if(varList[i]== "jet3_eta") {nbins= 10; xmin= -2.5; xmax= 2.5;};
+      if(varList[i]== "jet4_eta") {nbins= 10; xmin= -2.5; xmax= 2.5;};
+      if(varList[i]== "jet1_phi") {nbins= 10; xmin= -3.15; xmax= 3.15;};
+      if(varList[i]== "jet2_phi") {nbins= 10; xmin= -3.15; xmax= 3.15;};
+      if(varList[i]== "jet3_phi") {nbins= 10; xmin= -3.15; xmax= 3.15;};
+      if(varList[i]== "jet4_phi") {nbins= 10; xmin= -3.15; xmax= 3.15;};
+      if(varList[i]== "lep1_charge") {nbins= 3; xmin= -1.5; xmax= 1.5;};
+      if(varList[i]== "lep1_conePt") {nbins= 10; xmin= 0; xmax= 200;};
+      if(varList[i]== "lep2_conePt") {nbins= 10; xmin= 0; xmax= 100;};
+      if(varList[i]== "lep1_eta") {nbins= 10; xmin= -2.5; xmax= 2.5;};
+      if(varList[i]== "lep2_eta") {nbins= 10; xmin= -2.5; xmax= 2.5;};
+      if(varList[i]== "lep1_phi") {nbins= 10; xmin= -3.15; xmax= 3.15;};
+      if(varList[i]== "lep2_phi") {nbins= 10; xmin= -3.15; xmax= 3.15;};
       if(varList[i]== "Bin2l") {nbins= 11; xmin= 0.5; xmax= 11.5;};
       if(varList[i]== "SVABin2l") {nbins= 9; xmin= 0.5; xmax= 9.5;};
-      if(varList[i]== "DNN_maxval") {nbins= 20; xmin= 0; xmax= 1;};
-      if(varList[i]== "DNN_maxval_option2") {nbins= 20; xmin= 0; xmax= 1;};
-      if(varList[i]== "DNN_maxval_option3") {nbins= 20; xmin= 0; xmax= 1;};
+      if(varList[i]== "DNN_maxval") {nbins= 10; xmin= 0; xmax= 1;};
+      if(varList[i]== "DNN_ttHnode_all") {nbins= 10; xmin= 0; xmax= 1;};
+      if(varList[i]== "DNN_ttWnode_all") {nbins= 10; xmin= 0; xmax= 1;};
+      if(varList[i]== "DNN_Restnode_all") {nbins= 10; xmin= 0; xmax= 1;};
+      if(varList[i]== "DNN_tHQnode_all") {nbins= 10; xmin= 0; xmax= 1;};
+      if(varList[i]== "DNN_maxval_option2") {nbins= 10; xmin= 0; xmax= 1;};
+      if(varList[i]== "DNN_maxval_option3") {nbins= 10; xmin= 0; xmax= 1;};
       if(varList[i]== "DNNCat_2DBin_GT5") {nbins= 50; xmin= 0.5; xmax= 50.5;};
       if(varList[i]== "DNNCat_2DBin_GT10") {nbins= 50; xmin= 0.5; xmax= 50.5;};
       if(varList[i]== "DNNCat_2DBin_GT15") {nbins= 50; xmin= 0.5; xmax= 50.5;};

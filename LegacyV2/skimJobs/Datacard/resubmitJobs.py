@@ -27,16 +27,27 @@ mysamplesToCheck=[
 
 dirsToCheck = [f for f in os.listdir(".") if os.path.isdir(f)]
 
-#dirsToCheck = ["tWSysts/","tW2j1tSysts/","tW3j2tSysts/","tW4j1tSysts/","tW4j2tSysts/"]
+#dirsToCheck = [
+#]
 
 print dirsToCheck
 
 ignoredDirs = [
-#"ttH2016Data2L","ttH2016All2L","ttH2017Data2L","ttH2017All2L","ttH2018Data2L","ttH2018All2L",
-#"ttH2016All3L", "ttH2017All3L", "ttH2018All3L",
-#"ttH2016Data3L", "ttH2017Data3L", "ttH2018Data3L",
-#"ttH2016All4L", "ttH2017All4L", "ttH2018All4L",
-#"ttH2016Data4L", "ttH2017Data4L", "ttH2018Data4L",
+#"ttH2016All2L","ttH2016Data2L",
+"ttH2016SR2LJERUp","ttH2016SR2LJERDown","ttH2016SR2LMetShiftUp","ttH2016SR2LMetShiftDown",
+"ttH2016SR2LJESUp_FlavorQCD","ttH2016SR2LJESDown_FlavorQCD", "ttH2016SR2LJESUp_RelativeBal","ttH2016SR2LJESDown_RelativeBal", "ttH2016SR2LJESUp_HF","ttH2016SR2LJESDown_HF", "ttH2016SR2LJESUp_BBEC1","ttH2016SR2LJESDown_BBEC1", "ttH2016SR2LJESUp_EC2","ttH2016SR2LJESDown_EC2", "ttH2016SR2LJESUp_Absolute","ttH2016SR2LJESDown_Absolute",
+"ttH2016SR2LJESUp_BBEC1_2016","ttH2016SR2LJESDown_BBEC1_2016", "ttH2016SR2LJESUp_EC2_2016","ttH2016SR2LJESDown_EC2_2016", "ttH2016SR2LJESUp_Absolute_2016","ttH2016SR2LJESDown_Absolute_2016", "ttH2016SR2LJESUp_HF_2016","ttH2016SR2LJESDown_HF_2016", "ttH2016SR2LJESUp_RelativeSample_2016","ttH2016SR2LJESDown_RelativeSample_2016",
+
+#"ttH2017All2L","ttH2017Data2L",
+"ttH2017SR2LJERUp","ttH2017SR2LJERDown","ttH2017SR2LMetShiftUp","ttH2017SR2LMetShiftDown",
+"ttH2017SR2LJESUp_FlavorQCD","ttH2017SR2LJESDown_FlavorQCD", "ttH2017SR2LJESUp_RelativeBal","ttH2017SR2LJESDown_RelativeBal", "ttH2017SR2LJESUp_HF","ttH2017SR2LJESDown_HF", "ttH2017SR2LJESUp_BBEC1","ttH2017SR2LJESDown_BBEC1", "ttH2017SR2LJESUp_EC2","ttH2017SR2LJESDown_EC2", "ttH2017SR2LJESUp_Absolute","ttH2017SR2LJESDown_Absolute",
+"ttH2017SR2LJESUp_BBEC1_2017","ttH2017SR2LJESDown_BBEC1_2017", "ttH2017SR2LJESUp_EC2_2017","ttH2017SR2LJESDown_EC2_2017", "ttH2017SR2LJESUp_Absolute_2017","ttH2017SR2LJESDown_Absolute_2017", "ttH2017SR2LJESUp_HF_2017","ttH2017SR2LJESDown_HF_2017", "ttH2017SR2LJESUp_RelativeSample_2017","ttH2017SR2LJESDown_RelativeSample_2017",
+
+#"ttH2018All2L","ttH2018Data2L",
+"ttH2018SR2LJERUp","ttH2018SR2LJERDown","ttH2018SR2LMetShiftUp","ttH2018SR2LMetShiftDown",
+"ttH2018SR2LJESUp_FlavorQCD","ttH2018SR2LJESDown_FlavorQCD", "ttH2018SR2LJESUp_RelativeBal","ttH2018SR2LJESDown_RelativeBal", "ttH2018SR2LJESUp_HF","ttH2018SR2LJESDown_HF", "ttH2018SR2LJESUp_BBEC1","ttH2018SR2LJESDown_BBEC1", "ttH2018SR2LJESUp_EC2","ttH2018SR2LJESDown_EC2", "ttH2018SR2LJESUp_Absolute","ttH2018SR2LJESDown_Absolute",
+"ttH2018SR2LJESUp_BBEC1_2018","ttH2018SR2LJESDown_BBEC1_2018", "ttH2018SR2LJESUp_EC2_2018","ttH2018SR2LJESDown_EC2_2018", "ttH2018SR2LJESUp_Absolute_2018","ttH2018SR2LJESDown_Absolute_2018", "ttH2018SR2LJESUp_HF_2018","ttH2018SR2LJESDown_HF_2018", "ttH2018SR2LJESUp_RelativeSample_2018","ttH2018SR2LJESDown_RelativeSample_2018",
+
 ]
 skippedDirs = [
 ]
@@ -104,6 +115,9 @@ def runDirCheck(dirToCheck):
 if __name__ == "__main__":
     threads = {}
     for dirToCheck in dirsToCheck:
+        if dirToCheck in ignoredDirs:
+            print "!!!!!!!!!!!!!!!!!!!! Ignore {0} directory manually !!!!!!!!!!!!!!!!!!!!!!!!!!!!".format(dirToCheck)
+            continue
         print dirToCheck
         threads[dirToCheck] = Thread(target = runDirCheck, args = (dirToCheck,) )
         allMissedFile.write("bash missingFiles{0}.sh\n".format(dirToCheck))
@@ -113,6 +127,9 @@ if __name__ == "__main__":
         
 print "Skipping the following directories: ", skippedDirs
 for dirChecked in dirsToCheck:
+    if dirToCheck in ignoredDirs:
+        print "!!!!!!!!!!!!!!!!!!!! Ignore {0} directory manually !!!!!!!!!!!!!!!!!!!!!!!!!!!!".format(dirToCheck)
+        continue
     totalResubmits += nErrorFiles[dirChecked]
     if dirChecked in nErrorFiles.keys(): print "There were {0} jobs to resubmit in {1} directory".format(nErrorFiles[dirChecked],dirChecked)
 print "There were {0} error files".format(totalResubmits)

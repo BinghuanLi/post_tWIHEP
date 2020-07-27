@@ -1,41 +1,40 @@
+    readtree->SetBranchStatus("Bin4Lctrl",1);
+    readtree->SetBranchStatus("is4lctrlFake",1);
     readtree->SetBranchStatus("massll",1);
+    readtree->SetBranchStatus("nZPair",1);
 
 
   SetBranchStatus done 
 
-    oldtree->SetBranchAddress("massll",&massll);
+    oldtree->SetBranchAddress("Bin4Lctrl",&Bin4Lctrl);
+    oldtree->SetBranchAddress("is4lctrlFake",&is4lctrlFake);
+    oldtree->SetBranchAddress("is4lctrlSR",&is4lctrlSR);
+    oldtree->SetBranchAddress("nZPair",&nZPair);
 
 
   SetBranchAddress done 
 
-    float SVABin2l = 0;
-    float SVABin3j = 0;
-    float SVACat2l = 0;
-    float SVACat3j = 0;
-    float massll = 0;
+    float Bin4Lctrl = 0;
+    float is4lctrlFake = 0;
+    float is4lctrlSR = 0;
+    float nZPair = 0;
 
 
   variable declaration done 
 
-        SVABin2l = -9;
-        SVABin3j = -9;
-        SVACat2l = -9;
-        SVACat3j = -9;
-        massll = -9;
+        Bin4Lctrl = -9;
+        is4lctrlFake = -9;
+        is4lctrlSR = -9;
+        nZPair = -9;
 
 
   variable clear done 
 
-    newtree->Branch("SVABin2l",&SVABin2l);
-    newtree->Branch("SVABin3j",&SVABin3j);
-    newtree->Branch("SVACat2l",&SVACat2l);
-    newtree->Branch("SVACat3j",&SVACat3j);
 
 
   set newtree branch done 
 
-            inputs["SVABin2l"]=SVABin2l;
-            inputs["SVABin3j"]=SVABin3j;
-            inputs["SVACat2l"]=SVACat2l;
-            inputs["SVACat3j"]=SVACat3j;
-            inputs["massll"]=massll;
+            inputs["Bin4Lctrl"]=Bin4Lctrl;
+            inputs["is4lctrlFake"]=is4lctrlFake;
+            inputs["is4lctrlSR"]=is4lctrlSR;
+            inputs["nZPair"]=nZPair;

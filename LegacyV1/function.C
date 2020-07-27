@@ -759,6 +759,9 @@ void SetOldTreeBranchStatus(TTree* readtree, bool isHjtagger){
     readtree->SetBranchStatus("puWeight",1);
     readtree->SetBranchStatus("puWeight_SysDown",1);
     readtree->SetBranchStatus("puWeight_SysUp",1);
+    readtree->SetBranchStatus("PUWeight",1);
+    readtree->SetBranchStatus("MinBiasUpWeight",1);
+    readtree->SetBranchStatus("MinBiasDownWeight",1);
     readtree->SetBranchStatus("run",1);
     readtree->SetBranchStatus("secondLep_BDT",1);
     readtree->SetBranchStatus("secondLep_isFromB",1);

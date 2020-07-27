@@ -1,18 +1,68 @@
 #define mvaTool_cxx
 #include "mvaTool.h"
 
-mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, TString Category, TString TreeName, std::map<Int_t, TString> channelNameMap, std::map<TString, int> IDOfReWeight, TString inputbaseDir, int dataEra, std::map<TString, Int_t> DNNBinMap){
+mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, TString Category, TString TreeName, std::map<Int_t, TString> channelNameMap, std::map<TString, int> IDOfReWeight, TString inputbaseDir, int dataEra, TString varName, std::map<TString, Int_t> DNNBinMap){
   
   _channel = channel;
   _nPerBin = nPerBin;
   _IDOfReWeight = IDOfReWeight;
   _DNNBinMap = DNNBinMap;
   subCat2l = Category;
-  treeName = TreeName;
+  _varName = varName;
+  treeName = TreeName+varName;
   ChannelNameMap = channelNameMap;
   BinDir = binDir;
   RegName = regName;
   _inputbaseDir = inputbaseDir;
+  _systMap = {
+    //{"JERUp_HEM","_CMS_ttHl_HEM_up"}, {"JERDown_HEM","_CMS_ttHl_HEM_down"},
+    // all JER should be uncorrelated across years, will change later
+    //{"JERUp_eta1p9","_CMS_res_j_barrel_2016_up"}, {"JERDown_eta1p9","_CMS_res_j_barrel_2016_down"},
+    //{"JERUp_eta2p5","_CMS_res_j_endcap1_2016_up"}, {"JERDown_eta2p5","_CMS_res_j_endcap1_2016_down"},
+    //{"JERUp_eta3lowpt","_CMS_res_j_endcap2lowpt_2016_up"}, {"JERDown_eta3lowpt","_CMS_res_j_endcap2lowpt_2016_down"},
+    //{"JERUp_eta3highpt","_CMS_res_j_endcap2highpt_2016_up"}, {"JERDown_eta3highpt","_CMS_res_j_endcap2highpt_2016_down"},
+    //{"JERUp_eta5lowpt","_CMS_res_j_forwardlowpt_2016_up"}, {"JERDown_eta5lowpt","_CMS_res_j_forwardlowpt_2016_down"},
+    //{"JERUp_eta5highpt","_CMS_res_j_forwardhighpt_2016_up"}, {"JERDown_eta5highpt","_CMS_res_j_forwardhighpt_2016_down"},
+    {"JESUp_FlavorQCD","_CMS_scale_j_jesFlavorQCD_up"}, {"JESUp_RelativeBal","_CMS_scale_j_jesRelativeBal_up"}, {"JESUp_HF","_CMS_scale_j_jesHF_up"}, {"JESUp_BBEC1","_CMS_scale_j_jesBBEC1_up"}, {"JESUp_EC2","_CMS_scale_j_jesEC2_up"},
+    {"JESUp_Absolute","_CMS_scale_j_jesAbsolute_up"}, {"JESUp_BBEC1_2016","_CMS_scale_j_jesBBEC1_2016_up"}, {"JESUp_EC2_2016","_CMS_scale_j_jesEC2_2016_up"}, {"JESUp_Absolute_2016","_CMS_scale_j_jesAbsolute_2016_up"}, {"JESUp_HF_2016","_CMS_scale_j_jesHF_2016_up"},
+    {"JESUp_RelativeSample_2016","_CMS_scale_j_jesRelativeSample_2016_up"}, {"JESUp_BBEC1_2017","_CMS_scale_j_jesBBEC1_2017_up"}, {"JESUp_EC2_2017","_CMS_scale_j_jesEC2_2017_up"}, {"JESUp_Absolute_2017","_CMS_scale_j_jesAbsolute_2017_up"}, {"JESUp_HF_2017","_CMS_scale_j_jesHF_2017_up"},
+    {"JESUp_RelativeSample_2017","_CMS_scale_j_jesRelativeSample_2017_up"}, {"JESUp_BBEC1_2018","_CMS_scale_j_jesBBEC1_2018_up"}, {"JESUp_EC2_2018","_CMS_scale_j_jesEC2_2018_up"}, {"JESUp_Absolute_2018","_CMS_scale_j_jesAbsolute_2018_up"}, {"JESUp_HF_2018","_CMS_scale_j_jesHF_2018_up"},
+    {"JESUp_RelativeSample_2018","_CMS_scale_j_jesRelativeSample_2018_up"},
+    {"JESDown_FlavorQCD","_CMS_scale_j_jesFlavorQCD_down"}, {"JESDown_RelativeBal","_CMS_scale_j_jesRelativeBal_down"}, {"JESDown_HF","_CMS_scale_j_jesHF_down"}, {"JESDown_BBEC1","_CMS_scale_j_jesBBEC1_down"}, {"JESDown_EC2","_CMS_scale_j_jesEC2_down"},
+    {"JESDown_Absolute","_CMS_scale_j_jesAbsolute_down"}, {"JESDown_BBEC1_2016","_CMS_scale_j_jesBBEC1_2016_down"}, {"JESDown_EC2_2016","_CMS_scale_j_jesEC2_2016_down"}, {"JESDown_Absolute_2016","_CMS_scale_j_jesAbsolute_2016_down"}, {"JESDown_HF_2016","_CMS_scale_j_jesHF_2016_down"},
+    {"JESDown_RelativeSample_2016","_CMS_scale_j_jesRelativeSample_2016_down"}, {"JESDown_BBEC1_2017","_CMS_scale_j_jesBBEC1_2017_down"}, {"JESDown_EC2_2017","_CMS_scale_j_jesEC2_2017_down"}, {"JESDown_Absolute_2017","_CMS_scale_j_jesAbsolute_2017_down"}, {"JESDown_HF_2017","_CMS_scale_j_jesHF_2017_down"},
+    {"JESDown_RelativeSample_2017","_CMS_scale_j_jesRelativeSample_2017_down"}, {"JESDown_BBEC1_2018","_CMS_scale_j_jesBBEC1_2018_down"}, {"JESDown_EC2_2018","_CMS_scale_j_jesEC2_2018_down"}, {"JESDown_Absolute_2018","_CMS_scale_j_jesAbsolute_2018_down"}, {"JESDown_HF_2018","_CMS_scale_j_jesHF_2018_down"},
+    {"JESDown_RelativeSample_2018","_CMS_scale_j_jesRelativeSample_2018_down"},
+  };
+  _rwgtRatios={
+  {"TTH_2016",{
+      9, 4, 2.25, 1.56250001, 0.5625, 0.25, 0.0625, 9.999999999e-09, 0.0625, 0.25, 0.5625, 1, 1.56250001, 2.25, 4, 9, 9, 4, 2.25, 1.56250001, 1, 0.5625, 0.25, 0.0625, 9.999999999e-09, 0.0625, 0.25, 0.5625, 1, 1.56250001, 2.25, 4, 9, 9, 4, 2.25, 1.56250001, 1, 0.5625, 0.25, 0.0625, 9.999999999e-09, 0.0625, 0.25, 0.5625, 1, 1.56250001, 2.25, 4, 9, 0.845238896, 0.7067390494, 0.5845268875, 0.4786055349, 0.3889764104, 0.3156403697, 0.2585980157, 0.2178498192, 0.1933961777, 0.1852374674, 0.1933739695, 0.2178060811, 0.2585341398, 0.3155585431, 0.3888797618, 0.4784983987, 0.5844153096, 0.7066319132, 0.8451513343 
+      }},
+  {"THQ_2016",{
+    54.02742142, 30.48359515, 21.28300915, 17.32554792, 10.69628904, 8.024491386, 5.781248249, 3.967199832, 2.580425539, 1.622845966, 1.093820914, 0.9933503835, 1.321434374, 2.078072886, 4.877013474, 15.61754891, 68.5954635, 41.84914681, 31.04731559, 26.28923176, 21.95970245, 18.05872766, 14.5863074, 11.54244166, 8.928090883, 6.740373735, 4.982171556, 3.652523898, 2.751430761, 2.278892146, 2.234908052, 3.432603428, 10.97064843, 41.44480742, 21.10347158, 13.50413078, 10.34729217, 7.619008072, 5.319278499, 3.448103447, 2.005482916, 0.9917368564, 0.4059054184, 0.2489484515, 0.5205460058, 1.220698081, 2.349404678, 3.906665797, 8.306851597, 22.24987745, 12.61761812, 11.4782782, 10.39735814, 9.375315363, 8.411423228, 7.506410541, 6.65905977, 5.872333826, 5.143274153, 4.473509131, 3.861115241, 3.308014872, 2.812963112, 2.377763217, 2.000604682, 1.682164508, 1.422181601, 1.220889358, 1.078116129 
+      }},
+  {"THW_2016",{
+    40.17201392, 21.72611731, 14.666358, 11.67727559, 6.780705281, 4.873217376, 3.326260971, 2.140238558, 1.313942659, 0.8485807536, 0.7437503478, 0.9994514418, 1.615684036, 2.592448129, 5.627570817, 16.02419419, 48.88376394, 28.42554901, 20.35963055, 16.86746856, 13.73583808, 10.9647391, 8.554171613, 6.50413563, 4.815234871, 3.485658163, 2.517216679, 1.909306696, 1.661928212, 1.775081228, 2.248765744, 4.277729276, 12.66203434, 32.53018194, 16.09660364, 10.04300348, 7.557000654, 5.431529327, 3.666589499, 2.262181172, 1.218304344, 0.5351602769, 0.2121451884, 0.2498628604, 0.6481120324, 1.406892704, 2.526204876, 4.006048547, 8.04733039, 20.45627207, 8.280087642, 7.550282836, 6.858937802, 6.206272594, 5.591858163, 5.016099767, 4.47831252, 3.980140683, 3.519936893, 3.098651101, 2.715074923, 2.370414748, 2.06396, 1.796631271, 1.567505961, 1.376927339, 1.224780519, 1.111179524, 1.036071844 
+      }},
+  {"TTH_2017",{
+    9, 4, 2.25, 1.562500002, 0.5624999994, 0.25, 0.06249999996, 9.999999999e-09, 0.06249999996, 0.25, 0.5624999994, 1, 1.562500002, 2.25, 4, 9, 9, 4, 2.25, 1.562500002, 1, 0.5624999994, 0.25, 0.06249999996, 9.999999999e-09, 0.06249999996, 0.25, 0.5624999994, 1, 1.562500002, 2.25, 4, 9, 9, 4, 2.25, 1.562500002, 1, 0.5624999994, 0.25, 0.06249999996, 9.999999999e-09, 0.06249999996, 0.25, 0.5624999994, 1, 1.562500002, 2.25, 4, 9, 0.8452040963, 0.7067089081, 0.5845086707, 0.4786027026, 0.3889906943, 0.3156724591, 0.2586478656, 0.2179168109, 0.1934792085, 0.1853349862, 0.1934840528, 0.2179263515, 0.2586617988, 0.315690308, 0.3890117764, 0.4786260723, 0.5845330093, 0.7067322778, 0.8452231962
+      }},
+  {"THQ_2017",{
+    53.94103716, 30.43780756, 21.25278899, 17.30192877, 10.68350645, 8.015944348, 5.776148286, 3.964757557, 2.579854282, 1.62335634, 1.094624437, 0.9936585748, 1.320458752, 2.075024969, 4.867455523, 15.58550911, 68.492792, 41.79143939, 31.00735932, 26.25696834, 21.93434341, 18.03948452, 14.57239166, 11.53306485, 8.922463179, 6.737709339, 4.981680644, 3.653417989, 2.752921374, 2.280190799, 2.235226263, 3.428595312, 10.94852589, 41.37342714, 21.06832055, 13.48236349, 10.33103402, 7.60747059, 5.311673201, 3.443641852, 2.003376543, 0.9911967538, 0.4061440435, 0.2491768537, 0.5199757038, 1.218540594, 2.344871524, 3.898968493, 8.290460552, 22.20663715, 12.60210374, 11.46433444, 10.38488697, 9.36422663, 8.401631165, 7.497830979, 6.651611082, 5.865933271, 5.13784233, 4.468965918, 3.857383921, 3.305017026, 2.810622305, 2.376003249, 1.999351249, 1.681344527, 1.421724041, 1.220726597, 1.078187927 
+      }},
+  {"THW_2017",{
+    39.8628933, 21.55920605, 14.55431883, 11.58861432, 6.730683501, 4.838457195, 3.304056956, 2.127881877, 1.30873468, 0.8478126441, 0.7447166752, 0.9994467743, 1.612002941, 2.582385175, 5.596627845, 15.919026, 48.50821361, 28.20920408, 20.20665572, 16.74212064, 13.63541163, 10.88652869, 8.495471812, 6.462241005, 4.78743489, 3.469257592, 2.509504986, 1.907578449, 1.663477979, 1.777203577, 2.248755243, 4.265336775, 12.59241265, 32.28131439, 15.97294941, 9.965723325, 7.498849385, 5.389801512, 3.638579707, 2.245183969, 1.209614299, 0.5320702569, 0.211953161, 0.2498616936, 0.6455962937, 1.399156961, 2.510543697, 3.9797565, 7.991660308, 20.30938074, 8.218770013, 7.495255844, 6.809885368, 6.162876894, 5.553801728, 4.983059659, 4.449967102, 3.956155341, 3.499983874, 3.082392438, 2.70217954, 2.360536762, 2.056753368, 1.791739929, 1.564569714, 1.375573472, 1.224619314, 1.111790378, 1.036961384 
+      }},
+  {"TTH_2018",{
+    9, 4, 2.249999987, 1.562500002, 0.5625, 0.25, 0.06249999999, 9.999999996e-09, 0.06249999999, 0.25, 0.5625, 1, 1.562500002, 2.249999987, 4, 9, 9, 4, 2.249999987, 1.562500002, 1, 0.5625, 0.25, 0.06249999999, 9.999999996e-09, 0.06249999999, 0.25, 0.5625, 1, 1.562500002, 2.249999987, 4, 9, 9, 4, 2.249999987, 1.562500002, 1, 0.5625, 0.25, 0.06249999999, 9.999999996e-09, 0.06249999999, 0.25, 0.5625, 1, 1.562500002, 2.249999987, 4, 9, 0.8450461828, 0.7064202839, 0.5841070233, 0.4781045943, 0.3884121767, 0.3150292758, 0.2579555428, 0.2171907057, 0.1927345346, 0.1845868247, 0.1927473751, 0.2172159946, 0.2579924751, 0.3150765869, 0.3884680578, 0.4781665392, 0.5841715362, 0.7064822287, 0.8450968099 
+      }},
+  {"THQ_2018",{
+    53.14675165, 29.98434828, 20.93417974, 17.04185375, 10.52271836, 7.895908946, 5.690938391, 3.908435612, 2.546513853, 1.60705987, 1.089444745, 0.9936684772, 1.319731067, 2.067632513, 4.828951979, 15.4136572, 67.4717497, 41.16356203, 30.54050133, 25.86172927, 21.60479607, 17.76970172, 14.35644624, 11.3650296, 8.796395327, 6.647712914, 4.921812855, 3.617751653, 2.735529308, 2.275145821, 2.236601192, 3.425028504, 10.86394942, 40.77828167, 20.76166261, 13.28438622, 10.17850631, 7.494465259, 5.232263066, 3.39189973, 1.973375251, 0.9770039704, 0.4018428664, 0.2488349601, 0.5176659112, 1.208335719, 2.320844385, 3.855191908, 8.189403527, 21.91989305, 12.41411996, 11.29394985, 10.23118032, 9.226286656, 8.278568409, 7.388753854, 6.555653277, 5.782192192, 5.065465239, 4.40708246, 3.80516124, 3.261600081, 2.775183606, 2.347701984, 1.977385572, 1.664923217, 1.410089076, 1.213170099, 1.074128415 
+      }},
+  {"THW_2018",{
+    40.22799353, 21.75948586, 14.69056772, 11.69744257, 6.793860117, 4.883402813, 3.333834791, 2.145559373, 1.317366592, 0.8504664148, 0.7444555197, 0.9993339063, 1.615101575, 2.591758525, 5.62774027, 16.03037514, 48.95884319, 28.47386732, 20.39671508, 16.89947288, 13.76311996, 10.98765633, 8.573081975, 6.519396903, 4.827206082, 3.494694605, 2.523677378, 1.913549433, 1.66431077, 1.775961389, 2.248501289, 4.276248935, 12.66241561, 32.56972189, 16.11768243, 10.05699838, 7.567990283, 5.439871465, 3.67264193, 2.266301675, 1.220850703, 0.5364906882, 0.2126166037, 0.2498334766, 0.6479396312, 1.406935068, 2.526819786, 4.007593785, 8.05180963, 20.4709127, 8.296075649, 7.565469229, 6.873270197, 6.219726818, 5.604420787, 5.02776498, 4.48907718, 3.990008909, 3.528911158, 3.106738155, 2.72228061, 2.376749133, 2.069432866, 1.801256437, 1.571296086, 1.379897614, 1.226947496, 1.112562256, 1.036692127 
+      }},
+  };
   theBinFile = new TFile((binDir+"/OptBin_"+regName+".root"));
   the2DBinFile = new TFile((binDir+"/DNNBin_"+regName+".root"));
   //  regionNames = {"3j1t","3j2t","2j1t","4j1t","4j2t"};
@@ -26,26 +76,20 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, 
     varList.push_back("TrueInteractions");
     varList.push_back("nBestVTX");
     
-    varList.push_back("mT_lep1");
-    varList.push_back("mT_lep2");
     varList.push_back("Hj_tagger_resTop");
     varList.push_back("Dilep_mtWmin");
 
     varList.push_back("massll");
     varList.push_back("Sum2lCharge");
-    varList.push_back("n_presel_jet");
     varList.push_back("n_presel_ele");
     varList.push_back("n_presel_mu");
     varList.push_back("MHT");
-    varList.push_back("metLD");
     varList.push_back("Dilep_bestMVA");
     varList.push_back("Dilep_worseMVA");
-    varList.push_back("Dilep_pdgId");
     varList.push_back("Dilep_htllv");
     varList.push_back("Dilep_nTight");
     varList.push_back("HighestJetCSV");
     varList.push_back("HtJet");
-    varList.push_back("maxeta");
     varList.push_back("leadLep_jetdr");
     varList.push_back("secondLep_jetdr");
     varList.push_back("minMllAFOS");
@@ -61,10 +105,43 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, 
     varList.push_back("secondLep_BDT");
     varList.push_back("leadLep_corrpt");
     varList.push_back("secondLep_corrpt");
-    varList.push_back("mbb");
     varList.push_back("mbb_loose");
-    varList.push_back("avg_dr_jet");
     varList.push_back("dr_leps");
+    varList.push_back("massL");
+    */
+   
+    TString catname = ChannelNameMap[_channel];
+    TString flag = subCat2l;
+    if (flag.Contains("option1")){
+        flag.ReplaceAll("option1","");
+    }
+    /* 
+    varList.push_back("DNN_maxval");
+    varList.push_back("DNN_ttHnode_all");
+    varList.push_back("DNN_ttWnode_all");
+    varList.push_back("DNN_Restnode_all");
+    varList.push_back("DNN_tHQnode_all");
+    
+    varList.push_back("nBJetMedium"); // please always load nBJetMedium
+    varList.push_back("nBJetLoose");
+    varList.push_back("n_presel_jet");
+    varList.push_back("n_presel_jetFwd");
+    varList.push_back("Bin2l");
+    varList.push_back("SVABin2l");
+    varList.push_back("mvaOutput_2lss_ttV");
+    varList.push_back("mvaOutput_2lss_ttbar");
+    varList.push_back("Hj_tagger_hadTop");
+    varList.push_back("Hj_tagger");
+    varList.push_back("hadTop_BDT");
+    varList.push_back("Dilep_pdgId");
+    varList.push_back("avg_dr_jet");
+    varList.push_back("lep1_charge");
+    varList.push_back("lep1_conePt");
+    varList.push_back("lep2_conePt");
+    varList.push_back("lep1_eta");
+    varList.push_back("lep2_eta");
+    varList.push_back("lep1_phi");
+    varList.push_back("lep2_phi");
     varList.push_back("jet1_pt");
     varList.push_back("jet2_pt");
     varList.push_back("jet3_pt");
@@ -73,31 +150,23 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, 
     varList.push_back("jet2_eta");
     varList.push_back("jet3_eta");
     varList.push_back("jet4_eta");
-    varList.push_back("lep1_conePt");
-    varList.push_back("lep2_conePt");
-    varList.push_back("lep1_eta");
-    varList.push_back("lep2_eta");
-    varList.push_back("massL");
-    varList.push_back("nBJetLoose");
+    varList.push_back("jet1_phi");
+    varList.push_back("jet2_phi");
+    varList.push_back("jet3_phi");
+    varList.push_back("jet4_phi");
+    varList.push_back("jetFwd1_pt");
+    varList.push_back("jetFwd1_eta");
+    varList.push_back("mT_lep1");
+    varList.push_back("mT_lep2");
+    varList.push_back("maxeta");
+    varList.push_back("mbb");
+    varList.push_back("metLD");
+    varList.push_back("mindr_lep1_jet");
+    varList.push_back("mindr_lep2_jet");
     */
-   
-    TString catname = ChannelNameMap[_channel];
-    TString flag = subCat2l;
-    if (flag.Contains("option1")){
-        flag.ReplaceAll("option1","");
-    }
-    
-    varList.push_back("DNN_maxval");
-    
-    varList.push_back("nBJetMedium"); // please always load nBJetMedium
-    varList.push_back("Bin2l");
-    varList.push_back("mvaOutput_2lss_ttV");
-    varList.push_back("mvaOutput_2lss_ttbar");
-    varList.push_back("Hj_tagger_hadTop");
-    varList.push_back("Hj_tagger");
-    varList.push_back("hadTop_BDT");
     if(flag.Contains("DNN")){
         if(subCat2l.Contains("option1")){
+        /*
         varList.push_back((flag+catname+"_nBin1"));
         varList.push_back((flag+catname+"_nBin2"));
         varList.push_back((flag+catname+"_nBin3"));
@@ -118,7 +187,9 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, 
         varList.push_back((flag+catname+"_nBin18"));
         varList.push_back((flag+catname+"_nBin19"));
         varList.push_back((flag+"BIN"));
+        */
         }else{
+        /*
         varList.push_back((flag+"_"+catname+"_nBin1"));
         varList.push_back((flag+"_"+catname+"_nBin2"));
         varList.push_back((flag+"_"+catname+"_nBin3"));
@@ -138,6 +209,7 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, 
         varList.push_back((flag+"_"+catname+"_nBin17"));
         varList.push_back((flag+"_"+catname+"_nBin18"));
         varList.push_back((flag+"_"+catname+"_nBin19"));
+        */
         varList.push_back((flag+"_"+"BIN"));
         }
         
@@ -153,91 +225,111 @@ mvaTool::mvaTool(TString regName, TString binDir, Int_t nPerBin, Int_t channel, 
     */
   
   //At some point this should be filled out with the names of the systematics so that we can read those too
-  systlist.push_back("");
-  systlist.push_back("_PU_16_up");
-  systlist.push_back("_PU_16_down");
-  systlist.push_back("_PU_17_up");
-  systlist.push_back("_PU_17_down");
-  systlist.push_back("_PU_18_up");
-  systlist.push_back("_PU_18_down");
-  systlist.push_back("_CMS_ttHl16_L1PreFiring_up");
-  systlist.push_back("_CMS_ttHl16_L1PreFiring_down");
-  systlist.push_back("_CMS_ttHl17_L1PreFiring_up");
-  systlist.push_back("_CMS_ttHl17_L1PreFiring_down");
-  systlist.push_back("_CMS_ttHl16_trigger_up");
-  systlist.push_back("_CMS_ttHl16_trigger_down");
-  systlist.push_back("_CMS_ttHl17_trigger_up");
-  systlist.push_back("_CMS_ttHl17_trigger_down");
-  systlist.push_back("_CMS_ttHl18_trigger_up");
-  systlist.push_back("_CMS_ttHl18_trigger_down");
-  systlist.push_back("_CMS_ttHl_lepEff_elloose_up");
-  systlist.push_back("_CMS_ttHl_lepEff_elloose_down");
-  systlist.push_back("_CMS_ttHl_lepEff_eltight_up");
-  systlist.push_back("_CMS_ttHl_lepEff_eltight_down");
-  systlist.push_back("_CMS_ttHl_lepEff_muloose_up");
-  systlist.push_back("_CMS_ttHl_lepEff_muloose_down");
-  systlist.push_back("_CMS_ttHl_lepEff_mutight_up");
-  systlist.push_back("_CMS_ttHl_lepEff_mutight_down");
-  systlist.push_back("_CMS_ttHl16_btag_HFStats1_up"); 
-  systlist.push_back("_CMS_ttHl16_btag_HFStats1_down"); 
-  systlist.push_back("_CMS_ttHl16_btag_HFStats2_up"); 
-  systlist.push_back("_CMS_ttHl16_btag_HFStats2_down"); 
-  systlist.push_back("_CMS_ttHl16_btag_LFStats1_up"); 
-  systlist.push_back("_CMS_ttHl16_btag_LFStats1_down"); 
-  systlist.push_back("_CMS_ttHl16_btag_LFStats2_up"); 
-  systlist.push_back("_CMS_ttHl16_btag_LFStats2_down"); 
-  systlist.push_back("_CMS_ttHl17_btag_HFStats1_up"); 
-  systlist.push_back("_CMS_ttHl17_btag_HFStats1_down"); 
-  systlist.push_back("_CMS_ttHl17_btag_HFStats2_up"); 
-  systlist.push_back("_CMS_ttHl17_btag_HFStats2_down"); 
-  systlist.push_back("_CMS_ttHl17_btag_LFStats1_up"); 
-  systlist.push_back("_CMS_ttHl17_btag_LFStats1_down"); 
-  systlist.push_back("_CMS_ttHl17_btag_LFStats2_up"); 
-  systlist.push_back("_CMS_ttHl17_btag_LFStats2_down"); 
-  systlist.push_back("_CMS_ttHl18_btag_HFStats1_up"); 
-  systlist.push_back("_CMS_ttHl18_btag_HFStats1_down"); 
-  systlist.push_back("_CMS_ttHl18_btag_HFStats2_up"); 
-  systlist.push_back("_CMS_ttHl18_btag_HFStats2_down"); 
-  systlist.push_back("_CMS_ttHl18_btag_LFStats1_up"); 
-  systlist.push_back("_CMS_ttHl18_btag_LFStats1_down"); 
-  systlist.push_back("_CMS_ttHl18_btag_LFStats2_up"); 
-  systlist.push_back("_CMS_ttHl18_btag_LFStats2_down"); 
-  systlist.push_back("_CMS_ttHl_btag_cErr1_up"); 
-  systlist.push_back("_CMS_ttHl_btag_cErr1_down"); 
-  systlist.push_back("_CMS_ttHl_btag_cErr2_up"); 
-  systlist.push_back("_CMS_ttHl_btag_cErr2_down"); 
-  systlist.push_back("_CMS_ttHl_btag_LF_up"); 
-  systlist.push_back("_CMS_ttHl_btag_LF_down"); 
-  systlist.push_back("_CMS_ttHl_btag_HF_up"); 
-  systlist.push_back("_CMS_ttHl_btag_HF_down"); 
-  systlist.push_back("_bWeight_jes_up"); 
-  systlist.push_back("_bWeight_jes_down"); 
-  systlist.push_back("_CMS_ttHl_FRm_norm_up");
-  systlist.push_back("_CMS_ttHl_FRm_norm_down");
-  systlist.push_back("_CMS_ttHl_FRm_pt_up");
-  systlist.push_back("_CMS_ttHl_FRm_pt_down");
-  systlist.push_back("_CMS_ttHl_FRm_be_up");
-  systlist.push_back("_CMS_ttHl_FRm_be_down");
-  systlist.push_back("_CMS_ttHl_FRe_norm_up");
-  systlist.push_back("_CMS_ttHl_FRe_norm_down");
-  systlist.push_back("_CMS_ttHl_FRe_pt_up");
-  systlist.push_back("_CMS_ttHl_FRe_pt_down");
-  systlist.push_back("_CMS_ttHl_FRe_be_up");
-  systlist.push_back("_CMS_ttHl_FRe_be_down");
-  systlist.push_back("_CMS_ttHl_Clos_m_shape_up");
-  systlist.push_back("_CMS_ttHl_Clos_m_shape_down");
-  systlist.push_back("_CMS_ttHl_Clos_m_norm_up");
-  systlist.push_back("_CMS_ttHl_Clos_m_norm_down");
-  systlist.push_back("_CMS_ttHl_Clos_e_shape_up");
-  systlist.push_back("_CMS_ttHl_Clos_e_shape_down");
-  systlist.push_back("_CMS_ttHl_Clos_e_norm_up");
-  systlist.push_back("_CMS_ttHl_Clos_e_norm_down");
-  systlist.push_back("_CMS_ttHl_QF_up");
-  systlist.push_back("_CMS_ttHl_QF_down");
-  systlist.push_back("_CMS_ttHl_thu_shape_ttH_x1_up");
-  systlist.push_back("_CMS_ttHl_thu_shape_ttH_x1_down");
-  systlist.push_back("_CMS_ttHl_thu_shape_ttH_y1_up");
-  systlist.push_back("_CMS_ttHl_thu_shape_ttH_y1_down");
+  if(_varName.Contains("JERUp")){
+    systlist.push_back("_CMS_ttHl_JER_up"); 
+  }
+  if(_varName.Contains("JERDown")){
+    systlist.push_back("_CMS_ttHl_JER_down"); 
+  }
+  if(_varName.Contains("MetShiftUp")){
+    systlist.push_back("_CMS_ttHl_UnclusteredEn_up"); 
+  }
+  if(_varName.Contains("MetShiftDown")){
+    systlist.push_back("_CMS_ttHl_UnclusteredEn_down"); 
+  }
+  if(_varName.Contains("JESUp") || _varName.Contains("JESDown")){
+    systlist.push_back(_systMap[_varName]); 
+  }
+  /*
+  if(_varName.Contains("JERUp") || _varName.Contains("JERDown")){
+    systlist.push_back(_systMap[_varName].ReplaceAll("2016",std::to_string(_DataEra))); 
+  }
+  */
+  if (_varName ==""){
+    systlist.push_back("");
+    systlist.push_back("_PU_16_up");
+    systlist.push_back("_PU_16_down");
+    systlist.push_back("_PU_17_up");
+    systlist.push_back("_PU_17_down");
+    systlist.push_back("_PU_18_up");
+    systlist.push_back("_PU_18_down");
+    systlist.push_back("_CMS_ttHl16_L1PreFiring_up");
+    systlist.push_back("_CMS_ttHl16_L1PreFiring_down");
+    systlist.push_back("_CMS_ttHl17_L1PreFiring_up");
+    systlist.push_back("_CMS_ttHl17_L1PreFiring_down");
+    systlist.push_back("_CMS_ttHl16_trigger_up");
+    systlist.push_back("_CMS_ttHl16_trigger_down");
+    systlist.push_back("_CMS_ttHl17_trigger_up");
+    systlist.push_back("_CMS_ttHl17_trigger_down");
+    systlist.push_back("_CMS_ttHl18_trigger_up");
+    systlist.push_back("_CMS_ttHl18_trigger_down");
+    systlist.push_back("_CMS_ttHl_lepEff_elloose_up");
+    systlist.push_back("_CMS_ttHl_lepEff_elloose_down");
+    systlist.push_back("_CMS_ttHl_lepEff_eltight_up");
+    systlist.push_back("_CMS_ttHl_lepEff_eltight_down");
+    systlist.push_back("_CMS_ttHl_lepEff_muloose_up");
+    systlist.push_back("_CMS_ttHl_lepEff_muloose_down");
+    systlist.push_back("_CMS_ttHl_lepEff_mutight_up");
+    systlist.push_back("_CMS_ttHl_lepEff_mutight_down");
+    systlist.push_back("_CMS_ttHl16_btag_HFStats1_up"); 
+    systlist.push_back("_CMS_ttHl16_btag_HFStats1_down"); 
+    systlist.push_back("_CMS_ttHl16_btag_HFStats2_up"); 
+    systlist.push_back("_CMS_ttHl16_btag_HFStats2_down"); 
+    systlist.push_back("_CMS_ttHl16_btag_LFStats1_up"); 
+    systlist.push_back("_CMS_ttHl16_btag_LFStats1_down"); 
+    systlist.push_back("_CMS_ttHl16_btag_LFStats2_up"); 
+    systlist.push_back("_CMS_ttHl16_btag_LFStats2_down"); 
+    systlist.push_back("_CMS_ttHl17_btag_HFStats1_up"); 
+    systlist.push_back("_CMS_ttHl17_btag_HFStats1_down"); 
+    systlist.push_back("_CMS_ttHl17_btag_HFStats2_up"); 
+    systlist.push_back("_CMS_ttHl17_btag_HFStats2_down"); 
+    systlist.push_back("_CMS_ttHl17_btag_LFStats1_up"); 
+    systlist.push_back("_CMS_ttHl17_btag_LFStats1_down"); 
+    systlist.push_back("_CMS_ttHl17_btag_LFStats2_up"); 
+    systlist.push_back("_CMS_ttHl17_btag_LFStats2_down"); 
+    systlist.push_back("_CMS_ttHl18_btag_HFStats1_up"); 
+    systlist.push_back("_CMS_ttHl18_btag_HFStats1_down"); 
+    systlist.push_back("_CMS_ttHl18_btag_HFStats2_up"); 
+    systlist.push_back("_CMS_ttHl18_btag_HFStats2_down"); 
+    systlist.push_back("_CMS_ttHl18_btag_LFStats1_up"); 
+    systlist.push_back("_CMS_ttHl18_btag_LFStats1_down"); 
+    systlist.push_back("_CMS_ttHl18_btag_LFStats2_up"); 
+    systlist.push_back("_CMS_ttHl18_btag_LFStats2_down"); 
+    systlist.push_back("_CMS_ttHl_btag_cErr1_up"); 
+    systlist.push_back("_CMS_ttHl_btag_cErr1_down"); 
+    systlist.push_back("_CMS_ttHl_btag_cErr2_up"); 
+    systlist.push_back("_CMS_ttHl_btag_cErr2_down"); 
+    systlist.push_back("_CMS_ttHl_btag_LF_up"); 
+    systlist.push_back("_CMS_ttHl_btag_LF_down"); 
+    systlist.push_back("_CMS_ttHl_btag_HF_up"); 
+    systlist.push_back("_CMS_ttHl_btag_HF_down"); 
+    systlist.push_back("_CMS_ttHl_FRm_norm_up");
+    systlist.push_back("_CMS_ttHl_FRm_norm_down");
+    systlist.push_back("_CMS_ttHl_FRm_pt_up");
+    systlist.push_back("_CMS_ttHl_FRm_pt_down");
+    systlist.push_back("_CMS_ttHl_FRm_be_up");
+    systlist.push_back("_CMS_ttHl_FRm_be_down");
+    systlist.push_back("_CMS_ttHl_FRe_norm_up");
+    systlist.push_back("_CMS_ttHl_FRe_norm_down");
+    systlist.push_back("_CMS_ttHl_FRe_pt_up");
+    systlist.push_back("_CMS_ttHl_FRe_pt_down");
+    systlist.push_back("_CMS_ttHl_FRe_be_up");
+    systlist.push_back("_CMS_ttHl_FRe_be_down");
+    systlist.push_back("_CMS_ttHl_Clos_m_shape_up");
+    systlist.push_back("_CMS_ttHl_Clos_m_shape_down");
+    systlist.push_back("_CMS_ttHl_Clos_m_norm_up");
+    systlist.push_back("_CMS_ttHl_Clos_m_norm_down");
+    systlist.push_back("_CMS_ttHl_Clos_e_shape_up");
+    systlist.push_back("_CMS_ttHl_Clos_e_shape_down");
+    systlist.push_back("_CMS_ttHl_Clos_e_norm_up");
+    systlist.push_back("_CMS_ttHl_Clos_e_norm_down");
+    systlist.push_back("_CMS_ttHl_QF_up");
+    systlist.push_back("_CMS_ttHl_QF_down");
+    systlist.push_back("_CMS_ttHl_thu_shape_ttH_x1_up");
+    systlist.push_back("_CMS_ttHl_thu_shape_ttH_x1_down");
+    systlist.push_back("_CMS_ttHl_thu_shape_ttH_y1_up");
+    systlist.push_back("_CMS_ttHl_thu_shape_ttH_y1_down");
+  }
   for (auto& IDs : _IDOfReWeight){
     //std::cout<< " push_back systlist "<< IDs.first <<std::endl;
     systlist.push_back("_"+IDs.first);
@@ -304,11 +396,11 @@ void mvaTool::doReadingNoMVA(TString sampleName, TString inDir, TString outDir, 
 //Do the thing
 void mvaTool::processMCSample(TString sampleName, TString inDir, TString outDir, float * treevars, bool isData, bool doMVA){
 
-  TString dirWithTrees = _inputbaseDir + "/"+RegName+"/"+std::to_string(_DataEra)+"/"+inDir+"/"+sampleName+"_"+inDir+".root";
+  TString dirWithTrees = _inputbaseDir + "/"+RegName+"/"+std::to_string(_DataEra)+"/"+inDir+"/"+sampleName+"_"+RegName+".root";
   std::vector<TFile*> theoutputfiles;
   for (auto const regionName : regionNames){
     std::cout << "Createing file " << outDir+regionName+"/output_"+ChannelNameMap[_channel]+"_"+sampleName+".root" <<std::endl;
-    TFile *theoutputfile = new TFile( (outDir+regionName+"/output_"+ChannelNameMap[_channel]+"_"+sampleName+".root").Data(), "RECREATE");
+    TFile *theoutputfile = new TFile( (outDir+regionName+"/output_"+ChannelNameMap[_channel]+"_"+sampleName+".root").Data(), "update");//change to update for adding variations
     theoutputfiles.push_back(theoutputfile);
   }
 
@@ -325,10 +417,11 @@ void mvaTool::processMCSample(TString sampleName, TString inDir, TString outDir,
   for (unsigned int j=0; j < systlist.size(); j++){
     if (isData && sampleName !="Fakes" && sampleName!="Flips" && systlist[j] != "") continue;
     if (isData && sampleName =="Fakes" && !(systlist[j].Contains("_FRm_") || systlist[j].Contains("_FRe_") || systlist[j].Contains("_Clos_m_") || systlist[j].Contains("_Clos_e_") || systlist[j] == ""))continue;
-    if (!isData && sampleName =="FakeSub" && !(systlist[j].Contains("_FRm_") || systlist[j].Contains("_FRe_") || systlist[j].Contains("_Clos_m_") || systlist[j].Contains("_Clos_e_") || systlist[j] == "" || systlist[j].Contains("bWeight_jes")))continue;
+    if (!isData && sampleName =="FakeSub" && !(systlist[j].Contains("_FRm_") || systlist[j].Contains("_FRe_") || systlist[j].Contains("_Clos_m_") || systlist[j].Contains("_Clos_e_") || systlist[j] == "" ))continue;
     if (!isData && sampleName !="FakeSub" && (systlist[j].Contains("_FRm_") || systlist[j].Contains("_FRe_") || systlist[j].Contains("_Clos_m_") || systlist[j].Contains("_Clos_e_")))continue;
     if (isData && sampleName =="Flips" && !(systlist[j].Contains("ttHl_QF") || systlist[j] ==""))continue;
     if (!(sampleName.Contains("ttH") || sampleName.Contains("THQ") || sampleName.Contains("THW")) && ((systlist[j].Contains("_kt_") && systlist[j].Contains("_kv_"))|| systlist[j].Contains("cosa")))continue;
+    //std::cout<<" createHist " << sampleName << systlist[j] << std::endl;
     createHists(sampleName+systlist[j]);
   }
 
@@ -379,6 +472,7 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
   float Prefire(0.), Prefire_SysUp(0.), Prefire_SysDown(0.);
   // genWeights
   double genWeight =0.;
+  double EVENT_originalXWGTUP =0.;
   float genWeight_muF0p5(0.), genWeight_muF2(0.), genWeight_muR0p5(0.), genWeight_muR2(0.); // x1 down, x1 up, y1 down , y1 up
   float CMS_ttHl_thu_shape_ttH(0.), CMS_ttHl_thu_shape_ttH_up(0.), CMS_ttHl_thu_shape_ttH_down(0.);
   float CMS_ttHl_thu_shape_ttW(0.), CMS_ttHl_thu_shape_ttW_up(0.), CMS_ttHl_thu_shape_ttW_down(0.);
@@ -451,6 +545,7 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
     theTree->SetBranchAddress( "TriggerSF_SysDown", &trigSFWeightDown );
     
     theTree->SetBranchAddress( "EVENT_genWeight", &genWeight );
+    theTree->SetBranchAddress( "EVENT_originalXWGTUP", &EVENT_originalXWGTUP );
     theTree->SetBranchAddress( "genWeight_muF0p5", &genWeight_muF0p5 );
     theTree->SetBranchAddress( "genWeight_muF2", &genWeight_muF2 );
     theTree->SetBranchAddress( "genWeight_muR0p5", &genWeight_muR0p5 );
@@ -532,6 +627,10 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
         theTree->SetBranchAddress( "FakeRate_e_be1", &FakeRateWeight_e_beUp);
         theTree->SetBranchAddress( "FakeRate_e_be2", &FakeRateWeight_e_beDown);
         std::cout << "[loopInSample] Finished assigning FakeRate weights" << std::endl;
+        theTree->SetBranchAddress( "FakeRate_e_QCD", &FakeRate_Clos_e_shape_up);
+        theTree->SetBranchAddress( "FakeRate_e_TT", &FakeRate_Clos_e_shape_down);
+        theTree->SetBranchAddress( "FakeRate_m_QCD", &FakeRate_Clos_m_shape_up);
+        theTree->SetBranchAddress( "FakeRate_m_TT", &FakeRate_Clos_m_shape_down);
         /*
         theTree->SetBranchAddress( "CMS_ttHl17_Clos_e_shape_ee_SysUp", &FakeRate_Clos_e_shape_ee_up);
         theTree->SetBranchAddress( "CMS_ttHl17_Clos_e_shape_ee_SysDown", &FakeRate_Clos_e_shape_ee_down);
@@ -556,10 +655,9 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
   std::tuple<float,float> mistagSysts (std::make_pair(1.,1.));
 
   //Loop over the events
-  std::cout << theTree->GetEntries() << " events in loop for sample " << sampleName << std::endl; 
+  std::cout << theTree->GetEntries() << " events in loop for sample " << sampleName <<" varName " << _varName <<  std::endl; 
   for (int i = 0; i < theTree->GetEntries(); i++){
      
-    
     //if (i > 20000) break;
     if (i%500 == 0){
       printf ("Processing event %i\r", i);
@@ -567,8 +665,8 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
     }
     theTree->GetEntry(i);
     
-    
     if (fabs(_channel)>0.01 && fabs(theChannel - _channel)>0.01) continue;
+    if (fabs(_channel)<0.01 && theChannel < 0.5) continue;
     //std::cout << " now fill the channel: "<< ChannelNameMap[_channel]<<std::endl; 
     //cut optimization
     /*
@@ -585,9 +683,9 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
     if(EVENT_genWeights->size()>0){
         genWeight = EVENT_genWeights->at(0);
     }
-    float factor_muF0p5(0.), factor_muF2(0.), factor_muR0p5(0.), factor_muR2(0.);
+    float factor_muF0p5(1.), factor_muF2(1.), factor_muR0p5(1.), factor_muR2(1.);
 
-    std::tie(factor_muF0p5, factor_muF2, factor_muR0p5, factor_muR2) = get_muFmuR_factor(sampleName);
+    //std::tie(factor_muF0p5, factor_muF2, factor_muR0p5, factor_muR2) = get_muFmuR_factor(sampleName);
 
     if (theChannel == 0){ // A backup because I messed up the channel flag in the first reprocessing.
       //      std::cout << "Zero! njets are: " << nbJets4000 << " " << nbJets3040 <<std::endl;
@@ -610,26 +708,47 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
             nbJet = treevars[ivar];
         }
     }
-
     //    std::cout << met << " " << lepPt << " " << metPhi << " " << lepPhi << " " << mtw << std::endl;
-
-    fillHists(sampleName,treevars,mvaValue,mvawJetsValue,theweight,met,mtw,theChannel);
-    
+    //std::cout<<" event " << i << std::endl; 
+    if(_varName.Contains("JERUp")){
+        fillHists(sampleName+"_CMS_ttHl_JER_up",treevars,mvaValue,mvawJetsValue,theweight,met,mtw,theChannel);
+    }
+    if(_varName.Contains("JERDown")){
+        fillHists(sampleName+"_CMS_ttHl_JER_down",treevars,mvaValue,mvawJetsValue,theweight,met,mtw,theChannel);
+    }
+    if(_varName.Contains("MetShiftUp")){
+        fillHists(sampleName+"_CMS_ttHl_UnclusteredEn_up",treevars,mvaValue,mvawJetsValue,theweight,met,mtw,theChannel);
+    }
+    if(_varName.Contains("MetShiftDown")){
+        fillHists(sampleName+"_CMS_ttHl_UnclusteredEn_down",treevars,mvaValue,mvawJetsValue,theweight,met,mtw,theChannel);
+    }
+    if(_varName.Contains("JESUp") || _varName.Contains("JESDown")){
+        fillHists(sampleName+_systMap[_varName],treevars,mvaValue,mvawJetsValue,theweight,met,mtw,theChannel);
+    }
+    /*
+    if(_varName.Contains("JERUp") || _varName.Contains("JERDown")){
+        fillHists(sampleName+_systMap[_varName].ReplaceAll("2016",std::to_string(_DataEra)),treevars,mvaValue,mvawJetsValue,theweight,met,mtw,theChannel);
+    } 
+    */
     //std::cout << " now fill the weight-based systematic histograms "<<std::endl; 
     //Now fill the weight-based systematic histograms
+ if(_varName==""){
+        fillHists(sampleName,treevars,mvaValue,mvawJetsValue,theweight,met,mtw,theChannel);
    if(theweight!=0){
     if (!isData){
       if(sampleName.Contains("FakeSub")){
+        /*
         std::tie(FakeRate_Clos_e_shape_up, FakeRate_Clos_e_shape_down, FakeRate_Clos_m_shape_up, FakeRate_Clos_m_shape_down)=calculateClosSyst(Dilepton_flav , FakeRate_Clos_e_shape_ee_up, FakeRate_Clos_e_shape_ee_down, FakeRate_Clos_e_shape_em_up, FakeRate_Clos_e_shape_em_down, FakeRate_Clos_m_shape_mm_up, FakeRate_Clos_m_shape_mm_down, FakeRate_Clos_m_shape_em_up, FakeRate_Clos_m_shape_em_down);
         calculateClosNormSyst(Dilepton_flav, nbJet, FakeRate_Clos_e_norm_up, FakeRate_Clos_e_norm_down, FakeRate_Clos_e_bt_norm_up, FakeRate_Clos_e_bt_norm_down, FakeRate_Clos_m_norm_up, FakeRate_Clos_m_norm_down, FakeRate_Clos_m_bt_norm_up, FakeRate_Clos_m_bt_norm_down);
         fillHists(sampleName+"_CMS_ttHl_Clos_e_norm_up",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_e_norm_up/FakeRate_Clos_e_norm) ,met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_Clos_e_norm_down",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_e_norm_down/FakeRate_Clos_e_norm) ,met,mtw,theChannel);
-        fillHists(sampleName+"_CMS_ttHl_Clos_e_shape_up",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_e_shape_up/FakeRate_Clos_e_shape) ,met,mtw,theChannel);
-        fillHists(sampleName+"_CMS_ttHl_Clos_e_shape_down",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_e_shape_down/FakeRate_Clos_e_shape) ,met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_Clos_m_norm_up",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_m_norm_up/FakeRate_Clos_m_norm) ,met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_Clos_m_norm_down",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_m_norm_down/FakeRate_Clos_m_norm) ,met,mtw,theChannel);
-        fillHists(sampleName+"_CMS_ttHl_Clos_m_shape_up",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_m_shape_up/FakeRate_Clos_m_shape) ,met,mtw,theChannel);
-        fillHists(sampleName+"_CMS_ttHl_Clos_m_shape_down",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_m_shape_down/FakeRate_Clos_m_shape) ,met,mtw,theChannel);
+        */
+        fillHists(sampleName+"_CMS_ttHl_Clos_e_shape_up",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_e_shape_up/FakeRateWeight) ,met,mtw,theChannel);
+        fillHists(sampleName+"_CMS_ttHl_Clos_e_shape_down",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_e_shape_down/FakeRateWeight) ,met,mtw,theChannel);
+        fillHists(sampleName+"_CMS_ttHl_Clos_m_shape_up",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_m_shape_up/FakeRateWeight) ,met,mtw,theChannel);
+        fillHists(sampleName+"_CMS_ttHl_Clos_m_shape_down",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_m_shape_down/FakeRateWeight) ,met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_FRm_norm_up",treevars,mvaValue,mvawJetsValue,theweight * (FakeRateWeight_m_normUp/FakeRateWeight),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_FRm_norm_down",treevars,mvaValue,mvawJetsValue,theweight * (FakeRateWeight_m_normDown/FakeRateWeight),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_FRm_pt_up",treevars,mvaValue,mvawJetsValue,theweight * (FakeRateWeight_m_ptUp/FakeRateWeight),met,mtw,theChannel);
@@ -642,15 +761,11 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
         fillHists(sampleName+"_CMS_ttHl_FRe_pt_down",treevars,mvaValue,mvawJetsValue,theweight * (FakeRateWeight_e_ptDown/FakeRateWeight),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_FRe_be_up",treevars,mvaValue,mvawJetsValue,theweight * (FakeRateWeight_e_beUp/FakeRateWeight),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_FRe_be_down",treevars,mvaValue,mvawJetsValue,theweight * (FakeRateWeight_e_beDown/FakeRateWeight),met,mtw,theChannel);
-        fillHists(sampleName+"_bWeight_jes_up",treevars,mvaValue,mvawJetsValue,theweight * (bWeightjerUp/bWeight),met,mtw,theChannel);
-        fillHists(sampleName+"_bWeight_jes_down",treevars,mvaValue,mvawJetsValue,theweight * (bWeightjerDown/bWeight),met,mtw,theChannel);
+        //fillHists(sampleName+"_bWeight_jes_up",treevars,mvaValue,mvawJetsValue,theweight * (bWeightjerUp/bWeight),met,mtw,theChannel);
+        //fillHists(sampleName+"_bWeight_jes_down",treevars,mvaValue,mvawJetsValue,theweight * (bWeightjerDown/bWeight),met,mtw,theChannel);
       
       }else{
         //calculateLepTightEffSyst(Dilepton_flav,  eletightSFWeightUp,  eletightSFWeightDown,  mutightSFWeightUp,  mutightSFWeightDown);
-        fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_x1_up",treevars,mvaValue,mvawJetsValue,theweight * (genWeight_muF2/genWeight) * factor_muF2,met,mtw,theChannel);
-        fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_x1_down",treevars,mvaValue,mvawJetsValue,theweight * (genWeight_muF0p5/genWeight) * factor_muF0p5,met,mtw,theChannel);
-        fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_y1_up",treevars,mvaValue,mvawJetsValue,theweight * (genWeight_muR2/genWeight) * factor_muR2,met,mtw,theChannel);
-        fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_y1_down",treevars,mvaValue,mvawJetsValue,theweight * (genWeight_muR0p5/genWeight) * factor_muR0p5,met,mtw,theChannel);
         /*
         fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_up",treevars,mvaValue,mvawJetsValue,theweight * (CMS_ttHl_thu_shape_ttH_up/CMS_ttHl_thu_shape_ttH),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_down",treevars,mvaValue,mvawJetsValue,theweight * (CMS_ttHl_thu_shape_ttH_down/CMS_ttHl_thu_shape_ttH),met,mtw,theChannel);
@@ -659,6 +774,10 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
         fillHists(sampleName+"_CMS_ttHl_thu_shape_ttZ_up",treevars,mvaValue,mvawJetsValue,theweight * (CMS_ttHl_thu_shape_ttZ_up/CMS_ttHl_thu_shape_ttZ),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_thu_shape_ttZ_down",treevars,mvaValue,mvawJetsValue,theweight * (CMS_ttHl_thu_shape_ttZ_down/CMS_ttHl_thu_shape_ttZ),met,mtw,theChannel);
         */
+        fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_x1_up",treevars,mvaValue,mvawJetsValue,theweight * (genWeight_muF2/genWeight) * factor_muF2,met,mtw,theChannel);
+        fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_x1_down",treevars,mvaValue,mvawJetsValue,theweight * (genWeight_muF0p5/genWeight) * factor_muF0p5,met,mtw,theChannel);
+        fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_y1_up",treevars,mvaValue,mvawJetsValue,theweight * (genWeight_muR2/genWeight) * factor_muR2,met,mtw,theChannel);
+        fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_y1_down",treevars,mvaValue,mvawJetsValue,theweight * (genWeight_muR0p5/genWeight) * factor_muR0p5,met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl16_L1PreFiring_up",treevars,mvaValue,mvawJetsValue,theweight * (Prefire_SysUp/Prefire),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl16_L1PreFiring_down",treevars,mvaValue,mvawJetsValue,theweight * (Prefire_SysDown/Prefire),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl17_L1PreFiring_up",treevars,mvaValue,mvawJetsValue,theweight * (Prefire_SysUp/Prefire),met,mtw,theChannel);
@@ -711,17 +830,18 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
         fillHists(sampleName+"_CMS_ttHl_btag_cErr1_down",treevars,mvaValue,mvawJetsValue,theweight * (bWeightcferr1Down/bWeight),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_btag_cErr2_up",treevars,mvaValue,mvawJetsValue,theweight * (bWeightcferr2Up/bWeight),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_btag_cErr2_down",treevars,mvaValue,mvawJetsValue,theweight * (bWeightcferr2Down/bWeight),met,mtw,theChannel);
-        fillHists(sampleName+"_bWeight_jes_up",treevars,mvaValue,mvawJetsValue,theweight * (bWeightjerUp/bWeight),met,mtw,theChannel);
-        fillHists(sampleName+"_bWeight_jes_down",treevars,mvaValue,mvawJetsValue,theweight * (bWeightjerDown/bWeight),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_btag_LF_up",treevars,mvaValue,mvawJetsValue,theweight * (bWeightlfUp/bWeight),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_btag_LF_down",treevars,mvaValue,mvawJetsValue,theweight * (bWeightlfDown/bWeight),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_btag_HF_up",treevars,mvaValue,mvawJetsValue,theweight * (bWeighthfUp/bWeight),met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_btag_HF_down",treevars,mvaValue,mvawJetsValue,theweight * (bWeighthfDown/bWeight),met,mtw,theChannel);
+        //fillHists(sampleName+"_bWeight_jes_up",treevars,mvaValue,mvawJetsValue,theweight * (bWeightjerUp/bWeight),met,mtw,theChannel);
+        //fillHists(sampleName+"_bWeight_jes_down",treevars,mvaValue,mvawJetsValue,theweight * (bWeightjerDown/bWeight),met,mtw,theChannel);
         if (theTree->GetListOfBranches()->FindObject("EVENT_rWeights") && (sampleName.Contains("ttH") || sampleName.Contains("THQ") || sampleName.Contains("THW"))){
             for (auto& IDs : _IDOfReWeight){
                 //std::cout<< " fill syst "<< IDs.first <<std::endl;
                 if(EVENT_rWeights->size()>= IDs.second && EVENT_rWeights->size()>=12){
-                    float rWeight = EVENT_rWeights->at(IDs.second-1)/EVENT_rWeights->at(11);
+                    double ratio_effective_events = get_rwgt_ratio(sampleName, (IDs.second-1));
+                    float rWeight = (EVENT_rWeights->at(IDs.second-1)/EVENT_rWeights->at(11))/ratio_effective_events;
                     fillHists(sampleName+"_"+IDs.first,treevars,mvaValue,mvawJetsValue,theweight * rWeight,met,mtw,theChannel);
                 }
             }
@@ -731,16 +851,18 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
       fillHists(sampleName+"_CMS_ttHl_QF_up",treevars,mvaValue,mvawJetsValue,theweight * (ChargeMisUp/ChargeMis),met,mtw,theChannel);
       fillHists(sampleName+"_CMS_ttHl_QF_down",treevars,mvaValue,mvawJetsValue,theweight * (ChargeMisDown/ChargeMis),met,mtw,theChannel);
     }else if(sampleName.Contains("Fakes")){
+      /*
       std::tie(FakeRate_Clos_e_shape_up, FakeRate_Clos_e_shape_down, FakeRate_Clos_m_shape_up, FakeRate_Clos_m_shape_down)=calculateClosSyst(Dilepton_flav , FakeRate_Clos_e_shape_ee_up, FakeRate_Clos_e_shape_ee_down, FakeRate_Clos_e_shape_em_up, FakeRate_Clos_e_shape_em_down, FakeRate_Clos_m_shape_mm_up, FakeRate_Clos_m_shape_mm_down, FakeRate_Clos_m_shape_em_up, FakeRate_Clos_m_shape_em_down);
       calculateClosNormSyst(Dilepton_flav, nbJet, FakeRate_Clos_e_norm_up, FakeRate_Clos_e_norm_down, FakeRate_Clos_e_bt_norm_up, FakeRate_Clos_e_bt_norm_down, FakeRate_Clos_m_norm_up, FakeRate_Clos_m_norm_down, FakeRate_Clos_m_bt_norm_up, FakeRate_Clos_m_bt_norm_down);
       fillHists(sampleName+"_CMS_ttHl_Clos_e_norm_up",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_e_norm_up/FakeRate_Clos_e_norm) ,met,mtw,theChannel);
       fillHists(sampleName+"_CMS_ttHl_Clos_e_norm_down",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_e_norm_down/FakeRate_Clos_e_norm) ,met,mtw,theChannel);
-      fillHists(sampleName+"_CMS_ttHl_Clos_e_shape_up",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_e_shape_up/FakeRate_Clos_e_shape) ,met,mtw,theChannel);
-      fillHists(sampleName+"_CMS_ttHl_Clos_e_shape_down",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_e_shape_down/FakeRate_Clos_e_shape) ,met,mtw,theChannel);
-      fillHists(sampleName+"_CMS_ttHl_Clos_m_shape_up",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_m_shape_up/FakeRate_Clos_m_shape) ,met,mtw,theChannel);
-      fillHists(sampleName+"_CMS_ttHl_Clos_m_shape_down",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_m_shape_down/FakeRate_Clos_m_shape) ,met,mtw,theChannel);
       fillHists(sampleName+"_CMS_ttHl_Clos_m_norm_up",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_m_norm_up/FakeRate_Clos_m_norm) ,met,mtw,theChannel);
       fillHists(sampleName+"_CMS_ttHl_Clos_m_norm_down",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_m_norm_down/FakeRate_Clos_m_norm) ,met,mtw,theChannel);
+      */
+      fillHists(sampleName+"_CMS_ttHl_Clos_e_shape_up",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_e_shape_up/FakeRateWeight) ,met,mtw,theChannel);
+      fillHists(sampleName+"_CMS_ttHl_Clos_e_shape_down",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_e_shape_down/FakeRateWeight) ,met,mtw,theChannel);
+      fillHists(sampleName+"_CMS_ttHl_Clos_m_shape_up",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_m_shape_up/FakeRateWeight) ,met,mtw,theChannel);
+      fillHists(sampleName+"_CMS_ttHl_Clos_m_shape_down",treevars,mvaValue,mvawJetsValue,theweight*(FakeRate_Clos_m_shape_down/FakeRateWeight) ,met,mtw,theChannel);
       fillHists(sampleName+"_CMS_ttHl_FRm_norm_up",treevars,mvaValue,mvawJetsValue,theweight * (FakeRateWeight_m_normUp/FakeRateWeight),met,mtw,theChannel);
       fillHists(sampleName+"_CMS_ttHl_FRm_norm_down",treevars,mvaValue,mvawJetsValue,theweight * (FakeRateWeight_m_normDown/FakeRateWeight),met,mtw,theChannel);
       fillHists(sampleName+"_CMS_ttHl_FRm_pt_up",treevars,mvaValue,mvawJetsValue,theweight * (FakeRateWeight_m_ptUp/FakeRateWeight),met,mtw,theChannel);
@@ -757,6 +879,7 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
    }else{
     std::cout<< sampleName<< " :  EventWeight is 0 , please Check !!! "<<std::endl; 
    }
+  }
   }
 } 
 
@@ -776,7 +899,7 @@ void mvaTool::createHists(TString sampleName){
       double xmax = 1000;
     
       if(varList[i]== "Hj_tagger_resTop") {nbins= 20; xmin= -1.01; xmax= 1.01;};
-      if(varList[i]== "Hj_tagger_hadTop") {nbins= 10; xmin= 0.; xmax= 1.01;};
+      if(varList[i]== "Hj_tagger_hadTop") {nbins= 10; xmin= 0.; xmax= 1.00;};
       if(varList[i]== "Hj_tagger") {nbins= 10; xmin= 0.; xmax= 1.0;};
       if(varList[i]== "hadTop_BDT") {nbins= 10; xmin= 0.; xmax= 1.0;};
       if(varList[i]== "Dilep_mtWmin") {nbins= 10; xmin= 0; xmax= 200;};
@@ -788,15 +911,18 @@ void mvaTool::createHists(TString sampleName){
       if(varList[i]== "secondLep_corrpt") {nbins= 10; xmin= 0; xmax= 100;};
       if(varList[i]== "massll") {nbins= 10; xmin= 0; xmax= 400;};
       if(varList[i]== "Sum2lCharge") {nbins= 5; xmin= -2.5; xmax= 2.5;};
-      if(varList[i]== "n_presel_jet") {nbins= 4; xmin= 3.5; xmax= 7.5;};
-      if(varList[i]== "nBJetLoose") {nbins= 6; xmin= -0.5; xmax= 5.5;};
-      if(varList[i]== "nBJetMedium") {nbins= 6; xmin= -0.5; xmax= 5.5;};
+      if(varList[i]== "n_presel_jet") {nbins= 7; xmin= 0.5; xmax= 7.5;};
+      if(varList[i]== "n_presel_jetFwd") {nbins= 4; xmin= -0.5; xmax= 3.5;};
+      if(varList[i]== "nBJetLoose") {nbins= 4; xmin= 0.5; xmax= 4.5;};
+      if(varList[i]== "nBJetMedium") {nbins= 4; xmin= -0.5; xmax= 3.5;};
       if(varList[i]== "MHT") {nbins= 10; xmin= 0; xmax= 400;};
       if(varList[i]== "PFMET") {nbins= 50; xmin= 0; xmax= 500;};
-      if(varList[i]== "metLD") {nbins= 20; xmin= 0; xmax= 200;};
+      if(varList[i]== "metLD") {nbins= 10; xmin= 0; xmax= 200;};
+      if(varList[i]== "mindr_lep1_jet") {nbins= 10; xmin= 0; xmax= 4.;};
+      if(varList[i]== "mindr_lep2_jet") {nbins= 10; xmin= 0; xmax= 4.;};
       if(varList[i]== "Dilep_bestMVA") {nbins= 8; xmin= 0.6; xmax= 1;};
       if(varList[i]== "Dilep_worseMVA") {nbins= 8; xmin= 0.6; xmax= 1;};
-      if(varList[i]== "Dilep_pdgId") {nbins= 5; xmin= -0.5; xmax= 4.5;};
+      if(varList[i]== "Dilep_pdgId") {nbins= 3; xmin= 0.5; xmax= 3.5;};
       if(varList[i]== "Dilep_htllv") {nbins= 10; xmin= 0; xmax= 600;};
       if(varList[i]== "Dilep_nTight") {nbins= 3; xmin= -0.5; xmax= 2.5;};
       if(varList[i]== "HighestJetCSV") {nbins= 15; xmin= 0; xmax= 1;};
@@ -824,30 +950,44 @@ void mvaTool::createHists(TString sampleName){
       if(varList[i]== "lepSF") {nbins= 30; xmin= 0.6; xmax= 1.4;};
       if(varList[i]== "leadLep_BDT") {nbins= 10; xmin= -1; xmax= 1;};
       if(varList[i]== "secondLep_BDT") {nbins= 10; xmin= -1; xmax= 1;};
-      if(varList[i]== "mbb") {nbins= 50; xmin= 0; xmax= 500;};
+      if(varList[i]== "mbb") {nbins= 10; xmin= 0; xmax= 200;};
       if(varList[i]== "mbb_loose") {nbins= 50; xmin= 0; xmax= 500;};
-      if(varList[i]== "avg_dr_jet") {nbins= 50; xmin= 0.; xmax= 10.;};
+      if(varList[i]== "avg_dr_jet") {nbins= 10; xmin= 0.; xmax= 5.;};
       if(varList[i]== "dr_leps") {nbins= 10; xmin= 0.; xmax= 5;};
-      if(varList[i]== "mvaOutput_2lss_ttV") {nbins= 20; xmin= -1; xmax= 1;};
-      if(varList[i]== "mvaOutput_2lss_ttbar") {nbins= 20; xmin= -1; xmax= 1;};
+      if(varList[i]== "mvaOutput_2lss_ttV") {nbins= 10; xmin= -1; xmax= 1;};
+      if(varList[i]== "mvaOutput_2lss_ttbar") {nbins= 10; xmin= -1; xmax= 1;};
       if(varList[i]== "resTop_BDT") {nbins= 20; xmin= -1; xmax= 1;};
       if(varList[i]== "massL") {nbins= 20; xmin= 0; xmax= 400;};
-      if(varList[i]== "jet1_pt") {nbins= 20; xmin= 0; xmax= 800;};
-      if(varList[i]== "jet2_pt") {nbins= 20; xmin= 0; xmax= 600;};
-      if(varList[i]== "jet3_pt") {nbins= 20; xmin= 0; xmax= 400;};
-      if(varList[i]== "jet4_pt") {nbins= 20; xmin= 0; xmax= 200;};
-      if(varList[i]== "jet1_eta") {nbins= 20; xmin= -4; xmax= 4;};
-      if(varList[i]== "jet2_eta") {nbins= 20; xmin= -4; xmax= 4;};
-      if(varList[i]== "jet3_eta") {nbins= 20; xmin= -4; xmax= 4;};
-      if(varList[i]== "jet4_eta") {nbins= 20; xmin= -4; xmax= 4;};
-      if(varList[i]== "lep1_conePt") {nbins= 20; xmin= 0; xmax= 200;};
-      if(varList[i]== "lep2_conePt") {nbins= 20; xmin= 0; xmax= 100;};
-      if(varList[i]== "lep1_eta") {nbins= 20; xmin= -4; xmax= 4;};
-      if(varList[i]== "lep2_eta") {nbins= 20; xmin= -4; xmax= 4;};
+      if(varList[i]== "jetFwd1_pt") {nbins= 10; xmin= 20; xmax= 200;};
+      if(varList[i]== "jetFwd1_eta") {nbins= 10; xmin= -5; xmax= 5;};
+      if(varList[i]== "jet1_pt") {nbins= 10; xmin= 20; xmax= 200;};
+      if(varList[i]== "jet2_pt") {nbins= 10; xmin= 20; xmax= 200;};
+      if(varList[i]== "jet3_pt") {nbins= 10; xmin= 20; xmax= 100;};
+      if(varList[i]== "jet4_pt") {nbins= 10; xmin= 20; xmax= 100;};
+      if(varList[i]== "jet1_eta") {nbins= 10; xmin= -2.5; xmax= 2.5;};
+      if(varList[i]== "jet2_eta") {nbins= 10; xmin= -2.5; xmax= 2.5;};
+      if(varList[i]== "jet3_eta") {nbins= 10; xmin= -2.5; xmax= 2.5;};
+      if(varList[i]== "jet4_eta") {nbins= 10; xmin= -2.5; xmax= 2.5;};
+      if(varList[i]== "jet1_phi") {nbins= 10; xmin= -3.15; xmax= 3.15;};
+      if(varList[i]== "jet2_phi") {nbins= 10; xmin= -3.15; xmax= 3.15;};
+      if(varList[i]== "jet3_phi") {nbins= 10; xmin= -3.15; xmax= 3.15;};
+      if(varList[i]== "jet4_phi") {nbins= 10; xmin= -3.15; xmax= 3.15;};
+      if(varList[i]== "lep1_charge") {nbins= 3; xmin= -1.5; xmax= 1.5;};
+      if(varList[i]== "lep1_conePt") {nbins= 10; xmin= 0; xmax= 200;};
+      if(varList[i]== "lep2_conePt") {nbins= 10; xmin= 0; xmax= 100;};
+      if(varList[i]== "lep1_eta") {nbins= 10; xmin= -2.5; xmax= 2.5;};
+      if(varList[i]== "lep2_eta") {nbins= 10; xmin= -2.5; xmax= 2.5;};
+      if(varList[i]== "lep1_phi") {nbins= 10; xmin= -3.15; xmax= 3.15;};
+      if(varList[i]== "lep2_phi") {nbins= 10; xmin= -3.15; xmax= 3.15;};
       if(varList[i]== "Bin2l") {nbins= 11; xmin= 0.5; xmax= 11.5;};
-      if(varList[i]== "DNN_maxval") {nbins= 20; xmin= 0; xmax= 1;};
-      if(varList[i]== "DNN_maxval_option2") {nbins= 20; xmin= 0; xmax= 1;};
-      if(varList[i]== "DNN_maxval_option3") {nbins= 20; xmin= 0; xmax= 1;};
+      if(varList[i]== "SVABin2l") {nbins= 9; xmin= 0.5; xmax= 9.5;};
+      if(varList[i]== "DNN_maxval") {nbins= 10; xmin= 0; xmax= 1;};
+      if(varList[i]== "DNN_ttHnode_all") {nbins= 10; xmin= 0; xmax= 1;};
+      if(varList[i]== "DNN_ttWnode_all") {nbins= 10; xmin= 0; xmax= 1;};
+      if(varList[i]== "DNN_Restnode_all") {nbins= 10; xmin= 0; xmax= 1;};
+      if(varList[i]== "DNN_tHQnode_all") {nbins= 10; xmin= 0; xmax= 1;};
+      if(varList[i]== "DNN_maxval_option2") {nbins= 10; xmin= 0; xmax= 1;};
+      if(varList[i]== "DNN_maxval_option3") {nbins= 10; xmin= 0; xmax= 1;};
       if(varList[i]== "DNNCat_2DBin_GT5") {nbins= 50; xmin= 0.5; xmax= 50.5;};
       if(varList[i]== "DNNCat_2DBin_GT10") {nbins= 50; xmin= 0.5; xmax= 50.5;};
       if(varList[i]== "DNNCat_2DBin_GT15") {nbins= 50; xmin= 0.5; xmax= 50.5;};
@@ -1332,4 +1472,24 @@ std::tuple<float,float,float,float> mvaTool::get_muFmuR_factor(TString sampleNam
         std::cout<< "_DataEra is " << _DataEra << " please check, the best I can do is to return 1 " << std::endl;
     }
   return std::make_tuple(factor_muF0p5, factor_muF2, factor_muR0p5, factor_muR2);
+};
+
+double mvaTool::get_rwgt_ratio(TString sample, int index){
+    double ratio =1.;
+    if(_DataEra==2016){
+        if(sample.Contains("ttH"))ratio = _rwgtRatios["TTH_2016"][index];
+        else if(sample.Contains("THQ"))ratio = _rwgtRatios["THQ_2016"][index];
+        else if(sample.Contains("THW"))ratio = _rwgtRatios["THW_2016"][index];
+    }else if (_DataEra==2017){
+        if(sample.Contains("ttH"))ratio = _rwgtRatios["TTH_2017"][index];
+        else if(sample.Contains("THQ"))ratio = _rwgtRatios["THQ_2017"][index];
+        else if(sample.Contains("THW"))ratio = _rwgtRatios["THW_2017"][index];
+    }else if (_DataEra==2018){
+        if(sample.Contains("ttH"))ratio = _rwgtRatios["TTH_2018"][index];
+        else if(sample.Contains("THQ"))ratio = _rwgtRatios["THQ_2018"][index];
+        else if(sample.Contains("THW"))ratio = _rwgtRatios["THW_2018"][index];
+    }else{
+        std::cout<< "_DataEra is " << _DataEra << " please check, the best I can do is to return 1 " << std::endl;
+    }
+    return ratio;
 };

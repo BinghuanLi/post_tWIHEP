@@ -6,16 +6,25 @@ void runReadingNoMVA(TString regName, TString binDir, TString sampleName, TStrin
 {
   //  gROOT->LoadMacro("/publicfs/cms/user/duncanleg/tW13TeV/tmva/mvaTool.C");
   
-  std::cout << sampleName;
-  
-  mvaTool t;
-  if(keyName.Contains("DNN")){
-      t = mvaTool(regName, binDir, nPerBin, channel, keyName, treeName, MapOfChannelMap[keyName], IDOfReWeight, baseDir, dataEra, BinMap[keyName] );
+  std::vector<TString> varlist;
+  if(sampleName == "Data" || sampleName =="Fakes" || sampleName == "FakeSub" || sampleName == "Flips"){
+    varlist.push_back("");
   }else{
-      t = mvaTool(regName, binDir, nPerBin, channel, keyName, treeName, MapOfChannelMap[keyName], IDOfReWeight, baseDir, dataEra);
+    varlist = Variation_Map[dataEra];
+    varlist.push_back("");
   }
-  
-  t.doReadingNoMVA(sampleName,inDir,outDir, isdata);
-  //t.doReading("tW_top_nfh","tW/","output/");
-  
+  for (auto varName: varlist){
+      std::cout << sampleName << std::endl;
+      std::cout << varName << std::endl;
+    
+      mvaTool t;
+      if(keyName.Contains("DNN")){
+          t = mvaTool(regName, binDir, nPerBin, channel, keyName, treeName, MapOfChannelMap[keyName], IDOfReWeight, baseDir, dataEra, varName, BinMap[keyName] );
+      }else{
+          t = mvaTool(regName, binDir, nPerBin, channel, keyName, treeName, MapOfChannelMap[keyName], IDOfReWeight, baseDir, dataEra, varName);
+      }
+      
+      t.doReadingNoMVA(sampleName,inDir,outDir, isdata);
+      //t.doReading("tW_top_nfh","tW/","output/");
+  }      
 }

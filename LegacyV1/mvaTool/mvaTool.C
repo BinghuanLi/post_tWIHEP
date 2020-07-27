@@ -620,7 +620,7 @@ void mvaTool::loopInSample(TString dirWithTrees, TString sampleName, float* tree
         fillHists(sampleName+"_bWeight_jes_down",treevars,mvaValue,mvawJetsValue,theweight * (bWeightjerDown/bWeight),met,mtw,theChannel);
       
       }else{
-        calculateLepTightEffSyst(Dilepton_flav,  eletightSFWeightUp,  eletightSFWeightDown,  mutightSFWeightUp,  mutightSFWeightDown);
+        //calculateLepTightEffSyst(Dilepton_flav,  eletightSFWeightUp,  eletightSFWeightDown,  mutightSFWeightUp,  mutightSFWeightDown);
         fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_x1_up",treevars,mvaValue,mvawJetsValue,theweight * (genWeight_muF2/genWeight) * factor_muF2,met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_x1_down",treevars,mvaValue,mvawJetsValue,theweight * (genWeight_muF0p5/genWeight) * factor_muF0p5,met,mtw,theChannel);
         fillHists(sampleName+"_CMS_ttHl_thu_shape_ttH_y1_up",treevars,mvaValue,mvawJetsValue,theweight * (genWeight_muR2/genWeight) * factor_muR2,met,mtw,theChannel);

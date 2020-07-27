@@ -42,7 +42,7 @@
 
 class mvaTool {
  public :
-  mvaTool(TString RegName="SigRegion", TString BinDir="/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplizers/varJobs/BinData/" , Int_t nPerBin=5 ,Int_t channel = 0, TString Category ="SubCat2l", TString TreeName="syncTree", std::map<Int_t,TString> channelNameMap={{0,"inclusive"},{1,"ee_neg"},{2,"ee_pos"},{3,"em_bl_neg"},{4,"em_bl_pos"},{5,"em_bt_neg"},{6,"em_bt_pos"},{7,"mm_bl_neg"},{8,"mm_bl_pos"},{9,"mm_bt_neg"},{10,"mm_bt_pos"}},  std::map<TString, int> IDOfReWeight={{"kt_1_kv_1",12},{"cosa_mp0",60}}, TString inputbaseDir = "", int dataEra=2018, std::map<TString, Int_t> DNNBinMap={{"ee_ttHnode",3},{"ee_Restnode",1},{"ee_ttWnode",8},{"ee_tHQnode",1},{"em_ttHnode",5},{"em_Restnode",15},{"em_ttWnode",18},{"em_tHQnode",6},{"mm_ttHnode",6},{"mm_Restnode",14},{"mm_ttWnode",13},{"mm_tHQnode",5}});
+  mvaTool(TString RegName="SigRegion", TString BinDir="/publicfs/cms/data/TopQuark/cms13TeV/Binghuan/ttH2019/condorStuff/rootplizers/varJobs/BinData/" , Int_t nPerBin=5 ,Int_t channel = 0, TString Category ="SubCat2l", TString TreeName="syncTree", std::map<Int_t,TString> channelNameMap={{0,"inclusive"},{1,"ee_neg"},{2,"ee_pos"},{3,"em_bl_neg"},{4,"em_bl_pos"},{5,"em_bt_neg"},{6,"em_bt_pos"},{7,"mm_bl_neg"},{8,"mm_bl_pos"},{9,"mm_bt_neg"},{10,"mm_bt_pos"}},  std::map<TString, int> IDOfReWeight={{"kt_1_kv_1",12},{"cosa_mp0",60}}, TString inputbaseDir = "", int dataEra=2018, TString varName="", std::map<TString, Int_t> DNNBinMap={{"ee_ttHnode",3},{"ee_Restnode",1},{"ee_ttWnode",8},{"ee_tHQnode",1},{"em_ttHnode",5},{"em_Restnode",15},{"em_ttWnode",18},{"em_tHQnode",6},{"mm_ttHnode",6},{"mm_Restnode",14},{"mm_ttWnode",13},{"mm_tHQnode",5}});
   //  ~mvaTool();
 
   //void doBothTraining(TString inDir);
@@ -65,7 +65,9 @@ class mvaTool {
   std::map<Int_t,TString> ChannelNameMap;
   std::map<TString, int> _IDOfReWeight;
   std::map<TString, Int_t> _DNNBinMap;
-
+  std::map<TString, TString> _systMap;
+  std::map<TString, std::vector<double>> _rwgtRatios;
+  TString _varName;
   TString BinDir;
   TString RegName;
   TFile* theBinFile;
@@ -113,6 +115,9 @@ class mvaTool {
 
   std::vector<double>* EVENT_rWeights=0 ;
   std::vector<double>* EVENT_genWeights=0 ;
+  
+  double get_rwgt_ratio(TString sample, int index);
+  // effective event ratio: sum[i]/sum[11] (sum[11] : SM)
   float theweight;
   float mvaValue;
   float mvawJetsValue;

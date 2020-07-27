@@ -535,6 +535,9 @@ void SetOldTreeBranchStatus(TTree* readtree, bool isHjtagger){
     readtree->SetBranchStatus("Trilep_worseSip",1);
     readtree->SetBranchStatus("angle_bbpp_highest2b",1);
     readtree->SetBranchStatus("angle_bbpp_loose2b",1);
+    readtree->SetBranchStatus("cosa_highest2b",1);
+    readtree->SetBranchStatus("acuteangle_bbpp_highest2b",1);
+    readtree->SetBranchStatus("deta_highest2b",1);
     readtree->SetBranchStatus("angle_bbpp_truth2l2b",1);
     readtree->SetBranchStatus("avg_dr_jet",1);
     readtree->SetBranchStatus("bTagSF_weight",1);
@@ -592,6 +595,10 @@ void SetOldTreeBranchStatus(TTree* readtree, bool isHjtagger){
     readtree->SetBranchStatus("isWZctrlSR",1);
     readtree->SetBranchStatus("isZZctrlFake",1);
     readtree->SetBranchStatus("isZZctrlSR",1);
+    readtree->SetBranchStatus("Bin4Lctrl",1);
+    readtree->SetBranchStatus("is4lctrlFake",1);
+    readtree->SetBranchStatus("is4lctrlSR",1);
+    readtree->SetBranchStatus("nZPair",1);
     readtree->SetBranchStatus("istHlikeDiLepFake",1);
     readtree->SetBranchStatus("istHlikeDiLepOS",1);
     readtree->SetBranchStatus("istHlikeDiLepSR",1);

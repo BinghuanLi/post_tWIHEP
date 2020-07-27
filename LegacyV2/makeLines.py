@@ -439,16 +439,20 @@ varinfos = {
 #"jet3_phi":{"type":"float","function":"use"},
 #"maxeta":{"type":"float","function":"use"},
 #"jet1_eta":{"type":"float","function":"use"},
+"Bin4Lctrl":{"type":"float","function":"use"},
+"nZPair":{"type":"float","function":"use"},
+"is4lctrlSR":{"type":"float","function":"use"},
+"is4lctrlFake":{"type":"float","function":"use"},
 
 # new
 #"is_tH_like_and_not_ttH_like":{"type":"float","function":"new"},
 #"cpodd_rwgt":{"type":"float","function":"new"},
 #"xsec_rwgt":{"type":"float","function":"new"},
 # category
-"SVABin3j":{"type":"float","function":"new"},
-"SVABin2l":{"type":"float","function":"new"},
-"SVACat3j":{"type":"float","function":"new"},
-"SVACat2l":{"type":"float","function":"new"},
+#"SVABin3j":{"type":"float","function":"new"},
+#"SVABin2l":{"type":"float","function":"new"},
+#"SVACat3j":{"type":"float","function":"new"},
+#"SVACat2l":{"type":"float","function":"new"},
 ## NN vars
 #"DNN_maxval":{"type":"float","function":"new"},
 #"DNNCat":{"type":"float","function":"new"},

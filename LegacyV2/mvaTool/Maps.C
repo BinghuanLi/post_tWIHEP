@@ -86,6 +86,7 @@ std::map<int,std::vector<TString>> Variation_Map={
     //{2018,{}},
 };
 std::map<TString,int> IDOfReWeight={
+    {"kt_m1_kv_1",0},
     {"kt_m3_kv_1",1},
     {"kt_m2_kv_1",2},
     {"kt_m1p5_kv_1",3},

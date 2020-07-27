@@ -10,7 +10,7 @@ from ROOT import gROOT, gStyle
 gROOT.SetBatch(1)
 
 ######### to run #########
-#### python make_stack.py --createROOTfile --blind -r ttWctrl -y 2016 -i /home/binghuan/Work/TTHLep/TTHLep_RunII/Legacy_ctrls/data/rootplas_V0_20190917/ -o /home/binghuan/Work/TTHLep/TTHLep_RunII/Legacy_ctrls/plots/rootplas_V0_20190917/ -t 3 
+#python make_stack.py --createROOTfile -r ttWctrl -y 2016 -t 1 -i /home/binghuan/Work/TTHLep/TTHLep_RunII/Legacy_ctrls/data/rootplas_SVATrig_20200215/ -o /home/binghuan/Work/TTHLep/TTHLep_RunII/Legacy_ctrls/plots/rootplas_SVATrig_20200215/
 ##########################
 
 #### start  user defined variables
@@ -47,13 +47,18 @@ prefix = catflag.replace("_option1","")
 
 Cuts = {
     "ttWctrl":"*(n_presel_jet ==3)",
-    "ttHgeq4j":"*(n_presel_jet >=4 && is_tH_like_and_not_ttH_like==0)",
+    "QuaLepctrl":"*(Bin4Lctrl>0)",
+    "ttHgeq4j":"*(n_presel_jet >=4)",
     "ttWctrl_lep1_ele":"*(n_presel_jet ==3 && abs(lep1_pdgId)==11)",
     "ttWctrl_lep1_mu":"*(n_presel_jet ==3 && abs(lep1_pdgId)==13)",
     "ttHnode":"*(DNNCat ==1)",
     "Restnode":"*(DNNCat ==2)",
     "ttWnode":"*(DNNCat ==3)",
     "tHQnode":"*(DNNCat ==4)",
+    "ttHnode_option2":"*(DNNCat_option2 ==1)",
+    "Restnode_option2":"*(DNNCat_option2 ==2)",
+    "ttWnode_option2":"*(DNNCat_option2 ==3)",
+    "tHQnode_option2":"*(DNNCat_option2 ==4)",
     "%s_ee_ttHnode"%prefix:"*(%s ==1)"%catflag,
     "%s_ee_Restnode"%prefix:"*(%s ==2)"%catflag,
     "%s_ee_ttWnode"%prefix:"*(%s ==3)"%catflag,
@@ -85,7 +90,12 @@ PostFix={
 "ttWnode":"DiLepRegion",
 "Restnode":"DiLepRegion",
 "tHQnode":"DiLepRegion",
+"ttHnode_option2":"DiLepRegion",
+"ttWnode_option2":"DiLepRegion",
+"Restnode_option2":"DiLepRegion",
+"tHQnode_option2":"DiLepRegion",
 "DiLepRegion":"DiLepRegion",
+"QuaLepctrl":"QuaLepctrl",
 "ttWctrl":"DiLepRegion",
 "ttWctrl_lep1_ele":"DiLepRegion",
 "ttWctrl_lep1_mu":"DiLepRegion",
@@ -110,7 +120,6 @@ if region in Cuts:
 
 # feature informations
 features={
-"DNN_maxval":{"nbin":20,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"DNN_maxval","logy":0},
 #"%s_nBin1"%region:{"nbin":2,"min":0.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"%s_nBin1"%region,"logy":0},
 #"%s_nBin2"%region:{"nbin":2,"min":0.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"%s_nBin2"%region,"logy":0},
 #"%s_nBin3"%region:{"nbin":3,"min":0.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"%s_nBin3"%region,"logy":0},
@@ -130,93 +139,106 @@ features={
 #"%s_nBin17"%region:{"nbin":17,"min":0.5,"max":17.5,"cut":"EventWeight %s"%cut,"xlabel":"%s_nBin17"%region,"logy":0},
 #"%s_nBin18"%region:{"nbin":18,"min":0.5,"max":18.5,"cut":"EventWeight %s"%cut,"xlabel":"%s_nBin18"%region,"logy":0},
 #"%s_nBin19"%region:{"nbin":19,"min":0.5,"max":19.5,"cut":"EventWeight %s"%cut,"xlabel":"%s_nBin19"%region,"logy":0},
-"DNN_ttHnode_all":{"nbin":20,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"DNN_ttHnode_all","logy":0},
-"DNN_ttWnode_all":{"nbin":20,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"DNN_ttWnode_all","logy":0},
-"DNN_Restnode_all":{"nbin":20,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"DNN_Restnode_all","logy":0},
-"DNN_tHQnode_all":{"nbin":20,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"DNN_tHQnode_all","logy":0},
+#"DNN_maxval":{"nbin":15,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"DNN_maxval","logy":0},
+"DNN_ttHnode_all":{"nbin":10,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"DNN_ttHnode_all","logy":0},
+"DNN_ttWnode_all":{"nbin":10,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"DNN_ttWnode_all","logy":0},
+"DNN_Restnode_all":{"nbin":10,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"DNN_Restnode_all","logy":0},
+"DNN_tHQnode_all":{"nbin":10,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"DNN_tHQnode_all","logy":0},
+#"DNNCat":{"nbin":4,"min":0.5,"max":4.5,"cut":"EventWeight %s"%cut,"xlabel":"DNNCat","logy":0},
+#"DNN_maxval_option2":{"nbin":15,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"DNN_maxval_option2","logy":0},
+#"DNN_ttHnode_all_option2":{"nbin":15,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"DNN_ttHnode_all_option2","logy":0},
+#"DNN_ttWnode_all_option2":{"nbin":15,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"DNN_ttWnode_all_option2","logy":0},
+#"DNN_Restnode_all_option2":{"nbin":15,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"DNN_Restnode_all_option2","logy":0},
+#"DNN_tHQnode_all_option2":{"nbin":15,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"DNN_tHQnode_all_option2","logy":0},
+#"DNNCat_option2":{"nbin":4,"min":0.5,"max":4.5,"cut":"EventWeight %s"%cut,"xlabel":"DNNCat_option2","logy":0},
 #"Bin2l":{"nbin":12,"min":0.5,"max":12.5,"cut":"EventWeight %s"%cut,"xlabel":"Bin2l","logy":0},
-#"mT_lep1":{"nbin":25,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"mT_lep1","logy":0},
-#"mT_lep2":{"nbin":25,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"mT_lep2","logy":0},
-#"jet1_pt":{"nbin":25,"min":0.,"max":500.,"cut":"EventWeight %s"%cut,"xlabel":"jet1_pt","logy":0},
-#"jet1_eta":{"nbin":25,"min":-2.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"jet1_eta","logy":0},
-#"jet1_phi":{"nbin":25,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"jet1_phi","logy":0},
-#"jet1_E":{"nbin":25,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"jet1_energy","logy":0},
-#"jet1_QGdiscr":{"nbin":25,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"jet1_QGdiscr","logy":0},
-#"jet1_DeepJet":{"nbin":25,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"jet1_DeepJet","logy":0},
-#"jet2_pt":{"nbin":25,"min":0.,"max":250.,"cut":"EventWeight %s"%cut,"xlabel":"jet2_pt","logy":0},
-#"jet2_eta":{"nbin":25,"min":-2.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"jet2_eta","logy":0},
-#"jet2_phi":{"nbin":25,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"jet2_phi","logy":0},
-#"jet2_E":{"nbin":25,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"jet2_energy","logy":0},
-#"jet2_QGdiscr":{"nbin":25,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"jet2_QGdiscr","logy":0},
-#"jet2_DeepJet":{"nbin":25,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"jet2_DeepJet","logy":0},
-#"jet3_pt":{"nbin":25,"min":0.,"max":250.,"cut":"EventWeight %s"%cut,"xlabel":"jet3_pt","logy":0},
-#"jet3_eta":{"nbin":25,"min":-2.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"jet3_eta","logy":0},
-#"jet3_phi":{"nbin":25,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"jet3_phi","logy":0},
-#"jet3_E":{"nbin":25,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"jet3_energy","logy":0},
-#"jet3_QGdiscr":{"nbin":25,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"jet3_QGdiscr","logy":0},
-#"jet3_DeepJet":{"nbin":25,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"jet3_DeepJet","logy":0},
-#"jet4_pt":{"nbin":25,"min":0.,"max":250.,"cut":"EventWeight %s"%cut,"xlabel":"jet4_pt","logy":0},
-#"jet4_eta":{"nbin":25,"min":-2.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"jet4_eta","logy":0},
-#"jet4_phi":{"nbin":25,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"jet4_phi","logy":0},
-#"jet4_E":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"jet4_energy","logy":0},
-#"jet4_QGdiscr":{"nbin":25,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"jet4_QGdiscr","logy":0},
-#"jet4_DeepJet":{"nbin":25,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"jet4_DeepJet","logy":0},
-#"jetFwd1_pt":{"nbin":25,"min":0.,"max":250.,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd1_pt","logy":1},
-#"jetFwd1_eta":{"nbin":25,"min":-5.,"max":5.,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd1_eta","logy":1},
-#"jetFwd1_phi":{"nbin":25,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd1_phi","logy":1},
-#"jetFwd1_E":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd1_energy","logy":1},
-#"jetFwd2_pt":{"nbin":25,"min":0.,"max":250.,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd2_pt","logy":1},
-#"jetFwd2_eta":{"nbin":25,"min":-5.,"max":5.,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd2_eta","logy":1},
-#"jetFwd2_phi":{"nbin":25,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd2_phi","logy":1},
-#"jetFwd2_E":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd2_energy","logy":1},
-#"jetFwd3_pt":{"nbin":25,"min":0.,"max":250.,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd3_pt","logy":1},
-#"jetFwd3_eta":{"nbin":25,"min":-5.,"max":5.,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd3_eta","logy":1},
-#"jetFwd3_phi":{"nbin":25,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd3_phi","logy":1},
-#"jetFwd3_E":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd3_energy","logy":1},
-#"jetFwd4_pt":{"nbin":25,"min":0.,"max":250.,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd4_pt","logy":1},
-#"jetFwd4_eta":{"nbin":25,"min":-5.,"max":5.,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd4_eta","logy":1},
-#"jetFwd4_phi":{"nbin":25,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd4_phi","logy":1},
-#"jetFwd4_E":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd4_energy","logy":1},
-"PFMET":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"PFMET","logy":0},
-"PFMETphi":{"nbin":25,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"PFMETphi","logy":0},
-"MHT":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"MHT","logy":0},
-"metLD":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"metLD","logy":0},
-#"lep1_conePt":{"nbin":25,"min":0.,"max":250.,"cut":"EventWeight %s"%cut,"xlabel":"lep1_pt","logy":0},
-#"lep1_eta":{"nbin":25,"min":-2.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"lep1_eta","logy":0},
-#"lep1_phi":{"nbin":25,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"lep1_phi","logy":0},
-#"lep1_E":{"nbin":25,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"lep1_energy","logy":0},
-#"lep2_conePt":{"nbin":25,"min":0.,"max":250.,"cut":"EventWeight %s"%cut,"xlabel":"lep2_pt","logy":0},
-#"lep2_eta":{"nbin":25,"min":-2.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"lep2_eta","logy":0},
-#"lep2_phi":{"nbin":25,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"lep2_phi","logy":0},
-#"lep2_E":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"lep2_energy","logy":0},
-#"lep3_conePt":{"nbin":25,"min":0.,"max":250.,"cut":"EventWeight %s"%cut,"xlabel":"lep3_pt","logy":0},
-#"lep3_eta":{"nbin":25,"min":-2.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"lep3_eta","logy":0},
-#"lep3_phi":{"nbin":25,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"lep3_phi","logy":0},
-#"lep3_E":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"lep3_energy","logy":0},
-"mindr_lep1_jet":{"nbin":25,"min":0.,"max":5.0,"cut":"EventWeight %s"%cut,"xlabel":"mindr_lep1_jet","logy":0},
-"mindr_lep2_jet":{"nbin":25,"min":0.,"max":5.0,"cut":"EventWeight %s"%cut,"xlabel":"mindr_lep2_jet","logy":0},
-"mindr_lep3_jet":{"nbin":25,"min":0.,"max":5.0,"cut":"EventWeight %s"%cut,"xlabel":"mindr_lep3_jet","logy":0},
-"min_dr_lep_jet":{"nbin":25,"min":0.,"max":5.0,"cut":"EventWeight %s"%cut,"xlabel":"min_dr_lep_jet","logy":0},
-"max_lep_eta":{"nbin":25,"min":0.,"max":3.0,"cut":"EventWeight %s"%cut,"xlabel":"max_lep_eta","logy":0},
-"dr_leps":{"nbin":25,"min":0.,"max":5.0,"cut":"EventWeight %s"%cut,"xlabel":"dr_leps","logy":0},
-"nLightJet":{"nbin":6,"min":-0.5,"max":5.5,"cut":"EventWeight %s"%cut,"xlabel":"nLightJet","logy":0},
-"min_Deta_mostfwdJet_jet":{"nbin":25,"min":0.,"max":5,"cut":"EventWeight %s"%cut,"xlabel":"min_Deta_mostfwdJet_jet","logy":1},
-"min_Deta_leadfwdJet_jet":{"nbin":25,"min":0.,"max":5,"cut":"EventWeight %s"%cut,"xlabel":"min_Deta_leadfwdJet_jet","logy":1},
-"mT2_top_3particle":{"nbin":25,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"mT2_top_3particle","logy":0},
-"mT2_top_2particle":{"nbin":25,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"mT2_top_2particle","logy":0},
-"mT2_W":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"mT2_W","logy":0},
-"angle_bbpp_highest2b":{"nbin":25,"min":0.,"max":3.3,"cut":"EventWeight %s"%cut,"xlabel":"angle_bbpp_highest2b","logy":0},
-"mbb":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"mbb","logy":0},
-"mbb_loose":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"mbb_loose","logy":0},
-"hadTop_BDT":{"nbin":25,"min":-1.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"hadTop_BDT","logy":0},
-"hadTop_pt":{"nbin":25,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"hadTop_pt","logy":0},
-"Hj_tagger_hadTop":{"nbin":25,"min":-1.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"Hj_tagger_hadTop","logy":0},
-"Hj_tagger":{"nbin":25,"min":-1.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"Hj_tagger","logy":0},
-"nBJetLoose":{"nbin":6,"min":-0.5,"max":5.5,"cut":"EventWeight %s"%cut,"xlabel":"nBJetLoose","logy":0},
-"nBJetMedium":{"nbin":6,"min":-0.5,"max":5.5,"cut":"EventWeight %s"%cut,"xlabel":"nBJetMedium","logy":0},
-#"mvaOutput_2lss_ttbar":{"nbin":25,"min":-1.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"mvaOutput_2lss_ttbar","logy":0},
-#"mvaOutput_2lss_ttV":{"nbin":25,"min":-1.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"mvaOutput_2lss_ttV","logy":0},
-"avg_dr_jet":{"nbin":25,"min":-0.,"max":6.,"cut":"EventWeight %s"%cut,"xlabel":"avg_dr_jet","logy":0},
+#mT_lep1":{"nbin":15,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"mT_lep1","logy":0},
+#mT_lep2":{"nbin":15,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"mT_lep2","logy":0},
+#jet1_pt":{"nbin":15,"min":0.,"max":500.,"cut":"EventWeight %s"%cut,"xlabel":"jet1_pt","logy":0},
+#jet1_eta":{"nbin":15,"min":-2.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"jet1_eta","logy":0},
+#jet1_phi":{"nbin":15,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"jet1_phi","logy":0},
+#"jet1_E":{"nbin":15,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"jet1_energy","logy":0},
+#"jet1_QGdiscr":{"nbin":15,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"jet1_QGdiscr","logy":0},
+#"jet1_DeepJet":{"nbin":15,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"jet1_DeepJet","logy":0},
+#jet2_pt":{"nbin":15,"min":0.,"max":150.,"cut":"EventWeight %s"%cut,"xlabel":"jet2_pt","logy":0},
+#jet2_eta":{"nbin":15,"min":-2.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"jet2_eta","logy":0},
+#jet2_phi":{"nbin":15,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"jet2_phi","logy":0},
+#"jet2_E":{"nbin":15,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"jet2_energy","logy":0},
+#"jet2_QGdiscr":{"nbin":15,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"jet2_QGdiscr","logy":0},
+#"jet2_DeepJet":{"nbin":15,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"jet2_DeepJet","logy":0},
+#jet3_pt":{"nbin":15,"min":0.,"max":150.,"cut":"EventWeight %s"%cut,"xlabel":"jet3_pt","logy":0},
+#jet3_eta":{"nbin":15,"min":-2.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"jet3_eta","logy":0},
+#jet3_phi":{"nbin":15,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"jet3_phi","logy":0},
+#"jet3_E":{"nbin":15,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"jet3_energy","logy":0},
+#"jet3_QGdiscr":{"nbin":15,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"jet3_QGdiscr","logy":0},
+#"jet3_DeepJet":{"nbin":15,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"jet3_DeepJet","logy":0},
+#jet4_pt":{"nbin":15,"min":0.,"max":150.,"cut":"EventWeight %s"%cut,"xlabel":"jet4_pt","logy":0},
+#jet4_eta":{"nbin":15,"min":-2.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"jet4_eta","logy":0},
+#jet4_phi":{"nbin":15,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"jet4_phi","logy":0},
+#"jet4_E":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"jet4_energy","logy":0},
+#"jet4_QGdiscr":{"nbin":15,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"jet4_QGdiscr","logy":0},
+#"jet4_DeepJet":{"nbin":15,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"jet4_DeepJet","logy":0},
+#jetFwd1_pt":{"nbin":15,"min":0.,"max":150.,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd1_pt","logy":1},
+#jetFwd1_eta":{"nbin":15,"min":-5.,"max":5.,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd1_eta","logy":1},
+#"jetFwd1_phi":{"nbin":15,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd1_phi","logy":1},
+#"jetFwd1_E":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd1_energy","logy":1},
+#"jetFwd2_pt":{"nbin":15,"min":0.,"max":150.,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd2_pt","logy":1},
+#"jetFwd2_eta":{"nbin":15,"min":-5.,"max":5.,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd2_eta","logy":1},
+#"jetFwd2_phi":{"nbin":15,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd2_phi","logy":1},
+#"jetFwd2_E":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd2_energy","logy":1},
+#"jetFwd3_pt":{"nbin":15,"min":0.,"max":150.,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd3_pt","logy":1},
+#"jetFwd3_eta":{"nbin":15,"min":-5.,"max":5.,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd3_eta","logy":1},
+#"jetFwd3_phi":{"nbin":15,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd3_phi","logy":1},
+#"jetFwd3_E":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd3_energy","logy":1},
+#"jetFwd4_pt":{"nbin":15,"min":0.,"max":150.,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd4_pt","logy":1},
+#"jetFwd4_eta":{"nbin":15,"min":-5.,"max":5.,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd4_eta","logy":1},
+#"jetFwd4_phi":{"nbin":15,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd4_phi","logy":1},
+#"jetFwd4_E":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"jetFwd4_energy","logy":1},
+#"PFMET":{"nbin":15,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"PFMET","logy":0},
+#"PFMETphi":{"nbin":15,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"PFMETphi","logy":0},
+#"MHT":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"MHT","logy":0},
+#metLD":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"metLD","logy":0},
+#"lep1_ptratio":{"nbin":15,"min":0.,"max":1.5,"cut":"EventWeight %s"%cut,"xlabel":"lep1_ptratio","logy":0},
+#"lep2_ptratio":{"nbin":15,"min":0.,"max":1.5,"cut":"EventWeight %s"%cut,"xlabel":"lep2_ptratio","logy":0},
+#"lep1_ptrel":{"nbin":15,"min":0.,"max":50.,"cut":"EventWeight %s"%cut,"xlabel":"lep1_ptrel","logy":0},
+#"lep2_ptrel":{"nbin":15,"min":0.,"max":50.,"cut":"EventWeight %s"%cut,"xlabel":"lep2_ptrel","logy":0},
+#lep1_conePt":{"nbin":15,"min":0.,"max":150.,"cut":"EventWeight %s"%cut,"xlabel":"lep1_pt","logy":0},
+#lep1_eta":{"nbin":15,"min":-2.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"lep1_eta","logy":0},
+#lep1_phi":{"nbin":15,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"lep1_phi","logy":0},
+#"lep1_E":{"nbin":15,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"lep1_energy","logy":0},
+#lep2_conePt":{"nbin":15,"min":0.,"max":150.,"cut":"EventWeight %s"%cut,"xlabel":"lep2_pt","logy":0},
+#lep2_eta":{"nbin":15,"min":-2.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"lep2_eta","logy":0},
+#lep2_phi":{"nbin":15,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"lep2_phi","logy":0},
+#"lep2_E":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"lep2_energy","logy":0},
+#lep3_conePt":{"nbin":15,"min":0.,"max":150.,"cut":"EventWeight %s"%cut,"xlabel":"lep3_pt","logy":0},
+#lep3_eta":{"nbin":15,"min":-2.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"lep3_eta","logy":0},
+#lep3_phi":{"nbin":15,"min":-3.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"lep3_phi","logy":0},
+#"lep3_E":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"lep3_energy","logy":0},
+#mindr_lep1_jet":{"nbin":15,"min":0.,"max":5.0,"cut":"EventWeight %s"%cut,"xlabel":"mindr_lep1_jet","logy":0},
+#mindr_lep2_jet":{"nbin":15,"min":0.,"max":5.0,"cut":"EventWeight %s"%cut,"xlabel":"mindr_lep2_jet","logy":0},
+#"mindr_lep3_jet":{"nbin":15,"min":0.,"max":5.0,"cut":"EventWeight %s"%cut,"xlabel":"mindr_lep3_jet","logy":0},
+#"min_dr_lep_jet":{"nbin":15,"min":0.,"max":5.0,"cut":"EventWeight %s"%cut,"xlabel":"min_dr_lep_jet","logy":0},
+#"max_lep_eta":{"nbin":15,"min":0.,"max":3.0,"cut":"EventWeight %s"%cut,"xlabel":"max_lep_eta","logy":0},
+#"dr_leps":{"nbin":15,"min":0.,"max":5.0,"cut":"EventWeight %s"%cut,"xlabel":"dr_leps","logy":0},
+#"nLightJet":{"nbin":6,"min":-0.5,"max":5.5,"cut":"EventWeight %s"%cut,"xlabel":"nLightJet","logy":0},
+#"min_Deta_mostfwdJet_jet":{"nbin":15,"min":0.,"max":5,"cut":"EventWeight %s"%cut,"xlabel":"min_Deta_mostfwdJet_jet","logy":1},
+#min_Deta_leadfwdJet_jet":{"nbin":15,"min":0.,"max":5,"cut":"EventWeight %s"%cut,"xlabel":"min_Deta_leadfwdJet_jet","logy":1},
+#mT2_top_3particle":{"nbin":15,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"mT2_top_3particle","logy":0},
+#mT2_top_2particle":{"nbin":15,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"mT2_top_2particle","logy":0},
+#mT2_W":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"mT2_W","logy":0},
+#"angle_bbpp_highest2b":{"nbin":15,"min":0.,"max":3.3,"cut":"EventWeight %s"%cut,"xlabel":"angle_bbpp_highest2b","logy":0},
+#mbb":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"mbb","logy":0},
+#mbb_loose":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"mbb_loose","logy":0},
+#"hadTop_BDT":{"nbin":15,"min":-1.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"hadTop_BDT","logy":0},
+#"hadTop_pt":{"nbin":15,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"hadTop_pt","logy":0},
+#"Hj_tagger_hadTop":{"nbin":10,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"Hj_tagger_hadTop","logy":0},
+#"Hj_tagger":{"nbin":10,"min":0.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"Hj_tagger","logy":0},
+#"Bin4Lctrl":{"nbin":4,"min":0.5,"max":4.5,"cut":"EventWeight %s"%cut,"xlabel":"Bin4Lctrl","logy":1},
+#nBJetLoose":{"nbin":6,"min":-0.5,"max":5.5,"cut":"EventWeight %s"%cut,"xlabel":"nBJetLoose","logy":0},
+#nBJetMedium":{"nbin":6,"min":-0.5,"max":5.5,"cut":"EventWeight %s"%cut,"xlabel":"nBJetMedium","logy":0},
+#mvaOutput_2lss_ttbar":{"nbin":15,"min":-1.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"mvaOutput_2lss_ttbar","logy":0},
+#mvaOutput_2lss_ttV":{"nbin":15,"min":-1.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"mvaOutput_2lss_ttV","logy":0},
+#avg_dr_jet":{"nbin":15,"min":-0.,"max":6.,"cut":"EventWeight %s"%cut,"xlabel":"avg_dr_jet","logy":0},
 #"n_presel_mu":{"nbin":6,"min":-0.5,"max":5.5,"cut":"EventWeight %s"%cut,"xlabel":"n_presel_mu","logy":0},
 #"n_fakeablesel_mu":{"nbin":5,"min":-0.5,"max":4.5,"cut":"EventWeight %s"%cut,"xlabel":"n_fakeablesel_mu","logy":0},
 #"n_mvasel_mu":{"nbin":4,"min":-0.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"n_mvasel_mu","logy":0},
@@ -224,44 +246,47 @@ features={
 #"n_fakeablesel_ele":{"nbin":5,"min":-0.5,"max":4.5,"cut":"EventWeight %s"%cut,"xlabel":"n_fakeablesel_ele","logy":0},
 #"n_mvasel_ele":{"nbin":4,"min":-0.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"n_mvasel_ele","logy":0},
 #"n_presel_tau":{"nbin":4,"min":-0.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"n_presel_tau","logy":0},
-"n_presel_jet":{"nbin":8,"min":-0.5,"max":7.5,"cut":"EventWeight %s"%cut,"xlabel":"n_presel_jet","logy":0},
-"n_presel_jetFwd":{"nbin":5,"min":-0.5,"max":4.5,"cut":"EventWeight %s"%cut,"xlabel":"n_presel_jetFwd","logy":0},
-#"Bin2l":{"nbin":11,"min":0.5,"max":11.5,"cut":"EventWeight %s"%cut,"xlabel":"Bin2l","logy":0},
-#"massl":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"massl","logy":0},
-#"massL":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"massL","logy":0},
-#"massL_SFOS":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"massL_SFOS","logy":0},
-#"maxeta":{"nbin":25,"min":0.,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"maxeta","logy":0},
+#"n_presel_jet":{"nbin":6,"min":-0.5,"max":5.5,"cut":"EventWeight %s"%cut,"xlabel":"n_presel_jet","logy":0},
+#"n_presel_jetFwd":{"nbin":5,"min":-0.5,"max":4.5,"cut":"EventWeight %s"%cut,"xlabel":"n_presel_jetFwd","logy":0},
+#Bin2l":{"nbin":11,"min":0.5,"max":11.5,"cut":"EventWeight %s"%cut,"xlabel":"Bin2l","logy":0},
+#"mhtT":{"nbin":15,"min":0.,"max":300,"cut":"EventWeight %s"%cut,"xlabel":"mhtT","logy":0},
+#"mhtT_met":{"nbin":15,"min":0.,"max":300,"cut":"EventWeight %s"%cut,"xlabel":"mhtT_met","logy":0},
+#"massll":{"nbin":15,"min":0.,"max":300,"cut":"EventWeight %s"%cut,"xlabel":"massll","logy":0},
+#"massl":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"massl","logy":0},
+#"massL":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"massL","logy":0},
+#"massL_SFOS":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"massL_SFOS","logy":0},
+#maxeta":{"nbin":15,"min":0.,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"maxeta","logy":0},
 #"Sum2lCharge":{"nbin":5,"min":-2.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"Sum2lCharge","logy":0},
-#"Dilep_bestMVA":{"nbin":25,"min":0.7,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"Dilep_bestMVA","logy":0},
-#"Dilep_worseMVA":{"nbin":25,"min":0.7,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"Dilep_worseMVA","logy":0},
-"nElectron":{"nbin":3,"min":-0.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"nElectron","logy":0},
-#"Dilep_htllv":{"nbin":25,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"Dilep_htllv","logy":0},
-#"Dilep_mtWmin":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"Dilep_mtWmin","logy":0},
-#"mass_dilep":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"mass_dilep","logy":1},
-#"lep1_charge":{"nbin":3,"min":-1.5,"max":1.5,"cut":"EventWeight %s"%cut,"xlabel":"lep1_charge","logy":0},
+#"Dilep_bestMVA":{"nbin":15,"min":0.7,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"Dilep_bestMVA","logy":0},
+#"Dilep_worseMVA":{"nbin":15,"min":0.7,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"Dilep_worseMVA","logy":0},
+#nElectron":{"nbin":3,"min":-0.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"nElectron","logy":0},
+#"Dilep_htllv":{"nbin":15,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"Dilep_htllv","logy":0},
+#"Dilep_mtWmin":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"Dilep_mtWmin","logy":0},
+#mass_dilep":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"mass_dilep","logy":1},
+#lep1_charge":{"nbin":3,"min":-1.5,"max":1.5,"cut":"EventWeight %s"%cut,"xlabel":"lep1_charge","logy":0},
 #"Dilep_nTight":{"nbin":3,"min":-0.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"Dilep_nTight","logy":0},
-"HtJet":{"nbin":25,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"HtJet","logy":0},
-"nLepTight":{"nbin":4,"min":-0.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"nLepTight","logy":0},
-#"minMllAFAS":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"minMllAFAS","logy":0},
-#"minMllAFOS":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"minMllAFOS","logy":0},
-#"minMllSFOS":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"minMllSFOS","logy":0},
-#"mass3L":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"mass3L","logy":0},
-#"massLT":{"nbin":25,"min":0.,"max":250,"cut":"EventWeight %s"%cut,"xlabel":"massLT","logy":0},
+#"HtJet":{"nbin":15,"min":0.,"max":500,"cut":"EventWeight %s"%cut,"xlabel":"HtJet","logy":0},
+#"nLepTight":{"nbin":4,"min":-0.5,"max":3.5,"cut":"EventWeight %s"%cut,"xlabel":"nLepTight","logy":0},
+#"minMllAFAS":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"minMllAFAS","logy":0},
+#"minMllAFOS":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"minMllAFOS","logy":0},
+#"minMllSFOS":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"minMllSFOS","logy":0},
+#"mass3L":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"mass3L","logy":0},
+#"massLT":{"nbin":15,"min":0.,"max":150,"cut":"EventWeight %s"%cut,"xlabel":"massLT","logy":0},
 #"nBestVtx":{"nbin":100,"min":-0.5,"max":100,"cut":"EventWeight %s"%cut,"xlabel":"nBestVtx","logy":0},
 #"Sum3LCharge":{"nbin":5,"min":-2.5,"max":2.5,"cut":"EventWeight %s"%cut,"xlabel":"Sum3LCharge","logy":0},
 #"lep1_charge":{"nbin":3,"min":-1.5,"max":1.5,"cut":"EventWeight %s"%cut,"xlabel":"lep1_charge","logy":0},
 #"lep2_charge":{"nbin":3,"min":-1.5,"max":1.5,"cut":"EventWeight %s"%cut,"xlabel":"lep2_charge","logy":0},
 #"lep3_charge":{"nbin":3,"min":-1.5,"max":1.5,"cut":"EventWeight %s"%cut,"xlabel":"lep3_charge","logy":0},
-#"leadLep_BDT":{"nbin":25,"min":-1.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"leadLep_BDT","logy":0},
-#"secondLep_BDT":{"nbin":25,"min":-1.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"secondLep_BDT","logy":0},
-#"lep3_BDT":{"nbin":25,"min":-1.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"lep3_BDT","logy":0},
+#"leadLep_BDT":{"nbin":15,"min":-1.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"leadLep_BDT","logy":0},
+#"secondLep_BDT":{"nbin":15,"min":-1.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"secondLep_BDT","logy":0},
+#"lep3_BDT":{"nbin":15,"min":-1.,"max":1.,"cut":"EventWeight %s"%cut,"xlabel":"lep3_BDT","logy":0},
 
 }
 
 systematics=["nominal"]
 upDown=["_SysUp","_SysDown"]
-Color={"TTH":kRed,"TH":kRed+3,"TTZ":kGreen,"TTW+TTWW":kGreen+3,"Conv":kOrange,"EWK":kViolet,"WZ+ZZ":kViolet-3,"Rares":kCyan,"Fakes":kBlack,"Flips":kBlack,"mcFakes":kBlack,"mcFlips":kBlack,"ST":kGray,"VH+ggH+qqH":kBlue-7}
-Style={"TTH":1001,"TH":1001,"TTZ":1001,"TTW+TTWW":1001,"Conv":1001,"EWK":1001,"WZ+ZZ":1001,"Rares":1001,"Fakes":3005,"Flips":3006,"mcFakes":3005,"mcFlips":3006,"ST":1001,"VH+ggH+qqH":1001}
+Color={"TTH":kRed,"TH":kRed+3,"TTZ":kGreen,"TTW+TTWW":kGreen+3,"Conv":kOrange,"EWK":kViolet,"WZ+ZZ":kViolet-3,"Rares":kCyan,"Fakes":kBlack,"Flips":kBlack,"mcFakes":kBlack,"mcFlips":kBlack,"ST":kGray,"HOther":kBlue-7, "WZ":kViolet, "ZZ": kViolet-3, "ggZZ":kViolet+3}
+Style={"TTH":1001,"TH":1001,"TTZ":1001,"TTW+TTWW":1001,"Conv":1001,"EWK":1001,"WZ+ZZ":1001,"Rares":1001,"Fakes":3005,"Flips":3006,"mcFakes":3005,"mcFlips":3006,"ST":1001,"HOther":1001,"WZ":1001, "ZZ": 1001, "ggZZ":1001}
 
 # regions and postfix
 
@@ -269,21 +294,26 @@ postfix = "_%s.root"%PostFix[region]
 plotname = "%s_%i"%(region,year)
 
 # root file names
-sampleName = [ "TTH","THQ", "THW", "VH", "ZH", "ggH", "qqH", "TTZ", "TTW", "Convs", "WZ", "ZZ", "EWK", "Rares","TTWW","ST", "mcFlips", "mcFakes", "Data","FakeSub","Fakes","Flips",
-"ggH_hmm","ggH_htt","ggH_hww","ggH_hzg","ggH_hzz", "qqH_hmm","qqH_htt","qqH_hww","qqH_hzg","qqH_hzz", "VH_hmm","VH_htt","VH_hww","VH_hzg","VH_hzz", "ZH_hmm","ZH_htt","ZH_hww","ZH_hzg","ZH_hzz", "TTH_hmm","TTH_htt","TTH_hww","TTH_hzg","TTH_hzz", "THQ_hmm","THQ_htt","THQ_hww","THQ_hzg","THQ_hzz", "THW_hmm","THW_htt","THW_hww","THW_hzg","THW_hzz"]
+sampleName = [ "TTH","THQ", "THW", "WH", "ZH", "ggH", "qqH", "TTWH", "TTZH", "HH", "TTZ", "TTW", "Convs", "WZ", "ZZ", "Rares","TTWW","Data","FakeSub","Fakes","Flips","ggZZ",
+"ggH_hmm","ggH_htt","ggH_hww","ggH_hzg","ggH_hzz", "qqH_hmm","qqH_htt","qqH_hww","qqH_hzg","qqH_hzz", "WH_hmm","WH_htt","WH_hww","WH_hzg","WH_hzz", "ZH_hmm","ZH_htt","ZH_hww","ZH_hzg","ZH_hzz", "TTH_hmm","TTH_htt","TTH_hww","TTH_hzg","TTH_hzz", "THQ_hmm","THQ_htt","THQ_hww","THQ_hzg","THQ_hzz", "THW_hmm","THW_htt","THW_hww","THW_hzg","THW_hzz", "TTWH_hmm","TTWH_htt","TTWH_hww","TTWH_hzg","TTWH_hzz", "TTZH_hmm","TTZH_htt","TTZH_hww","TTZH_hzg","TTZH_hzz",
+]
 
 
 # set up the way we plot the samples
-Signals=["TTH","TH","VH+ggH+qqH"]
+Signals=["TTH","TH","HOther"]
 #Samples=["TTH","TH","VH+ggH+qqH","TTW+TTWW","TTZ","EWK","WZ+ZZ","Rares","Conv","ST","mcFakes","mcFlips","Data"]
-Samples=  ['Data', 'Flips', 'Fakes', 'Conv', 'Rares', 'WZ+ZZ', 'TTZ', 'TTW+TTWW', 'VH+ggH+qqH', 'TH', 'TTH']
+#Samples=  ['Data', 'Fakes', 'Conv', 'Rares', 'WZ', 'ggZZ', 'ZZ', 'TTZ', 'TTW+TTWW', 'HOther', 'TH', 'TTH']
+Samples=  ['Data', 'Fakes', 'Conv', 'Rares', 'WZ', 'ZZ', 'TTZ', 'TTW+TTWW', 'HOther', 'TH', 'TTH']
+#Samples=  ['Data', 'Flips', 'Fakes', 'Conv', 'WZ+ZZ', 'TTZ', 'TTW+TTWW', 'HOther', 'TH', 'TTH']
 
 Process={
     "TTH":["TTH_hww","TTH_hzz","TTH_htt","TTH_hmm","TTH_hzg"],
     "TH":["THW_hww","THW_hzz","THW_htt","THW_hmm","THW_hzg","THQ_hww","THQ_hzz","THQ_htt","THQ_hmm","THQ_hzg"],
     "VH+ggH+qqH":["ggH_hmm","ggH_htt","ggH_hww","ggH_hzg","ggH_hzz", "qqH_hmm","qqH_htt","qqH_hww","qqH_hzg","qqH_hzz", "VH_hmm","VH_htt","VH_hww","VH_hzg","VH_hzz", "ZH_hmm","ZH_htt","ZH_hww","ZH_hzg","ZH_hzz"],
+    "HOther":["ggH_hmm","ggH_htt","ggH_hww","ggH_hzg","ggH_hzz", "qqH_hmm","qqH_htt","qqH_hww","qqH_hzg","qqH_hzz", "WH_hmm","WH_htt","WH_hww","WH_hzg","WH_hzz", "ZH_hmm","ZH_htt","ZH_hww","ZH_hzg","ZH_hzz","TTWH_hmm","TTWH_htt","TTWH_hww","TTWH_hzg","TTWH_hzz", "TTZH_hmm","TTZH_htt","TTZH_hww","TTZH_hzg","TTZH_hzz","HH"],
     "TTZ":["TTZ"],"TTW+TTWW":["TTW","TTWW"],"Conv":["Convs"],"EWK":["EWK"],"WZ+ZZ":["WZ","ZZ"],"Rares":["Rares"],"Fakes":["Fakes","FakeSub"],"Flips":["Flips"],"Data":["Data"],
-    "ST":["ST"],"mcFlips":["mcFlips"],"mcFakes":["mcFakes"]
+    "ST":["ST"],"mcFlips":["mcFlips"],"mcFakes":["mcFakes"],
+    "WZ":["WZ"], "ZZ":["ZZ"], "ggZZ":["ggZZ"],
     }
 
 
@@ -631,8 +661,8 @@ def plotStack():
         upperbound = 2.*maximum
         lowerbound = -maximum/40.
         if values["logy"]==1:
-            upperbound = 10*maximum
-            lowerbound = 0.0000001
+            upperbound = 1000*maximum
+            lowerbound = 0.1
        
         
         hstack.SetMinimum(lowerbound)
@@ -648,7 +678,8 @@ def plotStack():
         y.SetLabelSize(20)
         
         nbins = h_ratio.GetNbinsX()
-        hstack.GetXaxis().SetRange(0, nbins+1)
+        #hstack.GetXaxis().SetRange(0, nbins+1)
+        hstack.GetXaxis().SetRangeUser(values["min"], values["max"])
         
         h_totalmc.Draw("e2same")
         if not blind:
@@ -663,10 +694,12 @@ def plotStack():
             #upperbound = 1.5*maximum
             #h_ratio.SetMaximum(upperbound)
             h_ratio.SetMaximum(3.)
+            h_ratio.GetXaxis().SetRangeUser(values["min"], values["max"])
             h_ratio.Draw("")
         else:
             h_MCerr.SetMinimum(0.5)
             h_MCerr.SetMaximum(1.8)
+            h_MCerr.GetXaxis().SetRangeUser(values["min"], values["max"])
             h_MCerr.Draw("e2") 
             h_ratio.Draw("same")
 
